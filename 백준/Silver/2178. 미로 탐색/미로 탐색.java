@@ -1,68 +1,58 @@
 import java.util.*;
+import java.io.*;
 
 public class Main {
+    static int n, m;
     static int[][] arr;
-    static boolean[][] visited;
-    static int N, M;
+    static boolean[][] bool;
 
-    // 상하좌우 이동을 위한 배열
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, 1, 0, -1};
+    static int[] dix = {0, 0, -1, 1};
+    static int[] diy = {-1, 1, 0, 0,};
+    static class Position{
+        int x, y;
 
-    static class Position {
-        int x;
-        int y;
-
-        Position(int x, int y) {
+        public Position(int x, int y){
             this.x = x;
             this.y = y;
         }
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
 
-        arr = new int[N][M];
-        visited = new boolean[N][M];
-
-        sc.nextLine(); // 버퍼를 비워주는 역할
-
-        for(int i = 0; i < N; i++){
-            String str = sc.nextLine();
-            for(int j = 0; j < M; j++){
-                arr[i][j] = str.charAt(j) - '0';
-                visited[i][j] = false;
-            }
+        arr = new int[n][m];
+        bool = new boolean[n][m];
+        for(int i = 0; i < n; i++){
+            String input = br.readLine();
+            for(int j = 0; j < m; j++)
+                arr[i][j] = Character.getNumericValue(input.charAt(j));
         }
 
-        visited[0][0] = true;
-        bfs(0, 0);
-        System.out.println(arr[N - 1][M - 1]);
+        BFS(0, 0);
+        System.out.println(arr[n - 1][m - 1]);
     }
 
-    static void bfs(int x, int y) {
-        Queue<Position> queue = new LinkedList<Position>();
-        queue.offer(new Position(x, y));
+    private static void BFS(int y, int x){
+        Deque<Position> deque = new LinkedList<Position>();
+        deque.addLast(new Position(x, y));
 
-        while(!queue.isEmpty()) {
-            Position pos = queue.poll();
+        while(!deque.isEmpty()){
+            Position cur = deque.pollFirst();
 
-            for(int i = 0; i < 4; i++) {
-                int nx = pos.x + dx[i];
-                int ny = pos.y + dy[i];
+            for(int i = 0; i < 4; i++){
+                int nx = cur.x + dix[i];
+                int ny = cur.y + diy[i];
 
-                // 미로 범위를 벗어나면 무시
-                if(nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-
-                // 벽이거나, 이미 방문한 곳이면 무시
-                if(arr[nx][ny] == 0 || visited[nx][ny]) continue;
-
-                // 최소 칸 수를 증가시킴
-                arr[nx][ny] = arr[pos.x][pos.y] + 1;
-                visited[nx][ny] = true;
-                queue.offer(new Position(nx, ny));
+                if(nx >= 0 && ny >= 0 && nx < m && ny < n){
+                    if(arr[ny][nx] == 1 && !bool[ny][nx]){
+                        arr[ny][nx] = arr[cur.y][cur.x] + 1;
+                        bool[ny][nx] = true;
+                        deque.addLast(new Position(nx, ny));
+                    }
+                }
             }
         }
     }
