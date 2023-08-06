@@ -2,51 +2,48 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int n, m;
-    static char[][] arr;
-    static boolean[][] bool;
-    static int[] dix = {-1, 1, 0, 0};
-    static int[] diy = {0, 0, -1, 1};
-    static int max = Integer.MIN_VALUE;
-    static List<Character> list = new ArrayList<>();
+    static int R, C, maxCount;
+    static char[][] board;
+    static boolean[][] visited;
+    static boolean[] alphaVisited = new boolean[26]; // 알파벳 'A' ~ 'Z' 까지 방문 체크
+    static int[] dx = {0, 0, -1, 1};
+    static int[] dy = {-1, 1, 0, 0};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        arr = new char[n][m];
-        bool = new boolean[n][m];
 
-        for(int i = 0; i < n; i++){
-            String str = br.readLine();
-            for(int j = 0; j < m; j++)
-                arr[i][j] = str.charAt(j);
-        }
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
 
-        list.add(arr[0][0]);
-        DFS(0, 0, 1);
+        board = new char[R][C];
+        visited = new boolean[R][C];
 
-        System.out.println(max);
+        for (int i = 0; i < R; i++)
+            board[i] = br.readLine().toCharArray();
+
+        DFS(0, 0, 1);  // 시작점에서 카운트는 1
+        System.out.println(maxCount);
     }
 
-    private static void DFS(int x, int y, int count){
-        bool[x][y] = true;
-        max = Math.max(max, count);
+    private static void DFS(int y, int x, int count) {
+        visited[y][x] = true;
+        alphaVisited[board[y][x] - 'A'] = true; // 알파벳 방문 체크
 
-        for(int i = 0; i < 4; i++){
-            int nx = x + dix[i];
-            int ny = y + diy[i];
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
 
-            if(nx >= 0 && ny >= 0 && nx < n && ny < m){
-                if(!list.contains(arr[nx][ny]) && !bool[nx][ny]) {
-                    list.add(arr[nx][ny]);
-                    DFS(nx, ny, count + 1);
-                    list.remove((Character) arr[nx][ny]);
+            if (nx >= 0 && ny >= 0 && nx < C && ny < R) {
+                if (!visited[ny][nx] && !alphaVisited[board[ny][nx] - 'A']) {
+                    DFS(ny, nx, count + 1);
                 }
             }
         }
 
-        bool[x][y] = false;
+        // 이전 상태로 복원
+        visited[y][x] = false;
+        alphaVisited[board[y][x] - 'A'] = false;
+        maxCount = Math.max(maxCount, count); // 최대 카운트 업데이트
     }
 }
