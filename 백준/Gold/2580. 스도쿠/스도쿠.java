@@ -49,9 +49,17 @@ public class Main {
                 return false;
             if(arr[i][x] == value)
                 return false;
-            if(arr[(y / 3) * 3 + i / 3][(x / 3) * 3 + i % 3] == value)
-                return false;
         }
+
+        int set_y = (y / 3) * 3;
+        int set_x = (x / 3) * 3;
+        for(int i = set_y; i < set_y + 3; i++){
+            for(int j = set_x; j < set_x + 3; j++){
+                if(arr[i][j] == value)
+                    return false;
+            }
+        }
+
         return true;
     }
 }
