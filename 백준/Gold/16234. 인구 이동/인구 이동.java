@@ -2,87 +2,84 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int[][] A;
-    static int N, L, R;
-    
+    static int n, l, r;
+    static int[][] arr;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        L = Integer.parseInt(st.nextToken());
-        R = Integer.parseInt(st.nextToken());
-        
-        A = new int[N][N];
-        
-        for(int i = 0; i < N; i++) {
+        n = Integer.parseInt(st.nextToken());
+        l = Integer.parseInt(st.nextToken());
+        r = Integer.parseInt(st.nextToken());
+        arr = new int[n][n];
+
+        for(int i = 0; i < n; i++){
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < N; j++) {
-                A[i][j] = Integer.parseInt(st.nextToken());
-            }
+            for(int j = 0; j < n; j++)
+                arr[i][j] = Integer.parseInt(st.nextToken());
         }
-        
+
         int answer = 0;
-        
-        while(true) {
-            boolean[][] visited = new boolean[N][N];
+
+        while(true){
+            boolean[][] bool = new boolean[n][n];
             boolean moved = false;
-            
-            for(int i = 0; i < N; i++) {
-                for(int j = 0; j < N; j++) {
-                    if(!visited[i][j]) {
-                        moved |= bfs(i, j, visited);
-                    }
+
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    if(!bool[i][j])
+                        moved |= bfs(j, i, bool);
                 }
             }
-            
-            if(!moved) break;
-            
+
+            if(!moved)
+                break;
+
             answer++;
         }
-        
+
         System.out.println(answer);
     }
-    
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-    
-    static boolean bfs(int x, int y, boolean[][] visited) {
+
+    static int[] dix = {0, 0, -1, 1};
+    static int[] diy = {-1, 1, 0, 0};
+    private static boolean bfs(int x, int y, boolean[][] bool){
         List<int[]> union = new ArrayList<>();
         int sum = 0;
-        
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {x, y});
-        visited[x][y] = true;
-        union.add(new int[] {x, y});
-        sum += A[x][y];
-        
-        while(!queue.isEmpty()) {
-            int[] current = queue.poll();
-            
-            for(int i = 0; i < 4; i++) {
-                int nx = current[0] + dx[i];
-                int ny = current[1] + dy[i];
-                
-                if(nx >= 0 && ny >= 0 && nx < N && ny < N && !visited[nx][ny]) {
-                    int diff = Math.abs(A[current[0]][current[1]] - A[nx][ny]);
-                    if(diff >= L && diff <= R) {
-                        queue.offer(new int[] {nx, ny});
-                        visited[nx][ny] = true;
-                        union.add(new int[] {nx, ny});
-                        sum += A[nx][ny];
+
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{x, y});
+        bool[y][x] = true;
+        union.add(new int[]{x, y});
+        sum += arr[y][x];
+
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
+
+            for(int i = 0; i < 4; i++){
+                int nx = cur[0] + dix[i];
+                int ny = cur[1] + diy[i];
+
+                if(nx >= 0 && ny >= 0 && nx < n && ny < n && !bool[ny][nx]){
+                    int diff = Math.abs(arr[cur[1]][cur[0]] - arr[ny][nx]);
+                    if(diff >= l && diff <= r){
+                        q.add(new int[]{nx, ny});
+                        bool[ny][nx] = true;
+                        union.add(new int[]{nx, ny});
+                        sum += arr[ny][nx];
                     }
                 }
             }
         }
-        
-        if(union.size() > 1) {
+
+        if(union.size() > 1){
             int avg = sum / union.size();
-            for(int[] pos : union) {
-                A[pos[0]][pos[1]] = avg;
-            }
+            for(int[] pos : union)
+                arr[pos[1]][pos[0]] = avg;
+
             return true;
         }
-        
+
         return false;
     }
 }
