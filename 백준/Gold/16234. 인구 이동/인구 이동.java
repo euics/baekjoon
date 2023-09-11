@@ -28,7 +28,7 @@ public class Main {
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
                     if(!bool[i][j])
-                        moved |= bfs(j, i, bool);
+                        moved = moved | bfs(j, i, bool);
                 }
             }
 
@@ -43,15 +43,14 @@ public class Main {
 
     static int[] dix = {0, 0, -1, 1};
     static int[] diy = {-1, 1, 0, 0};
-    private static boolean bfs(int x, int y, boolean[][] bool){
-        List<int[]> union = new ArrayList<>();
-        int sum = 0;
 
+    private static boolean bfs(int x, int y, boolean[][] bool){
         Queue<int[]> q = new LinkedList<>();
+        ArrayList<int[]> union = new ArrayList<>();
         q.add(new int[]{x, y});
-        bool[y][x] = true;
         union.add(new int[]{x, y});
-        sum += arr[y][x];
+        int sum = arr[y][x];
+        bool[y][x] = true;
 
         while(!q.isEmpty()){
             int[] cur = q.poll();
@@ -64,9 +63,9 @@ public class Main {
                     int diff = Math.abs(arr[cur[1]][cur[0]] - arr[ny][nx]);
                     if(diff >= l && diff <= r){
                         q.add(new int[]{nx, ny});
-                        bool[ny][nx] = true;
                         union.add(new int[]{nx, ny});
                         sum += arr[ny][nx];
+                        bool[ny][nx] = true;
                     }
                 }
             }
