@@ -1,9 +1,8 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
     static int t, a, b;
-    static String answer = "";
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,40 +18,39 @@ public class Main {
     }
 
     private static String BFS(){
-        Queue<Pair> q = new LinkedList<>();
+        Queue<Info> q = new LinkedList<>();
         boolean[] bool = new boolean[10000];
-
-        q.add(new Pair(a, " "));
+        q.add(new Info(a, ""));
         bool[a] = true;
 
         while(!q.isEmpty()){
-            Pair o = q.poll();
+            Info cur = q.poll();
 
-            if(o.value == b)
-                return o.command;
+            if(cur.value == b)
+                return cur.command;
 
-            int d = (o.value * 2) % 10000;
-            int s = (o.value == 0) ? 9999 : o.value - 1;
-            int l = (o.value % 1000) * 10 + (o.value / 1000);
-            int r = (o.value % 10) * 1000 + (o.value / 10);
+            int d = (cur.value * 2) % 10000;
+            int s = (cur.value == 0) ? 9999 : cur.value - 1;
+            int l = (cur.value % 1000) * 10 + (cur.value / 1000);
+            int r = (cur.value % 10) * 1000 + (cur.value / 10);
 
-            if(!bool[d]) {
-                q.add(new Pair(d, o.command + "D"));
+            if(!bool[d]){
+                q.add(new Info(d, cur.command + "D"));
                 bool[d] = true;
             }
 
-            if(!bool[s]) {
-                q.add(new Pair(s, o.command + "S"));
+            if(!bool[s]){
+                q.add(new Info(s, cur.command + "S"));
                 bool[s] = true;
             }
 
-            if(!bool[l]) {
-                q.add(new Pair(l, o.command + "L"));
+            if(!bool[l]){
+                q.add(new Info(l, cur.command + "L"));
                 bool[l] = true;
             }
 
-            if(!bool[r]) {
-                q.add(new Pair(r, o.command + "R"));
+            if(!bool[r]){
+                q.add(new Info(r, cur.command + "R"));
                 bool[r] = true;
             }
         }
@@ -61,11 +59,10 @@ public class Main {
     }
 }
 
-class Pair {
+class Info {
     int value;
     String command;
-
-    public Pair(int value, String command){
+    public Info(int value, String command){
         this.value = value;
         this.command = command;
     }
