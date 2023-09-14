@@ -1,51 +1,53 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static int f, s, g, u, d, cnt = 0, min = Integer.MAX_VALUE;
-    static boolean[] bool;
+    static int f, s, g, u, d, answer = Integer.MAX_VALUE;
+    static int[] dis;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        f = Integer.parseInt(st.nextToken());
-        s = Integer.parseInt(st.nextToken());
-        g = Integer.parseInt(st.nextToken());
-        u = Integer.parseInt(st.nextToken());
-        d = Integer.parseInt(st.nextToken());
-        bool = new boolean[f + 1];
+        f = Integer.parseInt(st.nextToken()); // 건물 총 층 수
+        s = Integer.parseInt(st.nextToken()); // 강호가 있는 층
+        g = Integer.parseInt(st.nextToken()); // 목적지
+        u = Integer.parseInt(st.nextToken()); // 올라가는 버튼
+        d = Integer.parseInt(st.nextToken()); // 내려가는 버튼
+        dis = new int[f + 1];
 
-        int result = BFS();
-        if (result == -1) {
+        solution();
+
+        if(dis[g] == 0 && g != s)
             System.out.println("use the stairs");
-        } else {
-            System.out.println(result);
-        }
+        else
+            System.out.println(dis[g]);
     }
 
-    private static int BFS(){
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{s, 0});
+    private static void solution(){
+        Queue<Integer> q = new LinkedList<>();
+        q.add(s);
 
         while(!q.isEmpty()){
-            int[] o = q.poll();
-            int floor = o[0];
-            int count = o[1];
+             int curStair = q.poll();
 
-            if(floor == g)
-                return count;
+            if(curStair == g)
+                return;
 
-            if(floor + u <= f && !bool[floor + u]){
-                bool[floor + u] = true;
-                q.add(new int[]{floor + u, count + 1});
+            //다음 up 이동할 위치가 최대값보다 작고 방문하지 않은 지점이여야 한다.
+            if(curStair + u <= f && u > 0){
+                if(dis[curStair + u] == 0){
+                    dis[curStair + u] = dis[curStair] + 1;
+                    q.add(curStair + u);
+                }
             }
 
-            if(floor - d > 0 && !bool[floor - d]){
-                bool[floor - d] = true;
-                q.add(new int[]{floor - d, count + 1});
+            //다음 down 이동할 위치가 최대값보다 작고 방문하지 않은 지점이여야 한다.
+            if(curStair - d >= 1 && d > 0){
+                if(dis[curStair - d] == 0){
+                    dis[curStair - d] = dis[curStair] + 1;
+                    q.add(curStair - d);
+                }
             }
         }
-
-        return -1;
     }
 }
