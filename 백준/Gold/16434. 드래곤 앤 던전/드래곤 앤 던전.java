@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
@@ -16,10 +16,10 @@ public class Main {
                 dungeon[i][j] = Long.parseLong(st.nextToken());
         }
 
-        long minHp = 0, maxHp = Long.MAX_VALUE;
-        while(minHp <= maxHp){
-            long assumeHp = (minHp + maxHp) / 2;
-            long curHp = assumeHp;
+        long left = 0, right = Long.MAX_VALUE;
+        while(left <= right){
+            long hp = (left + right) / 2;
+            long curHp = hp;
             long curAtk = atk;
             boolean alive = true;
 
@@ -30,26 +30,24 @@ public class Main {
                     else
                         curHp -= (dungeon[i][2] / curAtk) * dungeon[i][1];
 
-                    if(curHp <= 0){
+                    if(curHp <= 0)
                         alive = false;
-                        break;
-                    }
 
                 } else{
                     curAtk += dungeon[i][1];
-                    if(curHp + dungeon[i][2] >= assumeHp)
-                        curHp = assumeHp;
+                    if(curHp + dungeon[i][2] > hp)
+                        curHp = hp;
                     else
-                        curHp = curHp + dungeon[i][2];
+                        curHp += dungeon[i][2];
                 }
             }
 
             if(!alive)
-                minHp = assumeHp + 1;
+                left = hp + 1;
             else
-                maxHp = assumeHp - 1;
+                right = hp - 1;
         }
 
-        System.out.println(minHp);
+        System.out.println(left);
     }
 }
