@@ -2,11 +2,13 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int n, m, answer = Integer.MIN_VALUE;
+    static int n, m, max = Integer.MIN_VALUE;
     static int[][] arr;
     static boolean[][] bool;
+    static int[] dix = {0, 0, -1, 1};
+    static int[] diy = {-1, 1, 0, 0};
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
@@ -23,39 +25,37 @@ public class Main {
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
                 bool[i][j] = true;
-                solution(1, j, i, arr[i][j]);
+                solution(j, i, arr[i][j], 1);
                 bool[i][j] = false;
             }
         }
 
-        System.out.println(answer);
+        System.out.println(max);
     }
 
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
-
-    private static void solution(int L, int x, int y, int sum){
+    private static void solution(int x, int y, int sum, int cnt){
         bool[y][x] = true;
 
-        if(L == 4){
-            answer = Math.max(answer, sum);
+        if(cnt == 4){
+            max = Math.max(max, sum);
             return;
         }
 
-        for(int i = 0; i < 4; i++){
-            int nx = x + dix[i];
-            int ny = y + diy[i];
+        for(int d = 0; d < 4; d++){
+            int nx = x + dix[d];
+            int ny = y + diy[d];
 
             if(nx >= 0 && ny >= 0 && nx < m && ny < n){
                 if(!bool[ny][nx]){
-                    if(L == 2){
+
+                    if(cnt == 2){
                         bool[ny][nx] = true;
-                        solution(L + 1, x, y, sum + arr[ny][nx]);
+                        solution(x, y, sum + arr[ny][nx], cnt + 1);
                         bool[ny][nx] = false;
                     }
 
                     bool[ny][nx] = true;
-                    solution(L + 1, nx, ny, sum + arr[ny][nx]);
+                    solution(nx, ny, sum + arr[ny][nx], cnt + 1);
                     bool[ny][nx] = false;
                 }
             }
