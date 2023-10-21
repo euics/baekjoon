@@ -2,14 +2,16 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int n, m;
+    static ArrayList<Integer> broken = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(br.readLine());
-        int m = Integer.parseInt(br.readLine());
-        ArrayList<Integer> broken = new ArrayList<>();
-        if(m > 0) {
+        n = Integer.parseInt(br.readLine());
+        m = Integer.parseInt(br.readLine());
+
+        if(m > 0){
             StringTokenizer st = new StringTokenizer(br.readLine());
             for(int i = 0; i < m; i++)
                 broken.add(Integer.parseInt(st.nextToken()));
@@ -18,19 +20,20 @@ public class Main {
         int answer = Math.abs(n - 100);
         for(int i = 0; i <= 999999; i++){
             String channel = String.valueOf(i);
-            boolean bool = false;
+            boolean contain = false;
+
             for(int j = 0; j < channel.length(); j++){
                 if(broken.contains(channel.charAt(j) - '0')){
-                    bool = true;
+                    contain = true;
                     break;
                 }
             }
 
-            if(bool)
+            if(contain)
                 continue;
-            
-            int clickCnt = channel.length() + Math.abs(n - Integer.parseInt(channel));
-            answer = Math.min(answer, clickCnt);
+
+            int cntClick = channel.length() + Math.abs(n - Integer.parseInt(channel));
+            answer = Math.min(answer, cntClick);
         }
 
         System.out.println(answer);
