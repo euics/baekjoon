@@ -4,9 +4,10 @@ import java.util.*;
 public class Main {
     static int n, m, max = Integer.MIN_VALUE;
     static char[][] arr;
+    static int[][] dis;
     static boolean[][] bool;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
@@ -20,9 +21,15 @@ public class Main {
         }
 
         for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++) {
-                if(arr[i][j] == 'L')
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 'L'){
+                    bool = new boolean[n][m];
+                    dis = new int[n][m];
+
                     solution(j, i);
+
+                    max = Math.max(max, findMinTime());
+                }
             }
         }
 
@@ -32,40 +39,45 @@ public class Main {
     static int[] dix = {0, 0, -1, 1};
     static int[] diy = {-1, 1, 0, 0};
 
-    private static void solution(int x, int y){
+    public static void solution(int x, int y){
         Queue<int[]> q = new LinkedList<>();
         q.add(new int[]{x, y});
-        int[][] dis = new int[n][m];
-        bool = new boolean[n][m];
         bool[y][x] = true;
+        int L = 0;
 
         while(!q.isEmpty()){
-            int[] cur = q.poll();
+            int length = q.size();
 
-            for(int i = 0; i < 4; i++){
-                int nx = cur[0] + dix[i];
-                int ny = cur[1] + diy[i];
+            for(int i = 0; i < length; i++){
+                int[] cur = q.poll();
 
-                if(nx >= 0 && ny >= 0 && nx < m && ny < n && arr[ny][nx] == 'L'){
-                    if(!bool[ny][nx]){
-                        bool[ny][nx] = true;
-                        dis[ny][nx] = dis[cur[1]][cur[0]] + 1;
-                        q.add(new int[]{nx, ny});
+                for(int d = 0; d < 4; d++){
+                    int nx = cur[0] + dix[d];
+                    int ny = cur[1] + diy[d];
+
+                    if(nx >= 0 && ny >= 0 && nx < m && ny < n && arr[ny][nx] == 'L'){
+                        if(!bool[ny][nx]){
+                            bool[ny][nx] = true;
+                            q.add(new int[]{nx, ny});
+                            dis[ny][nx] = dis[cur[1]][cur[0]] + 1;
+                        }
                     }
                 }
             }
         }
-
-        max = Math.max(max, findMax(dis));
     }
 
-    private static int findMax(int[][] dis){
-        int distance = Integer.MIN_VALUE;
+    public static int findMinTime(){
+        int max = Integer.MIN_VALUE;
         for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++)
-                distance = Math.max(distance, dis[i][j]);
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 'L' && dis[i][j] != 0){
+                    if(max < dis[i][j])
+                        max = dis[i][j];
+                }
+            }
         }
 
-        return distance;
+        return max;
     }
 }
