@@ -16,10 +16,10 @@ public class Main {
                 dungeon[i][j] = Long.parseLong(st.nextToken());
         }
 
-        long left = 0, right = Long.MAX_VALUE;
-        while(left <= right){
-            long hp = (left + right) / 2;
-            long curHp = hp;
+        long minHp = 0, maxHp = Long.MAX_VALUE;
+        while(minHp <= maxHp){
+            long assumeHp = (minHp + maxHp) / 2;
+            long curHp = assumeHp;
             long curAtk = atk;
             boolean alive = true;
 
@@ -30,24 +30,26 @@ public class Main {
                     else
                         curHp -= (dungeon[i][2] / curAtk) * dungeon[i][1];
 
-                    if(curHp <= 0)
+                    if(curHp <= 0){
                         alive = false;
-
+                        break;
+                    }
                 } else{
                     curAtk += dungeon[i][1];
-                    if(curHp + dungeon[i][2] > hp)
-                        curHp = hp;
+
+                    if(curHp + dungeon[i][2] >= assumeHp)
+                        curHp = assumeHp;
                     else
                         curHp += dungeon[i][2];
                 }
             }
 
-            if(!alive)
-                left = hp + 1;
+            if(alive)
+                maxHp = assumeHp - 1;
             else
-                right = hp - 1;
+                minHp = assumeHp + 1;
         }
 
-        System.out.println(left);
+        System.out.println(minHp);
     }
 }
