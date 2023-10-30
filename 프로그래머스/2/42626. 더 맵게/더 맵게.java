@@ -6,26 +6,17 @@ class Solution {
         for(int i = 0; i < scoville.length; i++)
             pq.add(scoville[i]);
         
-        int cnt = 0;
-        while(!pq.isEmpty()){
-            int firstScoville = pq.poll();
-            
-            if(firstScoville >= K)
-                return cnt;
-            
-            if(pq.isEmpty())
-                return -1;
-            
-            int secondScoville = pq.poll();
-            
-            pq.add(calculateScoville(firstScoville, secondScoville));
-            cnt++;
+        int answer = 0;
+        while(pq.size() > 1 && pq.peek() < K){
+            int first = pq.poll();
+            int second = pq.poll();
+            pq.add(first + (second * 2));
+            answer++;
         }
         
-        return -1;
-    }
-    
-    public int calculateScoville(int firstScoville, int secondScoville){
-        return firstScoville + (secondScoville * 2);
+        if(pq.peek() < K)
+            return -1;
+        
+        return answer;
     }
 }
