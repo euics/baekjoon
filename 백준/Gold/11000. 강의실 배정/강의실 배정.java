@@ -3,47 +3,30 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(br.readLine());
-        Lecture[] arr = new Lecture[n];
+        List<int[]> list = new ArrayList<>();
 
         for(int i = 0; i < n; i++){
             StringTokenizer st = new StringTokenizer(br.readLine());
-            arr[i] = new Lecture(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            list.add(new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())});
         }
 
-        Arrays.sort(arr);
+        // 시작 시간 기준으로 정렬
+        Collections.sort(list, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
 
+        // 강의실 종료 시간을 저장할 우선순위 큐
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        pq.add(arr[0].end);
-        for(int i = 1; i < n; i++){
-            if(!pq.isEmpty()){
-                if(arr[i].start >= pq.peek())
-                    pq.poll();
 
-                pq.add(arr[i].end);
-            }
+        for(int[] pair : list){
+            // 현재 수업을 넣을 수 있는 강의실이 있는지 체크
+            if(!pq.isEmpty() && pq.peek() <= pair[0])
+                pq.poll();
+            pq.add(pair[1]);
         }
 
         System.out.println(pq.size());
-
-    }
-}
-
-class Lecture implements Comparable<Lecture>{
-    int start, end;
-    public Lecture(int start, int end){
-        this.start = start;
-        this.end = end;
-    }
-
-    @Override
-    public int compareTo(Lecture o){
-        if(this.start == o.start)
-            return this.end - o.end;
-        else
-            return this.start - o.start;
     }
 }
