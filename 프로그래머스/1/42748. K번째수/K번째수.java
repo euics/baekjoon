@@ -6,14 +6,10 @@ class Solution {
         
         for(int i = 0; i < commands.length; i++){
             
-            List<Integer> list = new ArrayList<>();
+            int[] tmp = Arrays.copyOfRange(array, commands[i][0] - 1, commands[i][1]);
+            Arrays.sort(tmp);
             
-            for(int start = commands[i][0] - 1; start < commands[i][1]; start++)
-                list.add(array[start]);
-            
-            Collections.sort(list);
-            
-            answer.add(list.get(commands[i][2] - 1));
+            answer.add(tmp[commands[i][2] - 1]);
         }
         
         return answer.stream().mapToInt(i -> i).toArray();
