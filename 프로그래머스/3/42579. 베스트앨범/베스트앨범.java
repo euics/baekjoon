@@ -2,45 +2,46 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        HashMap<String, Integer> genreSum = new HashMap<>();
-        HashMap<String, PriorityQueue<Song>> genreSong = new HashMap<>();
+        Map<String, Integer> genresSum = new HashMap<>();
+        Map<String, PriorityQueue<SongInfo>> genresInfo = new HashMap<>();
+        int n = genres.length;
         
-        for(int i = 0; i < genres.length; i++){
-            genreSum.put(genres[i], genreSum.getOrDefault(genres[i], 0) + plays[i]);
+        for(int i = 0; i < n; i++){
+            genresSum.put(genres[i], genresSum.getOrDefault(genres[i], 0) + plays[i]);
             
-            if(!genreSong.containsKey(genres[i])){
-                genreSong.put(genres[i], new PriorityQueue<Song>());
+            if(!genresInfo.containsKey(genres[i])){
+                genresInfo.put(genres[i], new PriorityQueue<SongInfo>());
             }
             
-            genreSong.get(genres[i]).add(new Song(i, plays[i]));
+            genresInfo.get(genres[i]).add(new SongInfo(i, plays[i]));
         }
         
-        List<String> genreRanking = new ArrayList<>(genreSum.keySet());
-        Collections.sort(genreRanking, (a, b) -> genreSum.get(b).compareTo(genreSum.get(a)));
+        List<String> genresRanking = new LinkedList<>(genresSum.keySet());
+        Collections.sort(genresRanking, (a, b) -> genresSum.get(b).compareTo(genresSum.get(a)));
+        List<Integer> answer = new ArrayList<>();
         
-        List<Integer> result = new ArrayList<>();
-        for(String genre : genreRanking){
+        for(String ranking : genresRanking){
             int cnt = 0;
-            while(!genreSong.get(genre).isEmpty() && cnt < 2){
-                result.add(genreSong.get(genre).poll().id);
+            
+            while(!genresInfo.get(ranking).isEmpty() && cnt < 2){
+                answer.add(genresInfo.get(ranking).poll().id);
                 cnt++;
             }
         }
         
-        return result.stream().mapToInt(i -> i).toArray();
+        return answer.stream().mapToInt(i -> i).toArray();
     }
 }
 
-class Song implements Comparable<Song>{
+class SongInfo implements Comparable<SongInfo>{
     int id, play;
-    
-    public Song(int id, int play){
+    public SongInfo(int id, int play){
         this.id = id;
         this.play = play;
     }
     
     @Override
-    public int compareTo(Song o){
+    public int compareTo(SongInfo o){
         if(this.play == o.play){
             return this.id - o.id;
         } else{
