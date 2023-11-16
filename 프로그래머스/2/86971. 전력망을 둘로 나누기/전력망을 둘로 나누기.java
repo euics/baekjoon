@@ -5,29 +5,24 @@ class Solution {
     static int[] groupSize;
     
     public int solution(int n, int[][] wires) {
-        
         int minDiff = Integer.MAX_VALUE;
         
         for(int i = 0; i < wires.length; i++){
             
             unf = new int[n + 1];
             groupSize = new int[n + 1];
-            
             for(int j = 1; j <= n; j++){
                 unf[j] = j;
                 groupSize[j] = 1;
             }
             
             for(int j = 0; j < wires.length; j++){
-                if(i != j){
-                    int a = wires[j][0];
-                    int b = wires[j][1];
-                    
-                    union(a, b);
-                }
+                if(i == j) continue;
+                
+                union(wires[j][0], wires[j][1]);
             }
             
-            int diff = Math.abs(n - 2 * groupSize[find(1)]);
+            int diff = Math.abs((n - groupSize[find(1)]) - groupSize[find(1)]);
             minDiff = Math.min(minDiff, diff);
         }
         
@@ -35,7 +30,7 @@ class Solution {
     }
     
     public int find(int v){
-        if(v == unf[v]) return v;
+        if(v == unf[v]) return unf[v];
         else return unf[v] = find(unf[v]);
     }
     
