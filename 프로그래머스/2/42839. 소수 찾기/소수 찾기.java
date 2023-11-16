@@ -4,16 +4,14 @@ class Solution {
     public int solution(String numbers) {
         Set<Integer> permutation = new HashSet<>();
         permutation("", numbers, permutation);
-        
-        return (int) permutation.stream().filter(this::isPrime).count();
+
+        return (int)permutation.stream().filter(this::isPrime).count();
     }
     
     public void permutation(String prefix, String str, Set<Integer> permutation){
         int n = str.length();
         
-        if(!prefix.equals("")){
-            permutation.add(Integer.parseInt(prefix));
-        }
+        if(!prefix.equals("")) permutation.add(Integer.parseInt(prefix));
         
         for(int i = 0; i < n; i++){
             permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n), permutation);
