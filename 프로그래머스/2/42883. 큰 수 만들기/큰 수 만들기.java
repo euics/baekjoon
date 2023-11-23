@@ -1,6 +1,7 @@
 import java.util.*;
 
 class Solution {
+    
     public String solution(String number, int k) {
         Stack<Character> stack = new Stack<>();
         
@@ -21,9 +22,7 @@ class Solution {
         }
         
         StringBuilder sb = new StringBuilder();
-        while(!stack.isEmpty()){
-            sb.insert(0, stack.pop());
-        }
+        while(!stack.isEmpty()) sb.insert(0, stack.pop());
         
         return sb.toString();
     }
