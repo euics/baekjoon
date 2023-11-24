@@ -7,20 +7,17 @@ class Solution {
     public int solution(int n, int[][] costs) {
         unf = new int[n + 1];
         groupSize = new int[n + 1];
-        for(int i = 1; i <= n; i++){
+        for(int i = 0; i <= n; i++){
             unf[i] = i;
             groupSize[i] = 1;
         }
         
-        List<Edge> graph = new ArrayList<>();
-        for(int i = 0; i < costs.length; i++){
-            graph.add(new Edge(costs[i][0], costs[i][1], costs[i][2]));
-        }
-        
-        Collections.sort(graph);
+        List<Edge> edge = new ArrayList<>();
+        for(int i = 0; i < costs.length; i++) edge.add(new Edge(costs[i][0], costs[i][1], costs[i][2]));
+        Collections.sort(edge);
         
         int answer = 0;
-        for(Edge o : graph){
+        for(Edge o : edge){
             int fa = find(o.v1);
             int fb = find(o.v2);
             
@@ -31,13 +28,12 @@ class Solution {
         }
         
         return answer;
+        
     }
     
     public int find(int v){
-        if(v == unf[v])
-            return unf[v];
-        else
-            return unf[v] = find(unf[v]);
+        if(v == unf[v]) return unf[v];
+        else return unf[v] = find(unf[v]);
     }
     
     public void union(int a, int b){
