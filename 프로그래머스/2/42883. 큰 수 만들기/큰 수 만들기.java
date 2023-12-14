@@ -1,10 +1,9 @@
 import java.util.*;
 
 class Solution {
-    
     public String solution(String number, int k) {
         Stack<Character> stack = new Stack<>();
-        
+
         for(int i = 0; i < number.length(); i++){
             char ch = number.charAt(i);
             
@@ -21,9 +20,9 @@ class Solution {
             k--;
         }
         
-        StringBuilder sb = new StringBuilder();
-        while(!stack.isEmpty()) sb.insert(0, stack.pop());
+        StringBuilder st = new StringBuilder();
+        while(!stack.isEmpty()) st.insert(0, stack.pop());
         
-        return sb.toString();
+        return st.toString();
     }
 }
