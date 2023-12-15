@@ -1,45 +1,43 @@
 import java.util.*;
 
 class Solution {
-    static int[] unf;
-    static int[] groupSize;
-    
+    static int[] unf, groupSize;
     public int solution(int n, int[][] costs) {
-        unf = new int[n + 1];
-        groupSize = new int[n + 1];
-        for(int i = 0; i <= n; i++){
+        unf = new int[n];
+        groupSize = new int[n];
+
+        for(int i = 0; i < n; i++){
             unf[i] = i;
             groupSize[i] = 1;
         }
-        
-        List<Edge> edge = new ArrayList<>();
+
+        ArrayList<Edge> edge = new ArrayList<>();
         for(int i = 0; i < costs.length; i++) edge.add(new Edge(costs[i][0], costs[i][1], costs[i][2]));
         Collections.sort(edge);
-        
+
         int answer = 0;
-        for(Edge o : edge){
-            int fa = find(o.v1);
-            int fb = find(o.v2);
-            
-            if(fa != fb){
-                answer += o.cost;
-                union(o.v1, o.v2);
+        for(int i = 0; i < costs.length; i++){
+            int fv1 = find(edge.get(i).v1);
+            int fv2 = find(edge.get(i).v2);
+
+            if(fv1 != fv2) {
+                union(edge.get(i).v1, edge.get(i).v2);
+                answer += edge.get(i).cost;
             }
         }
-        
-        return answer;
-        
+
+       return answer; 
     }
-    
+
     public int find(int v){
         if(v == unf[v]) return unf[v];
         else return unf[v] = find(unf[v]);
     }
-    
+
     public void union(int a, int b){
         int fa = find(a);
         int fb = find(b);
-        
+
         if(fa != fb){
             unf[fa] = fb;
             groupSize[fb] += groupSize[fa];
@@ -54,7 +52,7 @@ class Edge implements Comparable<Edge>{
         this.v2 = v2;
         this.cost = cost;
     }
-    
+
     @Override
     public int compareTo(Edge o){
         return this.cost - o.cost;
