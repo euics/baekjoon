@@ -1,33 +1,27 @@
 class Solution {
-    
-    static int[] unf, groupNum;
+    static int[] unf, groupSize;
     
     public int solution(int n, int[][] computers) {
-        unf = new int[n + 1];
-        groupNum = new int[n + 1];
+        unf = new int[n];
+        groupSize = new int[n];
         for(int i = 0; i < n; i++){
             unf[i] = i;
-            groupNum[i] = 1;
+            groupSize[i] = 1;
         }
         
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
-                if(computers[i][j] == 1 && i != j){
-                    int fa = find(i);
-                    int fb = find(j);
-                    
-                    if(fa != fb){
-                        union(fa, fb);
-                    }
+                if(i == j) continue;
+                
+                if(computers[i][j] == 1){
+                    union(i, j);
                 }
             }
         }
         
         int answer = 0;
         for(int i = 0; i < n; i++){
-            if(unf[i] == i){
-                answer++;
-            }
+            if(unf[i] == i) answer++;
         }
         
         return answer;
@@ -44,7 +38,7 @@ class Solution {
         
         if(fa != fb){
             unf[fa] = fb;
-            groupNum[fb] += groupNum[fa];
+            groupSize[fb] += groupSize[fa];
         }
     }
 }
