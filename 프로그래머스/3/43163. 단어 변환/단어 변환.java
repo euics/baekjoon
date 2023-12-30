@@ -11,12 +11,12 @@ class Solution {
         int L = 0;
         while(!q.isEmpty()){
             int length = q.size();
-            
+
             for(int i = 0; i < length; i++){
                 String cur = q.poll();
-                
+
                 if(cur.equals(target)) return L;
-                
+
                 for(String word : words){
                     if(!set.contains(word) && canTransform(cur, word)){
                         set.add(word);
@@ -24,21 +24,21 @@ class Solution {
                     }
                 }
             }
-            
+
             L++;
         }
-        
-        return 0;
+
+        return L;
     }
-    
-    public boolean canTransform(String a, String b){
-        int diffCnt = 0;
-        for(int i = 0; i < a.length(); i++){
-            if(a.charAt(i) != b.charAt(i)) diffCnt++;
-            
-            if(diffCnt > 1) return false;
+
+    public boolean canTransform(String cur, String word){
+        int diff = 0;
+        for(int i = 0; i < cur.length(); i++){
+            if(cur.charAt(i) != word.charAt(i)) diff++;
+
+            if(diff >= 2) return false;
         }
-        
-        return diffCnt == 1;
+
+        return diff == 1;
     }
 }
