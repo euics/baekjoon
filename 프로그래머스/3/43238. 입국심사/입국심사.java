@@ -1,16 +1,16 @@
+import java.util.*;
+
 class Solution {
     public long solution(int n, int[] times) {
         long answer = Long.MAX_VALUE;
         long left = 1;
-        long right = (long)n * getMax(times);
-        
+        long right = (long) n * getMax(times);
+
         while(left <= right){
             long mid = (left + right) / 2;
             long sum = 0;
-            
-            for(int time : times){
-                sum += mid / time;
-            }
+
+            for(int time : times) sum += mid / time;
             
             if(sum >= n){
                 answer = Math.min(answer, mid);
@@ -22,13 +22,11 @@ class Solution {
         
         return answer;
     }
-    
+
     public long getMax(int[] times){
-        long max = 0;
-        for(int time : times){
-            max = Math.max(max, time);
-        }
-        
+        long max = Long.MIN_VALUE;
+        for(int time : times) max = Math.max(max, time);
+
         return max;
     }
 }
