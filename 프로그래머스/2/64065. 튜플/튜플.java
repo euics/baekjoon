@@ -1,20 +1,16 @@
 import java.util.*;
 
 class Solution {
-
     public int[] solution(String s) {
-        String[] strs = s.substring(2, s.length() - 2).split("\\},\\{");
-        Arrays.sort(strs, (a, b) -> a.length() - b.length());
+        String[] str = s.substring(2, s.length() - 2).split("\\},\\{");
+        Arrays.sort(str, (a, b) -> a.length() - b.length());
 
-        Set<String> set = new HashSet<>();
         List<Integer> answer = new ArrayList<>();
+        for (String tmp : str) {
+            String[] a = tmp.split(",");
 
-        for (String str : strs) {
-            for (String splitNum : str.split(",")) {
-                if (!set.contains(splitNum)) {
-                    set.add(splitNum);
-                    answer.add(Integer.parseInt(splitNum));
-                }
+            for(String num : a){
+                if(!answer.contains(Integer.parseInt(num))) answer.add(Integer.parseInt(num));
             }
         }
 
