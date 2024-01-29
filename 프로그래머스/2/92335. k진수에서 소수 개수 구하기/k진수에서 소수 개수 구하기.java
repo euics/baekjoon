@@ -1,5 +1,17 @@
 class Solution {
     public int solution(int n, int k) {
+        String num = changeNum(n, k);
+        String[] nums = num.split("0");
+
+        int answer = 0;
+        for(String tmp : nums) {
+            if(!tmp.equals("") && isPrime(Long.parseLong(tmp))) answer++;
+        }
+        
+        return answer;
+    }
+
+    public String changeNum(int n, int k){
         StringBuilder sb = new StringBuilder();
 
         while(n > 0){
@@ -7,13 +19,7 @@ class Solution {
             n /= k;
         }
 
-        String[] nums = sb.toString().split("0");
-        int answer = 0;
-        for(String num : nums){
-            if(!num.equals("") && isPrime(Long.parseLong(num))) answer++;
-        }
-
-        return answer;
+        return sb.toString();
     }
 
     public boolean isPrime(Long num){
