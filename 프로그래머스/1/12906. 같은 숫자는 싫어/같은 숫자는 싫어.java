@@ -16,6 +16,6 @@ public class Solution {
         while(!stack.isEmpty())
             answer[idx--] = stack.pop();
         
-        return answer;
+        return answer; 
     }
 }
