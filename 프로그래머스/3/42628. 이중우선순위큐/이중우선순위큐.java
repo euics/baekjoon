@@ -1,34 +1,38 @@
-import java.util.*;
+import java.util.Collections;
+import java.util.PriorityQueue;
 
 class Solution {
     public int[] solution(String[] operations) {
-        LinkedList<Integer> list = new LinkedList<>();
-        
-        for(int i = 0; i < operations.length; i++){
-            String type = operations[i].split(" ")[0];
-            int data = Integer.parseInt(operations[i].split(" ")[1]);
-            
-            switch(type) {
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        for(int i = 0; i < operations.length; i++) {
+            String order = operations[i].split(" ")[0];
+
+            switch (order) {
                 case "I":
-                    list.add(data);
+                    int num = Integer.parseInt(operations[i].split(" ")[1]);
+                    maxHeap.add(num);
+                    minHeap.add(num);
                     break;
                 case "D":
-                    if(!list.isEmpty()){
-                        if(data == -1)
-                            list.remove(0);
-                        else
-                            list.remove(list.size() - 1);
+                    int x = Integer.parseInt(operations[i].split(" ")[1]);
+                    if(x == 1) {
+                        if(!maxHeap.isEmpty() && !minHeap.isEmpty()) {
+                            int max = maxHeap.poll();
+                            minHeap.remove(max);
+                        }
+                    } else if(x == -1){
+                        if(!maxHeap.isEmpty() && !minHeap.isEmpty()) {
+                            int min = minHeap.poll();
+                            maxHeap.remove(min);
+                        }
                     }
-                    
                     break;
             }
-            
-            Collections.sort(list);
         }
-        
-        if(list.size() == 0)
-            return new int[]{0, 0};
-        else
-            return new int[]{list.get(list.size() - 1), list.get(0)};
+
+        if(maxHeap.isEmpty() && minHeap.isEmpty()) return new int[]{0, 0};
+        else return new int[]{maxHeap.poll(), minHeap.poll()};
     }
 }
