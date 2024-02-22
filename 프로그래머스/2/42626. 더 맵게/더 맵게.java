@@ -1,22 +1,23 @@
-import java.util.*;
+import java.util.PriorityQueue;
 
 class Solution {
     public int solution(int[] scoville, int K) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for(int i = 0; i < scoville.length; i++)
-            pq.add(scoville[i]);
-        
         int answer = 0;
-        while(pq.size() > 1 && pq.peek() < K){
-            int first = pq.poll();
-            int second = pq.poll();
-            pq.add(first + (second * 2));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int s : scoville) pq.add(s);
+
+        while (pq.peek() < K) {
+            if(pq.size() == 1 && pq.peek() < K) return -1;
+
+            int mix = mix(pq.poll(), pq.poll());
+            pq.add(mix);
             answer++;
         }
-        
-        if(pq.peek() < K)
-            return -1;
-        
+
         return answer;
+    }
+    
+    private int mix(int a, int b){
+        return a + (b * 2);
     }
 }
