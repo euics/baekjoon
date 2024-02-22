@@ -14,8 +14,8 @@ class Solution {
         });
 
         StringBuilder sb = new StringBuilder();
-        for(String number : str) sb.append(number);
-
+        for(int i = 0; i < str.length; i++) sb.append(str[i]);
+        
         if(sb.toString().startsWith("0")) return "0";
 
         return sb.toString();
