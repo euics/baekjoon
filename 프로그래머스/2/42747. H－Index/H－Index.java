@@ -1,19 +1,28 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 class Solution {
     public int solution(int[] citations) {
-        int answer = 0;
-        Arrays.sort(citations);
+        int n = citations.length;
+        Integer[] tmp = Arrays.stream(citations).boxed().toArray(Integer[]::new);
+        Arrays.sort(tmp, Collections.reverseOrder());
 
-        for (int i = 0; i < citations.length; i++) {
-            int h = citations.length - i;
+        int h = tmp[0], max = Integer.MIN_VALUE;
+        while(h >= 0) {
+            int cnt = 0;
 
-            if (citations[i] >= h) {
-                answer = h;
+            for(int i = 0; i < n; i++) {
+                if(citations[i] >= h) cnt++;
+            }
+
+            if(cnt >= h) {
+                max = h;
                 break;
             }
+
+            h--;
         }
 
-        return answer;
+        return max;
     }
 }
