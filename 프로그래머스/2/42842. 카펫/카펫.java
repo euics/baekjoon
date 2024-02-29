@@ -1,45 +1,19 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
     public int[] solution(int brown, int yellow) {
-        
-        for(int i = 1; i <= yellow; i++){
-            for(int j = i; j <= yellow; j++){
-                
-                if(i * j == yellow){
-                    
-                    int row = i + 2;
-                    int col = j + 2;
-                    
-                    if(row * col == yellow + brown)
-                        return new int[]{col, row};
-                    
+        List<Integer> answer = new ArrayList<>();
+
+        for(int y = 3; y <= brown; y++) {
+            for(int x = y; x <= brown; x++) {
+                if(x * y == brown + yellow && (x - 2) * (y - 2) == yellow) {
+                    answer.add(x);
+                    answer.add(y);
                 }
             }
         }
-        
-        return new int[]{0, 0};
+
+        return answer.stream().mapToInt(i -> i).toArray();
     }
 }
-
-/*
-
-yellow = 세로 * 가로
-
-brown = 세로 
-
-*/
-
-/*
-    n * m - yellow = brown;
-    b b b b
-    b y y b
-    b b b b
-
-    b b b b b b
-    b y y y y b
-    b y y y y b
-    b y y y y b
-    b y y y y b
-    b y y y y b
-    b y y y y b
-    b b b b b b
-*/
