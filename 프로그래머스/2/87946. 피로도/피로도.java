@@ -1,11 +1,10 @@
-import java.util.*;
-
 class Solution {
-    static int[] pm;
     static boolean[] bool;
+    static int[] permutation;
+
     public int solution(int k, int[][] dungeons) {
         int n = dungeons.length;
-        pm = new int[n];
+        permutation = new int[n];
         bool = new boolean[n];
 
         permutation(0, n, k, dungeons);
@@ -13,36 +12,35 @@ class Solution {
         return max;
     }
 
-    static int max = Integer.MIN_VALUE;
-
-    public void permutation(int L, int n, int k, int[][] dungeons){
-        if(L == n){
-            findMax(k, dungeons);
+    private void permutation(int L, int n, int k, int[][] dungeons) {
+        if(L == n) {
+            explore(k, dungeons);
 
             return;
         }
 
-        for(int i = 0; i < n; i++){
-            if(!bool[i]){
-                pm[L] = i;
+        for(int i = 0; i < n; i++) {
+            if(!bool[i]) {
                 bool[i] = true;
+                permutation[L] = i;
                 permutation(L + 1, n, k, dungeons);
                 bool[i] = false;
             }
         }
     }
 
-    public void findMax(int k, int[][] dungeons){
-        int cnt = 0;
-        int tmp = k;
+    static int max = Integer.MIN_VALUE;
 
-        for(int index : pm) {
-            if(tmp >= dungeons[index][0]){
-                tmp -= dungeons[index][1];
-                cnt++;
-            } else {
-                break;
-            }
+    private void explore(int k, int[][] dungeons) {
+        int tmp = k, cnt = 0;
+
+        for(int index : permutation) {
+
+            if(tmp < dungeons[index][0]) break;
+
+            tmp -= dungeons[index][1];
+            cnt++;
+
         }
 
         max = Math.max(max, cnt);
