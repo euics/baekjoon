@@ -9,11 +9,8 @@ class Solution {
     public int solution(int n, int[][] costs) {
         unf = new int[n];
         groupSize = new int[n];
-        for(int i = 0; i < n; i++) {
-            unf[i] = i;
-            groupSize[i] = 1;
-        }
-
+        init(n);
+        
         List<Edge> edge = new ArrayList<>();
         for(int[] cost : costs) edge.add(new Edge(cost[0], cost[1], cost[2]));
         Collections.sort(edge);
@@ -30,6 +27,13 @@ class Solution {
         }
         
         return answer;
+    }
+
+    private void init(int n) {
+        for(int i = 0; i < n; i++) {
+            unf[i] = i;
+            groupSize[i] = 1;
+        }
     }
 
     private int find(int v) {
@@ -50,13 +54,13 @@ class Solution {
 
 class Edge implements Comparable<Edge> {
     int v1, v2, cost;
-
+    
     public Edge(int v1, int v2, int cost) {
         this.v1 = v1;
         this.v2 = v2;
         this.cost = cost;
     }
-
+    
     @Override
     public int compareTo(Edge o) {
         return this.cost - o.cost;
