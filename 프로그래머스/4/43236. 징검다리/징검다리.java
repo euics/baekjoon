@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Arrays;
 
 class Solution {
     public int solution(int distance, int[] rocks, int n) {
@@ -6,24 +6,25 @@ class Solution {
         return binarySearch(distance, rocks, n);
     }
 
-    public int binarySearch(int distance, int[] rocks, int n){
+    public int binarySearch(int distance, int[] rocks, int n) {
+        int answer = Integer.MIN_VALUE;
+
         int left = 0;
         int right = distance;
-        int answer = 0;
 
-        while(left <= right){
+        while (left <= right) {
             int mid = (left + right) / 2;
+            int removedRock = 0;
             int prev = 0;
-            int removedRocks = 0;
 
-            for(int rock : rocks){
-                if(rock - prev < mid) removedRocks++;
+            for (int rock : rocks) {
+                if (rock - prev < mid) removedRock++;
                 else prev = rock;
             }
 
-            if(distance - prev < mid) removedRocks++;
+            if (distance - prev < mid) removedRock++;
 
-            if(removedRocks <= n){
+            if (removedRock <= n) {
                 answer = Math.max(answer, mid);
                 left = mid + 1;
             } else right = mid - 1;
