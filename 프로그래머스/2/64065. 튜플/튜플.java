@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
     public int[] solution(String s) {
@@ -7,9 +9,9 @@ class Solution {
 
         List<Integer> answer = new ArrayList<>();
         for (String tmp : str) {
-            String[] a = tmp.split(",");
-
-            for(String num : a){
+            String[] numbers = tmp.split(",");
+            
+            for(String num : numbers) {
                 if(!answer.contains(Integer.parseInt(num))) answer.add(Integer.parseInt(num));
             }
         }
