@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 class Solution {
-    static Map<String, Integer> dictionary = new HashMap<>();
-    static List<Integer> answer = new ArrayList<>();
+    static Map<String, Integer> dictionary;
 
     public int[] solution(String msg) {
         initDictionary();
-
+        
+        List<Integer> answer = new ArrayList<>();
         int idx = 0;
         while (idx < msg.length()) {
             StringBuilder sb = new StringBuilder();
@@ -22,7 +22,6 @@ class Solution {
             }
 
             answer.add(dictionary.get(sb.toString()));
-
             if(idx < msg.length()) dictionary.put(sb.toString() + msg.charAt(idx), dictionary.size() + 1);
         }
 
@@ -30,6 +29,7 @@ class Solution {
     }
 
     public void initDictionary() {
+        dictionary = new HashMap<>();
         for (int i = 0; i < 26; i++) dictionary.put(String.valueOf((char) ('A' + i)), i + 1);
     }
 }
