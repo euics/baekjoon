@@ -5,16 +5,16 @@ import java.util.Map;
 
 class Solution {
     static Map<String, Integer> dictionary;
+    List<Integer> answer = new ArrayList<>();
 
     public int[] solution(String msg) {
         initDictionary();
-        
-        List<Integer> answer = new ArrayList<>();
+
         int idx = 0;
-        while (idx < msg.length()) {
+        while(idx < msg.length()) {
             StringBuilder sb = new StringBuilder();
 
-            while (idx < msg.length()) {
+            while(idx < msg.length()) {
                 if(!dictionary.containsKey(sb.toString() + msg.charAt(idx))) break;
                 else sb.append(msg.charAt(idx));
 
@@ -30,6 +30,7 @@ class Solution {
 
     public void initDictionary() {
         dictionary = new HashMap<>();
+
         for (int i = 0; i < 26; i++) dictionary.put(String.valueOf((char) ('A' + i)), i + 1);
     }
 }
