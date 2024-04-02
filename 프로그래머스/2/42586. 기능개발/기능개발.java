@@ -5,23 +5,28 @@ import java.util.Queue;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        Queue<Integer> days = new LinkedList<>();
-        for (int i = 0; i < progresses.length; i++) {
-            int day = (100 - progresses[i]) / speeds[i];
-            if ((100 - progresses[i]) % speeds[i] != 0) day += 1;
-            days.add(day);
+        Queue<Integer> remainDays = new LinkedList<>();
+        int n = progresses.length;
+
+        for(int i = 0; i < n; i++) {
+            int days = 0;
+
+            if((100 - progresses[i]) % speeds[i] != 0) days = ((100 - progresses[i]) / speeds[i]) + 1;
+            else days = (100 - progresses[i]) / speeds[i];
+
+            remainDays.add(days);
         }
 
         List<Integer> answer = new ArrayList<>();
-        while (!days.isEmpty()) {
+        while(!remainDays.isEmpty()) {
+            int prevDays = remainDays.poll();
             int cnt = 1;
-            int cur = days.poll();
-
-            while (!days.isEmpty() && days.peek() <= cur) {
-                days.poll();
+            
+            while(!remainDays.isEmpty() && prevDays >= remainDays.peek()) {
+                remainDays.poll();
                 cnt++;
             }
-
+            
             answer.add(cnt);
         }
 
