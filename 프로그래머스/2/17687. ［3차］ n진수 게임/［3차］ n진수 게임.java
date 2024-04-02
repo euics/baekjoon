@@ -1,24 +1,22 @@
-import java.util.*;
-
 class Solution {
     public String solution(int n, int t, int m, int p) {
-        StringBuilder number = new StringBuilder();
-        number.append(0);
+        StringBuilder sb = new StringBuilder();
+        sb.append(0);
 
-        for(int i = 0; ; i++){
-            String num = convert(i, n);
+        for (int i = 0; ; i++) {
+            String num = convert(n, i);
 
-            if(number.toString().length() < t * m) number.append(num);
+            if(sb.toString().length() < t * m)  sb.append(num);
             else break;
         }
 
         StringBuilder answer = new StringBuilder();
 
-        for(int i = 0; i < number.length(); i++){
+        for(int i = 0; i < sb.toString().length(); i++) {
             if(t == 0) break;
-
-            if(i % m + 1 == p){
-                answer.append(number.toString().charAt(i));
+            
+            if(i % m == p - 1) {
+                answer.append(sb.toString().charAt(i));
                 t--;
             }
         }
@@ -26,35 +24,35 @@ class Solution {
         return answer.toString();
     }
 
-    public String convert(int num, int n) {
+    public String convert(int n, int num) {
         StringBuilder sb = new StringBuilder();
 
-        while(num > 0){
+        while (num > 0) {
             int remain = num % n;
-
             switch (remain) {
                 case 10:
-                    sb.insert(0, "A");
+                    sb.insert(0, 'A');
                     break;
                 case 11:
-                    sb.insert(0, "B");
+                    sb.insert(0, 'B');
                     break;
                 case 12:
-                    sb.insert(0, "C");
+                    sb.insert(0, 'C');
                     break;
                 case 13:
-                    sb.insert(0, "D");
+                    sb.insert(0, 'D');
                     break;
                 case 14:
-                    sb.insert(0, "E");
+                    sb.insert(0, 'E');
                     break;
                 case 15:
-                    sb.insert(0, "F");
+                    sb.insert(0, 'F');
                     break;
                 default:
-                    sb.insert(0, String.valueOf(remain));
+                    sb.insert(0, remain);
                     break;
             }
+
             num /= n;
         }
 
