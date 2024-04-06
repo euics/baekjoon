@@ -6,7 +6,7 @@ class Solution {
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
         for(int work : works) pq.add(work);
 
-        while(!pq.isEmpty()){
+        while(!pq.isEmpty()) {
             if(n == 0) break;
 
             int cur = pq.poll() - 1;
@@ -15,7 +15,7 @@ class Solution {
         }
 
         long answer = 0;
-        for(int x : pq) answer += Math.pow(x, 2);
+        while(!pq.isEmpty()) answer += Math.pow(pq.poll(), 2);
 
         return answer;
     }
