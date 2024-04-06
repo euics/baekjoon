@@ -1,21 +1,26 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        Map<String, Integer> info = new HashMap<>();
-        for (int i = 0; i < participant.length; i++) info.put(participant[i], info.getOrDefault(participant[i], 0) + 1);
+        Map<String, Integer> map = initMap(participant);
+        countCompletion(map, completion);
 
-        for(int i = 0; i < completion.length; i++) {
-            if(info.containsKey(completion[i])) {
-                info.put(completion[i], info.get(completion[i]) - 1);
+        return new ArrayList<>(map.keySet()).get(0);
+    }
 
-                if(info.get(completion[i]) == 0) info.remove(completion[i]);
-            }
+    public Map<String, Integer> initMap(String[] participants) {
+        Map<String, Integer> map = new HashMap<>();
+        for(String participant : participants) map.put(participant, map.getOrDefault(participant, 0) + 1);
+
+        return map;
+    }
+
+    public void countCompletion(Map<String, Integer> map, String[] completions) {
+        for(String completion : completions) {
+            if(map.containsKey(completion)) map.put(completion, map.get(completion) - 1);
+            if(map.get(completion) == 0) map.remove(completion);
         }
-
-        String answer = "";
-        for(String keySet : info.keySet()) answer = keySet;
-
-        return answer;
     }
 }
