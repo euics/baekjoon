@@ -3,11 +3,11 @@ import java.util.Map;
 
 class Solution {
     public int solution(String[][] clothes) {
-        Map<String, Integer> map = new HashMap<>();
-        for(int i = 0; i < clothes.length; i++) map.put(clothes[i][1], map.getOrDefault(clothes[i][1], 0) + 1);
+        Map<String, Integer> clothInfo = new HashMap<>();
+        for(String[] cloth : clothes) clothInfo.put(cloth[1], clothInfo.getOrDefault(cloth[1], 0) + 1);
 
         int answer = 1;
-        for(String key : map.keySet()) answer *= (map.get(key) + 1);
+        for(String keySet : clothInfo.keySet()) answer *= (clothInfo.get(keySet) + 1);
 
         return answer - 1;
     }
