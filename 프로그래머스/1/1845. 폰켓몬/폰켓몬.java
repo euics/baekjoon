@@ -9,4 +9,4 @@ class Solution {
         
         return set.size() <= n / 2 ? set.size() : n / 2;
     }
-}
+} 
