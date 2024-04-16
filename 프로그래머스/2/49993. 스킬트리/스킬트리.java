@@ -1,34 +1,27 @@
 class Solution {
-
     public int solution(String skill, String[] skill_trees) {
         int answer = 0;
 
         for(String skill_tree : skill_trees) {
+            int skillIndex = 0;
             boolean bool = true;
-            int lastIndex = -1;
 
             for(int i = 0; i < skill_tree.length(); i++) {
-                char cur = skill_tree.charAt(i);
-                int index = skill.indexOf(cur);
+                int index = skill.indexOf(skill_tree.charAt(i));
 
                 if(index == -1) continue;
 
-                if(index != lastIndex + 1) {
+                if(index != skillIndex) {
                     bool = false;
                     break;
                 }
 
-                lastIndex = index;
+                skillIndex = index + 1;
             }
 
-            if (bool) answer++;
+            if(bool) answer++;
         }
 
         return answer;
-    }
-
-    public static void main(String[] args) {
-        Solution T = new Solution();
-        System.out.println(T.solution("CBD", new String[]{"BACDE", "CBADF", "AECD", "BDA"}));
     }
 }
