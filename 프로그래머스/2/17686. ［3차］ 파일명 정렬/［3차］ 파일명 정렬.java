@@ -10,7 +10,7 @@ class Solution {
                 String[] file2 = splitFile(o2);
 
                 int headCompare = file1[0].compareToIgnoreCase(file2[0]);
-                if (headCompare == 0) {
+                if(headCompare == 0) {
                     int number1 = Integer.parseInt(file1[1]);
                     int number2 = Integer.parseInt(file2[1]);
 
