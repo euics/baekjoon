@@ -1,59 +1,48 @@
 import java.util.*;
 
 class Solution {
-    static Map<String, Integer> totalPlayTime;
-    static Map<String, PriorityQueue<SongInfo>> playTime;
-    static List<Integer> answer = new ArrayList<>();
-
     public int[] solution(String[] genres, int[] plays) {
-        initMap(genres, plays);
-        findId(sortGenres());
-
-        return answer.stream().mapToInt(i -> i).toArray();
-    }
-
-    public void initMap(String[] genres, int[] plays) {
         int n = genres.length;
-        totalPlayTime = new HashMap<>();
-        playTime = new HashMap<>();
-
-        for (int i = 0; i < n; i++) {
-            totalPlayTime.put(genres[i], totalPlayTime.getOrDefault(genres[i], 0) + plays[i]);
-            playTime.putIfAbsent(genres[i], new PriorityQueue<SongInfo>());
-            playTime.get(genres[i]).add(new SongInfo(i, plays[i]));
+        
+        Map<String, Integer> genrePlaysInfo = new HashMap<>();
+        Map<String, PriorityQueue<Genre>> map = new HashMap<>();
+        for(int i = 0; i < n; i++) {
+            genrePlaysInfo.put(genres[i], genrePlaysInfo.getOrDefault(genres[i], 0) + plays[i]);
+            if(!map.containsKey(genres[i])) map.put(genres[i], new PriorityQueue<>());
+            
+            map.get(genres[i]).add(new Genre(i, plays[i]));
         }
-    }
-
-    public List<String> sortGenres() {
-        List<String> sortedGenres = new ArrayList<>(totalPlayTime.keySet());
-        Collections.sort(sortedGenres, (a, b) -> totalPlayTime.get(b) - totalPlayTime.get(a));
-
-        return sortedGenres;
-    }
-
-    public void findId(List<String> sortedGenres) {
-        for (String genre : sortedGenres) {
-            PriorityQueue<SongInfo> pq = playTime.get(genre);
-
-            int idx = 0;
-            while (!pq.isEmpty() && idx < 2) {
-                answer.add(pq.poll().id);
-                idx++;
+        
+        List<String> keySet = new ArrayList<>(genrePlaysInfo.keySet());
+        Collections.sort(keySet, (a, b) -> genrePlaysInfo.get(b).compareTo(genrePlaysInfo.get(a)));
+        
+        List<Integer> answer = new ArrayList<>();
+        for(String key : keySet) {
+            int cnt = 0;
+            PriorityQueue<Genre> pq = map.get(key);
+            
+            while(!pq.isEmpty() && cnt < 2) {
+                Genre cur = pq.poll();
+                answer.add(cur.id);
+                cnt++;
             }
         }
+        
+        return answer.stream().mapToInt(i -> i).toArray();
     }
 }
 
-class SongInfo implements Comparable<SongInfo> {
-    int id, plays;
-
-    public SongInfo(int id, int plays) {
+class Genre implements Comparable<Genre>{
+    int id, play;
+    
+    public Genre(int id, int play) {
         this.id = id;
-        this.plays = plays;
+        this.play = play;
     }
-
+    
     @Override
-    public int compareTo(SongInfo o) {
-        return o.plays - this.plays;
+    public int compareTo(Genre o) {
+        if(this.play == o.play) return this.id - o.id;
+        else return o.play - this.play;
     }
 }
