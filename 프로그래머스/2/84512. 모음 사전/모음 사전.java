@@ -1,25 +1,24 @@
 import java.util.*;
 
 class Solution {
-    static Set<String> set = new HashSet<>();
-    static List<String> list = new ArrayList<>();
-
     public int solution(String word) {
-        for(int i = 1; i <= 5; i++) makeDictionary(0, i, "", "AEIOU");
+        for(int length = 1; length <= 5; length++) setDictionary(0, length, word, "AEIOU", "");
 
-        list.addAll(set);
+        List<String> list = new ArrayList<>(set);
         Collections.sort(list);
 
         return list.indexOf(word) + 1;
     }
 
-    private void makeDictionary(int L, int length, String str, String vowel) {
+    static Set<String> set = new HashSet<>();
+
+    private void setDictionary(int L, int length, String word, String vowel, String str) {
         if(L == length) {
             set.add(str);
 
             return;
         }
 
-        for(int i = 0; i < vowel.length(); i++) makeDictionary(L + 1, length, str + vowel.charAt(i), vowel);
+        for(int i = 0; i < vowel.length(); i++) setDictionary(L + 1, length, word, vowel, str + vowel.charAt(i));
     }
 }
