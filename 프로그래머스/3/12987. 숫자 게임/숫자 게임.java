@@ -5,17 +5,14 @@ class Solution {
         Arrays.sort(A);
         Arrays.sort(B);
 
-        int score = 0, aIdx = 0, bIdx = 0, n = A.length;
-        while(bIdx < n) {
-            if(A[aIdx] < B[bIdx]) {
+        int score = 0, aIndex = 0, bIndex = 0;
+        while(bIndex < B.length) {
+            if(A[aIndex] < B[bIndex]) {
                 score++;
-                aIdx++;
-                bIdx++;
-            } else if(A[aIdx] > B[bIdx]) {
-                bIdx++;
-            } else {
-                bIdx++;
+                aIndex++;
             }
+
+            bIndex++;
         }
 
         return score;
