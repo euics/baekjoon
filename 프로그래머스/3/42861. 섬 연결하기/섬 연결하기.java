@@ -7,41 +7,42 @@ class Solution {
     static int[] groupSize;
 
     public int solution(int n, int[][] costs) {
-        unf = new int[n];
-        groupSize = new int[n];
         init(n);
-        
-        List<Edge> edge = new ArrayList<>();
-        for(int[] cost : costs) edge.add(new Edge(cost[0], cost[1], cost[2]));
-        Collections.sort(edge);
-        
+
+        List<Edge> edges = new ArrayList<>();
+        for(int[] cost : costs) edges.add(new Edge(cost[0], cost[1], cost[2]));
+        Collections.sort(edges);
+
         int answer = 0;
-        for(Edge o : edge) {
-            int fv1 = find(o.v1);
-            int fv2 = find(o.v2);
-            
+        for(Edge edge : edges) {
+            int fv1 = find(edge.v1);
+            int fv2 = find(edge.v2);
+
             if(fv1 != fv2) {
-                union(o.v1, o.v2);
-                answer += o.cost;
+                union(edge.v1, edge.v2);
+                answer += edge.cost;
             }
         }
         
         return answer;
     }
 
-    private void init(int n) {
+    public void init(int n) {
+        unf = new int[n];
+        groupSize = new int[n];
+
         for(int i = 0; i < n; i++) {
             unf[i] = i;
             groupSize[i] = 1;
         }
     }
 
-    private int find(int v) {
+    public int find(int v) {
         if(v == unf[v]) return unf[v];
         else return unf[v] = find(unf[v]);
     }
 
-    private void union(int a, int b) {
+    public void union(int a, int b) {
         int fa = find(a);
         int fb = find(b);
 
@@ -54,13 +55,12 @@ class Solution {
 
 class Edge implements Comparable<Edge> {
     int v1, v2, cost;
-    
     public Edge(int v1, int v2, int cost) {
         this.v1 = v1;
         this.v2 = v2;
         this.cost = cost;
     }
-    
+
     @Override
     public int compareTo(Edge o) {
         return this.cost - o.cost;
