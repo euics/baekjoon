@@ -5,44 +5,43 @@ class Solution {
     public int solution(int[] queue1, int[] queue2) {
         int answer = 0;
 
-        Queue<Integer> a = initQueue(queue1);
-        Queue<Integer> b = initQueue(queue2);
+        Queue<Integer> q1 = initQueue(queue1);
+        Queue<Integer> q2 = initQueue(queue2);
+        long sum1 = findSum(queue1);
+        long sum2 = findSum(queue2);
 
-        long sum1 = sumQueue(a);
-        long sum2 = sumQueue(b);
-
-        if((sum1 + sum2) % 2 != 0) return -1;
+        if ((sum1 + sum2) % 2 != 0) return -1;
 
         while (true) {
-            if(answer > (a.size() + b.size()) * 2) return -1;
+            if (answer > (q1.size() + q2.size()) * 2) return -1;
 
-            if(sum1 == sum2) break;
-            else if(sum1 < sum2) {
-                sum1 += b.peek();
-                sum2 -= b.peek();
-                a.add(b.poll());
+            if (sum1 == sum2) break;
+            else if (sum1 < sum2) {
+                sum1 += q2.peek();
+                sum2 -= q2.peek();
+                q1.add(q2.poll());
             } else {
-                sum1 -= a.peek();
-                sum2 += a.peek();
-                b.add(a.poll());
+                sum1 -= q1.peek();
+                sum2 += q1.peek();
+                q2.add(q1.poll());
             }
-
+            
             answer++;
         }
-
+        
         return answer;
     }
 
-    public Queue<Integer> initQueue(int[] arr) {
+    public Queue<Integer> initQueue(int[] queue) {
         Queue<Integer> q = new LinkedList<>();
-        for(int num : arr) q.add(num);
+        for (int i = 0; i < queue.length; i++) q.add(queue[i]);
 
         return q;
     }
 
-    public long sumQueue(Queue<Integer> q) {
+    public long findSum(int[] queue) {
         int sum = 0;
-        for(int value : q) sum += value;
+        for (int i = 0; i < queue.length; i++) sum += queue[i];
 
         return sum;
     }
