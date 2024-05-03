@@ -1,7 +1,7 @@
 class Solution {
+    static int MOD = 1_000_000_007;
+    
     public int solution(int n) {
-        int MOD = 1_000_000_007;
-
         int[] fibo = new int[n + 1];
         fibo[1] = 1;
         fibo[2] = 2;
