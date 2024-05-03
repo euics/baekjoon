@@ -9,8 +9,8 @@ class Solution {
 
     public void quad(int[][] arr, int x, int y, int size) {
         if(zip(arr, x, y, size, arr[y][x])) {
-            if(arr[y][x] == 1) answer[1]++;
             if(arr[y][x] == 0) answer[0]++;
+            if(arr[y][x] == 1) answer[1]++;
 
             return;
         }
@@ -18,7 +18,7 @@ class Solution {
         quad(arr, x, y, size / 2);
         quad(arr, x, y + size / 2, size / 2);
         quad(arr, x + size / 2, y, size / 2);
-        quad(arr, x +  size / 2, y + size / 2, size / 2);
+        quad(arr,x + size / 2, y + size / 2, size / 2);
     }
 
     public boolean zip(int[][] arr, int x, int y, int size, int val) {
