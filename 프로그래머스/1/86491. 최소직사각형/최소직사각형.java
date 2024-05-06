@@ -1,16 +1,15 @@
 class Solution {
     public int solution(int[][] sizes) {
-        int maxW = Integer.MIN_VALUE;
-        int maxH = Integer.MIN_VALUE;
+        int rowSize = Integer.MIN_VALUE, colSize = Integer.MIN_VALUE;
         
-        for(int i = 0; i < sizes.length; i++) {
-            int w = Math.max(sizes[i][0], sizes[i][1]);
-            int h = Math.min(sizes[i][0], sizes[i][1]);
-
-            maxW = Math.max(maxW, w);
-            maxH = Math.max(maxH, h);
+        for(int[] size : sizes) {
+            int row = Math.max(size[0], size[1]);
+            int col = Math.min(size[0], size[1]);
+            
+            rowSize = Math.max(row, rowSize);
+            colSize = Math.max(col, colSize);
         }
         
-        return maxW * maxH;
+        return rowSize * colSize;
     }
 }
