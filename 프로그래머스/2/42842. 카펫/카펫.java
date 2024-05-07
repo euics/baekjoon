@@ -1,19 +1,20 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Solution {
     public int[] solution(int brown, int yellow) {
-        List<Integer> answer = new ArrayList<>();
-
-        for(int y = 3; y <= brown; y++) {
-            for(int x = y; x <= brown; x++) {
+        int[] answer = new int[2];
+        
+        for(int x = 1; ; x++) {
+            boolean bool = false;
+            for(int y = 1; y <= x; y++) {
                 if(x * y == brown + yellow && (x - 2) * (y - 2) == yellow) {
-                    answer.add(x);
-                    answer.add(y);
+                    bool = true;
+                    answer[0] = x;
+                    answer[1] = y;
                 }
             }
+            
+            if(bool) break;
         }
-
-        return answer.stream().mapToInt(i -> i).toArray();
+        
+        return answer;
     }
 }
