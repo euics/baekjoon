@@ -2,29 +2,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 class Solution {
-    Set<Set<String>> result = new HashSet<>();
-
     public int solution(String[] user_id, String[] banned_id) {
-        boolean[] bool = new boolean[user_id.length];
-        DFS(user_id, banned_id, 0, bool, new HashSet<String>());
-
+        DFS(user_id, banned_id, new boolean[user_id.length], 0, new HashSet<String>());
+        
         return result.size();
     }
-
-    public void DFS(String[] user_id, String[] banned_id, int index, boolean[] bool, Set<String> current) {
+    
+    static Set<Set<String>> result = new HashSet<>();
+    
+    public void DFS(String[] user_id, String[] banned_id, boolean[] bool, int index, Set<String> cur) {
         if(index == banned_id.length) {
-            result.add(new HashSet<>(current));
+            result.add(new HashSet<>(cur));
+            
             return;
         }
-
+        
         String pattern = banned_id[index].replace("*", ".");
         for(int i = 0; i < user_id.length; i++) {
             if(!bool[i] && user_id[i].matches(pattern)) {
                 bool[i] = true;
-                current.add(user_id[i]);
-                DFS(user_id, banned_id, index + 1, bool, current);
+                cur.add(user_id[i]);
+                DFS(user_id, banned_id, bool, index + 1, cur);
                 bool[i] = false;
-                current.remove(user_id[i]);
+                cur.remove(user_id[i]);
             }
         }
     }
