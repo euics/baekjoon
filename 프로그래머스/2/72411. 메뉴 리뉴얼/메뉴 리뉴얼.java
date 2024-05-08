@@ -1,50 +1,48 @@
 import java.util.*;
 
 class Solution {
+    
     public String[] solution(String[] orders, int[] course) {
-        Map<String, Integer> map = new HashMap<>();
-
         for(int i = 0; i < orders.length; i++) {
             char[] ch = orders[i].toCharArray();
             Arrays.sort(ch);
             orders[i] = new String(ch);
         }
-
-        for(String order : orders) combination(order, "", 0, map);
-
+        
+        Map<String, Integer> map = new HashMap<>();
+        for(String order : orders) permutation(order, "", 0, map);
+        
         List<String> answer = new ArrayList<>();
-        for(int len : course) {
-            List<String> candidates = new ArrayList<>();
+        for(int length : course) {
             int max = 2;
-
-            for(String combinationKey : map.keySet()) {
-                if(len == combinationKey.length() && map.get(combinationKey) >= max) {
-                    if(map.get(combinationKey) > max) {
-                        max = map.get(combinationKey);
-                        candidates.clear();
+            List<String> combination = new ArrayList<>();
+            
+            for(String key : map.keySet()) {
+                
+                if(length == key.length() && map.get(key) >= max) {
+                    if(max < map.get(key)) {
+                        max = map.get(key);
+                        combination.clear();
                     }
-
-                    candidates.add(combinationKey);
+                    combination.add(key);
                 }
             }
-
-            answer.addAll(candidates);
+            
+            answer.addAll(combination);
         }
-
+        
         Collections.sort(answer);
         return answer.stream().toArray(String[]::new);
     }
-
-    public void combination(String order, String current, int index, Map<String, Integer> map) {
-        if(index == order.length()) {
-            if(current.length() >= 2) {
-                map.put(current, map.getOrDefault(current, 0) + 1);
-            }
-
+    
+    public void permutation(String orders, String str, int index, Map<String, Integer> map) {
+        if(index == orders.length()) {
+            map.put(str, map.getOrDefault(str, 0) + 1);
+            
             return;
         }
-
-        combination(order, current + order.charAt(index), index + 1, map);
-        combination(order, current, index + 1, map);
+        
+        permutation(orders, str + orders.charAt(index), index + 1, map);
+        permutation(orders, str, index + 1, map);
     }
 }
