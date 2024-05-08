@@ -1,19 +1,21 @@
 class Solution {
     public int solution(int k, int[][] dungeons) {
-        dis = new int[dungeons.length];
+        indexes = new int[dungeons.length];
         bool = new boolean[dungeons.length];
+        max = Integer.MIN_VALUE;
+        
         permutation(0, k, dungeons);
         
         return max;
     }
     
-    static int[] dis;
+    static int[] indexes;
     static boolean[] bool;
-    static int max = Integer.MIN_VALUE;
+    static int max;
     
     public void permutation(int L, int k, int[][] dungeons) {
         if(L == dungeons.length) {
-            max = Math.max(max, countPassDungeons(k, dungeons));
+            max = Math.max(max, countPass(k, dungeons));
             
             return;
         }
@@ -21,26 +23,26 @@ class Solution {
         for(int i = 0; i < dungeons.length; i++) {
             if(!bool[i]) {
                 bool[i] = true;
-                dis[L] = i;
+                indexes[L] = i;
                 permutation(L + 1, k, dungeons);
                 bool[i] = false;
             }
-        }        
+        }
     }
     
-    public int countPassDungeons(int k, int[][] dungeons) {
-        int tmp = k, count = 0;
+    public int countPass(int k, int[][] dungeons) {
+        int tmp = k, cnt = 0;
         
-        for(int index : dis) {
+        for(int index : indexes) {
             if(tmp >= dungeons[index][0]) {
                 tmp -= dungeons[index][1];
             } else {
                 break;
             }
             
-            count++;
+            cnt++;
         }
         
-        return count;
+        return cnt;
     }
 }
