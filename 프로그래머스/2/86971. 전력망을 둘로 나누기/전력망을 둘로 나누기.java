@@ -2,7 +2,7 @@ class Solution {
     static int[] unf, groupSize;
     
     public int solution(int n, int[][] wires) {
-        int min = Integer.MAX_VALUE;
+        int answer = Integer.MAX_VALUE;
         
         for(int i = 0; i < wires.length; i++) {
             init(n);
@@ -13,15 +13,16 @@ class Solution {
                 union(wires[j][0], wires[j][1]);
             }
             
-            min = Math.min(min, Math.abs(n - 2 * groupSize[find(1)]));
+            answer = Math.min(answer, Math.abs(n - 2 * groupSize[find(1)]));
         }
         
-        return min;
+        return answer;
     }
     
     public void init(int n) {
         unf = new int[n + 1];
         groupSize = new int[n + 1];
+        
         for(int i = 1; i <= n; i++) {
             unf[i] = i;
             groupSize[i] = 1;
@@ -42,4 +43,5 @@ class Solution {
             groupSize[fb] += groupSize[fa];
         }
     }
+
 }
