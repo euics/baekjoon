@@ -1,29 +1,28 @@
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int[] tmp = new int[n];
-        Arrays.fill(tmp, 1);
-        for(int x : lost) tmp[x - 1]--;
-        for(int x : reserve) tmp[x - 1]++;
-
+        int[] info = new int[n];
+        Arrays.fill(info, 1);
+        for(int i = 0; i < reserve.length; i++) info[reserve[i] - 1]++;
+        for(int i = 0; i < lost.length; i++) info[lost[i] - 1]--;
+        
         for(int i = 0; i < n; i++) {
-            if(tmp[i] == 0) {
-                if(i - 1 >= 0 && tmp[i - 1] > 1){
-                    tmp[i - 1]--;
-                    tmp[i]++;
-                } else if(i + 1 < n && tmp[i + 1] > 1) {
-                    tmp[i + 1]--;
-                    tmp[i]++;
-                }
+            if(i - 1 >= 0 && info[i] > 1 && info[i - 1] == 0) {
+                info[i]--;
+                info[i - 1]++;
+            }
+            if(i + 1 < n && info[i] > 1 && info[i + 1] == 0) {
+                info[i]--;
+                info[i + 1]++;
             }
         }
-
-        int answer = 0;
-        for(int x : tmp) {
-            if(x >= 1) answer++;
+        
+        int cnt = 0;
+        for(int i = 0; i < n; i++) {
+            if(info[i] >= 1) cnt++;
         }
-
-        return answer;
+        
+        return cnt;
     }
 }
