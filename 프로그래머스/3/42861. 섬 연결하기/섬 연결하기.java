@@ -1,68 +1,58 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 class Solution {
-    static int[] unf;
-    static int[] groupSize;
-
+    static int[] unf, groupSize;
+    
     public int solution(int n, int[][] costs) {
         init(n);
-
-        List<Edge> edges = new ArrayList<>();
-        for(int[] cost : costs) edges.add(new Edge(cost[0], cost[1], cost[2]));
-        Collections.sort(edges);
-
+        PriorityQueue<int[]> pq = initQueue(costs);
+        
         int answer = 0;
-        for(Edge edge : edges) {
-            int fv1 = find(edge.v1);
-            int fv2 = find(edge.v2);
-
+        while(!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int fv1 = find(cur[0]);
+            int fv2 = find(cur[1]);
+            
             if(fv1 != fv2) {
-                union(edge.v1, edge.v2);
-                answer += edge.cost;
+                union(cur[0], cur[1]);
+                answer += cur[2];
             }
         }
         
         return answer;
     }
-
+    
     public void init(int n) {
         unf = new int[n];
         groupSize = new int[n];
-
         for(int i = 0; i < n; i++) {
             unf[i] = i;
             groupSize[i] = 1;
         }
     }
-
+    
+    public PriorityQueue<int[]> initQueue(int[][] costs) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);        
+        
+        for(int[] cost : costs) {
+            pq.add(new int[]{cost[0], cost[1], cost[2]});
+        }
+        
+        return pq;
+    }
+    
     public int find(int v) {
         if(v == unf[v]) return unf[v];
         else return unf[v] = find(unf[v]);
     }
-
+    
     public void union(int a, int b) {
         int fa = find(a);
         int fb = find(b);
-
+        
         if(fa != fb) {
             unf[fa] = fb;
             groupSize[fb] += groupSize[fa];
         }
-    }
-}
-
-class Edge implements Comparable<Edge> {
-    int v1, v2, cost;
-    public Edge(int v1, int v2, int cost) {
-        this.v1 = v1;
-        this.v2 = v2;
-        this.cost = cost;
-    }
-
-    @Override
-    public int compareTo(Edge o) {
-        return this.cost - o.cost;
     }
 }
