@@ -1,79 +1,75 @@
 import java.util.*;
 
 class Solution {
-    static ArrayList<ArrayList<Edge>> graph;
-    static int[] dis;
+	static ArrayList<ArrayList<Edge>> graph;
+	static int[] costs;
 
-    public int solution(int n, int[][] edge) {
-        initDis(n);
-        initGraph(n, edge);
-        dijkstra();
-        
-        return getMaxLengthNode(n, getMaxLength(n));
-    }
+	public int solution(int n, int[][] edge) {
+		init(n, edge);
+		dijkstra(1);
+		int max = findMax(n);
 
-    public void initDis(int n) {
-        dis = new int[n + 1];
-        Arrays.fill(dis, Integer.MAX_VALUE);
-    }
+		return countMax(n, max);
+	}
 
-    public void initGraph(int n, int[][] edge) {
-        graph = new ArrayList<>();
-        for (int i = 0; i <= n; i++) graph.add(new ArrayList<>());
+	public void init(int n, int[][] edges) {
+		costs = new int[n + 1];
+		Arrays.fill(costs, Integer.MAX_VALUE);
 
-        for (int i = 0; i < edge.length; i++) {
-            int v1 = edge[i][0];
-            int v2 = edge[i][1];
+		graph = new ArrayList<>();
+		for(int i = 0; i <= n; i++) graph.add(new ArrayList<Edge>());
 
-            graph.get(v1).add(new Edge(v2, 1));
-            graph.get(v2).add(new Edge(v1, 1));
-        }
-    }
+		for(int[] edge : edges) {
+			graph.get(edge[0]).add(new Edge(edge[1], 1));
+			graph.get(edge[1]).add(new Edge(edge[0], 1));
+		}
+	}
 
-    public void dijkstra() {
-        Queue<Edge> q = new LinkedList<>();
-        q.add(new Edge(1, 0));
-        dis[1] = 0;
+	public void dijkstra(int v) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(v, 0));
+		costs[v] = 0;
 
-        while (!q.isEmpty()) {
-            Edge cur = q.poll();
+		while (!pq.isEmpty()) {
+			Edge cur = pq.poll();
 
-            for(Edge o : graph.get(cur.v)) {
-                if(dis[o.v] > cur.c + o.c) {
-                    dis[o.v] = cur.c + o.c;
-                    q.add(new Edge(o.v, cur.c + o.c));
-                }
-            }
-        }
-    }
+			if(costs[cur.v] < cur.c) continue;
 
-    public int getMaxLength(int n) {
-        int max = Integer.MIN_VALUE;
-        for(int i = 1; i <= n; i++) max = Math.max(max, dis[i]);
-
-        return max;
-    }
-
-    public int getMaxLengthNode(int n, int max) {
-        int cnt = 0;
-        for(int i = 1; i <= n; i++) {
-            if(dis[i] == max) cnt++;
-        }
-        
-        return cnt;
-    }
+			for(Edge o : graph.get(cur.v)) {
+				if(costs[o.v] > cur.c + o.c) {
+					costs[o.v] = cur.c + o.c;
+					pq.add(new Edge(o.v, cur.c + o.c));
+				}
+			}
+		}
+	}
+	
+	public int findMax(int n) {
+		int max = Integer.MIN_VALUE;
+		for(int i = 1; i <= n; i++) max = Math.max(max, costs[i]);
+		
+		return max;
+	}
+	
+	public int countMax(int n, int max) {
+		int cnt = 0;
+		for(int i = 1; i <= n; i++) {
+			if(costs[i] == max) cnt++;
+		}
+		
+		return cnt;
+	}
 }
 
 class Edge implements Comparable<Edge> {
-    int v, c;
+	int v, c;
+	public Edge(int v, int c) {
+		this.v = v;
+		this.c = c;
+	}
 
-    public Edge(int v, int c) {
-        this.v = v;
-        this.c = c;
-    }
-
-    @Override
-    public int compareTo(Edge o) {
-        return this.c - o.c;
-    }
+	@Override
+	public int compareTo(Edge o) {
+		return this.c - o.c;
+	}
 }
