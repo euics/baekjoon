@@ -1,36 +1,44 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class Solution {
-    static Map<String, Integer> dictionary;
-    List<Integer> answer = new ArrayList<>();
+	static Map<String, Integer> dictionary;
 
-    public int[] solution(String msg) {
-        initDictionary();
+	public int[] solution(String msg) {
+		makeDictionary();
 
-        int idx = 0;
-        while(idx < msg.length()) {
-            StringBuilder sb = new StringBuilder();
+		int key = 27, pointer = 0;
+		char[] message = msg.toCharArray();
+		List<Integer> answer = new ArrayList<>();
+		while (pointer < message.length) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(message[pointer]);
 
-            while(idx < msg.length()) {
-                if(!dictionary.containsKey(sb.toString() + msg.charAt(idx))) break;
-                else sb.append(msg.charAt(idx));
+			while (pointer + 1 < message.length && dictionary.containsKey(sb.toString() + message[pointer + 1])) {
+				sb.append(message[pointer + 1]);
+				pointer++;
+			}
 
-                idx++;
-            }
+			answer.add(dictionary.get(sb.toString()));
 
-            answer.add(dictionary.get(sb.toString()));
-            if(idx < msg.length()) dictionary.put(sb.toString() + msg.charAt(idx), dictionary.size() + 1);
-        }
+			if (pointer + 1 < message.length) {
+				sb.append(message[pointer + 1]);
+			}
+			pointer++;
 
-        return answer.stream().mapToInt(i -> i).toArray();
-    }
+			dictionary.put(sb.toString(), key++);
+		}
 
-    public void initDictionary() {
-        dictionary = new HashMap<>();
+		return answer.stream().mapToInt(i -> i).toArray();
+	}
 
-        for (int i = 0; i < 26; i++) dictionary.put(String.valueOf((char) ('A' + i)), i + 1);
-    }
+	public void makeDictionary() {
+		dictionary = new HashMap<>();
+
+		int key = 1;
+		char value = 'A';
+
+		for (int i = key; i <= 26; i++) {
+			dictionary.put(String.valueOf((char)(value + i - 1)), i);
+		}
+	}
 }
