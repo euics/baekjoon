@@ -1,61 +1,65 @@
 class Solution {
-    public String solution(int n, int t, int m, int p) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(0);
+	public String solution(int n, int t, int m, int p) {
+		StringBuilder sb = new StringBuilder();
+		String convert = convert(n, m, t);
 
-        for (int i = 0; ; i++) {
-            String num = convert(n, i);
+		int cnt = 0, pointer = 0;
+		while (cnt < t) {
+			if(pointer % m + 1 == p) {
+				sb.append(convert.charAt(pointer));
+				cnt++;
+			}
 
-            if(sb.toString().length() < t * m)  sb.append(num);
-            else break;
-        }
+			pointer++;
+		}
 
-        StringBuilder answer = new StringBuilder();
+		return sb.toString();
+	}
 
-        for(int i = 0; i < sb.toString().length(); i++) {
-            if(t == 0) break;
-            
-            if(i % m == p - 1) {
-                answer.append(sb.toString().charAt(i));
-                t--;
-            }
-        }
+	public String convert(int n, int m, int t) {
+		int num = 1;
+		StringBuilder convert = new StringBuilder();
+		convert.append(0);
 
-        return answer.toString();
-    }
+		while (convert.toString().length() <= m * t) {
+			StringBuilder sb = new StringBuilder();
+			int tmp = num;
 
-    public String convert(int n, int num) {
-        StringBuilder sb = new StringBuilder();
+			while (tmp > 0) {
+				int remain = tmp % n;
+				if (remain >= 10) {
+					switch (remain) {
+						case 10:
+							sb.insert(0, 'A');
+							break;
+						case 11:
+							sb.insert(0, 'B');
+							break;
+						case 12:
+							sb.insert(0, 'C');
+							break;
+						case 13:
+							sb.insert(0, 'D');
+							break;
+						case 14:
+							sb.insert(0, 'E');
+							break;
+						case 15:
+							sb.insert(0,
+								'F');
+							break;
+					}
+				} else {
+					sb.insert(0, remain);
+				}
 
-        while (num > 0) {
-            int remain = num % n;
-            switch (remain) {
-                case 10:
-                    sb.insert(0, 'A');
-                    break;
-                case 11:
-                    sb.insert(0, 'B');
-                    break;
-                case 12:
-                    sb.insert(0, 'C');
-                    break;
-                case 13:
-                    sb.insert(0, 'D');
-                    break;
-                case 14:
-                    sb.insert(0, 'E');
-                    break;
-                case 15:
-                    sb.insert(0, 'F');
-                    break;
-                default:
-                    sb.insert(0, remain);
-                    break;
-            }
+				tmp /= n;
+			}
 
-            num /= n;
-        }
+			convert.append(sb);
+			num++;
+		}
 
-        return sb.toString();
-    }
+		return convert.toString();
+	}
 }
