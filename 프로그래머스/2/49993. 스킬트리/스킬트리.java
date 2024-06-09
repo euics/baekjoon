@@ -1,27 +1,27 @@
+import java.util.*;
+
 class Solution {
-    public int solution(String skill, String[] skill_trees) {
-        int answer = 0;
+	public int solution(String skill, String[] skill_trees) {
+		int answer = 0;
 
-        for(String skill_tree : skill_trees) {
-            int skillIndex = 0;
-            boolean bool = true;
+		for (String skillTree : skill_trees) {
+			Queue<Character> skillDictionary = new LinkedList<>();
+			for (char ch : skill.toCharArray())
+				skillDictionary.add(ch);
 
-            for(int i = 0; i < skill_tree.length(); i++) {
-                int index = skill.indexOf(skill_tree.charAt(i));
+			boolean bool = true;
+			for (char ch : skillTree.toCharArray()) {
+				if (!skillDictionary.isEmpty() && skillDictionary.contains(ch)) {
+					if(skillDictionary.peek() == ch) skillDictionary.poll();
+					else bool = false;
+				}
+				
+				if(!bool) break;
+			}
+			
+			if(bool) answer++;
+		}
 
-                if(index == -1) continue;
-
-                if(index != skillIndex) {
-                    bool = false;
-                    break;
-                }
-
-                skillIndex = index + 1;
-            }
-
-            if(bool) answer++;
-        }
-
-        return answer;
-    }
+		return answer;
+	}
 }
