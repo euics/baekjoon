@@ -4,20 +4,39 @@ import java.util.List;
 import java.util.Map;
 
 class Solution {
-    public String[] solution(String[] records) {
-        Map<String, String> map = new HashMap<>();
-        for(String record : records) {
-            if(record.split(" ")[0].equals("Leave")) continue;
+	static Map<String, String> recordMap = new HashMap<>();
 
-            map.put(record.split(" ")[1], record.split(" ")[2]);
-        }
+	public String[] solution(String[] record) {
+		for (int i = 0; i < record.length; i++) {
+			String enterAndExit = record[i].split(" ")[0];
 
-        List<String> answer = new ArrayList<>();
-        for(String record : records) {
-            if(record.split(" ")[0].equals("Enter")) answer.add(map.get(record.split(" ")[1]) + "님이 들어왔습니다.");
-            if(record.split(" ")[0].equals("Leave")) answer.add(map.get(record.split(" ")[1]) + "님이 나갔습니다.");
-        }
+			if (enterAndExit.equals("Enter") || enterAndExit.equals("Change")) {
+				String uid = record[i].split(" ")[1];
+				String nickName = record[i].split(" ")[2];
 
-        return answer.stream().toArray(String[]::new);
-    }
+				recordMap.put(uid, nickName);
+			}
+		}
+
+		List<String> answer = new ArrayList<>();
+		for (int i = 0; i < record.length; i++) {
+			String enterAndExit = record[i].split(" ")[0];
+
+			if (enterAndExit.equals("Enter")) {
+				StringBuilder sb = new StringBuilder();
+				String uid = record[i].split(" ")[1];
+				sb.append(recordMap.get(uid)).append("님이 들어왔습니다.");
+				answer.add(sb.toString());
+			}
+
+			if (enterAndExit.equals("Leave")) {
+				StringBuilder sb = new StringBuilder();
+				String uid = record[i].split(" ")[1];
+				sb.append(recordMap.get(uid)).append("님이 나갔습니다.");
+				answer.add(sb.toString());
+			}
+		}
+
+		return answer.stream().toArray(String[]::new);
+	}
 }
