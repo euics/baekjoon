@@ -1,48 +1,36 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 class Solution {
-    public int solution(String[][] book_time) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
-        for(String[] book : book_time) pq.add(changeTimeFormat(book));
+	public int solution(String[][] book_time) {
+		int[][] bookTimeIntegerFormat = new int[book_time.length][2];
+		for (int i = 0; i < book_time.length; i++)
+			bookTimeIntegerFormat[i] = changeTimeFormat(book_time[i]);
+		Arrays.sort(bookTimeIntegerFormat, (a, b) -> a[0] - b[0]);
 
-        Map<Integer, Integer> roomsInfo = new HashMap<>();
-        int roomNumber = 1;
-        while(!pq.isEmpty()) {
-            int[] curTime = pq.poll();
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < bookTimeIntegerFormat.length; i++) {
+			if (!pq.isEmpty() && pq.peek()[1] + 10 <= bookTimeIntegerFormat[i][0])
+				pq.poll();
 
-            if(roomsInfo.size() == 0) roomsInfo.put(roomNumber++, curTime[1]);
-            else changeRooms(roomsInfo, curTime, roomNumber++);
-        }
+			pq.add(bookTimeIntegerFormat[i]);
+			max = Math.max(max, pq.size());
+		}
 
-        return roomsInfo.size();
-    }
+		return max;
+	}
 
-    public int[] changeTimeFormat(String[] book_time) {
-        int[] time = new int[2];
+	public int[] changeTimeFormat(String[] bookTime) {
+		return new int[] {
+			Integer.parseInt(bookTime[0].split(":")[0]) * 60 + Integer.parseInt(bookTime[0].split(":")[1]),
+			Integer.parseInt(bookTime[1].split(":")[0]) * 60 + Integer.parseInt(bookTime[1].split(":")[1]),
+		};
+	}
 
-        for(int i = 0; i < 2; i++) {
-            String hour = book_time[i].split(":")[0];
-            String minute = book_time[i].split(":")[1];
-            if(i == 1) time[i] = Integer.parseInt(hour) * 60 + (Integer.parseInt(minute) + 10);
-            else time[i] = Integer.parseInt(hour) * 60 + Integer.parseInt(minute);
-        }
-
-        return time;
-    }
-
-    public void changeRooms(Map<Integer, Integer> roomsInfo, int[] curTime, int roomNumber) {
-        boolean bool = false;
-
-        for(int room : roomsInfo.keySet()) {
-            if(roomsInfo.get(room) <= curTime[0]) {
-                roomsInfo.put(room, curTime[1]);
-                bool = true;
-                break;
-            }
-        }
-
-        if(!bool) roomsInfo.put(roomNumber, curTime[1]);
-    }
+	public static void main(String[] args) {
+		Solution T = new Solution();
+		T.solution(new String[][] {{"15:00", "17:00"}, {"16:40", "18:20"}, {"14:20", "15:20"}, {"14:10", "19:20"},
+			{"18:20", "21:20"}});
+	}
 }
