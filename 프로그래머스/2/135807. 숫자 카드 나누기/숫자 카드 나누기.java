@@ -1,42 +1,38 @@
-import java.util.Arrays;
-
 class Solution {
-    public int solution(int[] arrayA, int[] arrayB) {
-        int answer = 0;
+	public int solution(int[] arrayA, int[] arrayB) {
+		int answer = 0;
 
-        if(!divide(arrayA, findGCD(arrayB))) answer = Math.max(answer, findGCD(arrayB));
-        if(!divide(arrayB, findGCD(arrayA))) answer = Math.max(answer, findGCD(arrayA));
+		int aGCD = getGCDs(arrayA);
+		int bGCD = getGCDs(arrayB);
+		if (checkRemain(arrayA, bGCD))
+			answer = Math.max(answer, bGCD);
+		if (checkRemain(arrayB, aGCD))
+			answer = Math.max(answer, aGCD);
 
-        return answer;
-    }
+		return answer;
+	}
 
-    public int findGCD(int[] array) {
-        Arrays.sort(array);
-        int result = array[0];
+	public int getGCD(int num1, int num2) {
+		if (num1 % num2 == 0)
+			return num2;
 
-        for(int i = 1; i < array.length; i++) {
-            result = GCD(result, array[i]);
-            if(result == 1) break;
-        }
+		return getGCD(num2, num1 % num2);
+	}
 
-        return result;
-    }
+	public int getGCDs(int[] arr) {
+		int result = arr[0];
+		for (int i = 1; i < arr.length; i++)
+			result = getGCD(result, arr[i]);
 
-    public int GCD(int a, int b) {
-        while (b != 0) {
-            int t = b;
-            b = a % b;
-            a = t;
-        }
+		return result;
+	}
 
-        return a;
-    }
-    
-    public boolean divide(int[] array, int num) {
-        for(int i = 0; i < array.length; i++) {
-            if(array[i] % num == 0) return true;
-        }
-        
-        return false;
-    }
+	public boolean checkRemain(int[] arr, int gcd) {
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] % gcd == 0)
+				return false;
+		}
+
+		return true;
+	}
 }
