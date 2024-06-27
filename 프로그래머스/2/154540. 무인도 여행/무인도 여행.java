@@ -3,56 +3,62 @@ import java.util.Collections;
 import java.util.List;
 
 class Solution {
-    static char[][] map;
-    static boolean[][] bool;
+	static char[][] arr;
+	static boolean[][] bool;
+	static int sum = 0;
 
-    public int[] solution(String[] maps) {
-        init(maps);
+	public int[] solution(String[] maps) {
+		int n = maps.length;
+		int m = maps[0].length();
 
-        List<Integer> list = new ArrayList<>();
-        for(int i = 0; i < maps.length; i++) {
-            for(int j = 0; j < maps[i].length(); j++) {
-                if(!bool[i][j] && Character.isDigit(map[i][j])) {
-                    sum = Character.getNumericValue(map[i][j]);
-                    DFS(j, i);
-                    list.add(sum);
-                }
-            }
-        }
+		init(maps);
 
-        Collections.sort(list);
-        return list.size() == 0 ? new int[]{-1} : list.stream().mapToInt(i -> i).toArray();
-    }
+		List<Integer> answer = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (!bool[i][j] && arr[i][j] != 'X') {
+					sum = Character.getNumericValue(arr[i][j]);
+					DFS(j, i, n, m);
+					answer.add(sum);
+				}
+			}
+		}
 
-    public void init(String[] maps) {
-        map = new char[maps.length][maps[0].length()];
-        bool = new boolean[maps.length][maps[0].length()];
+		Collections.sort(answer);
+		return answer.size() == 0 ? new int[] {-1} : answer.stream().mapToInt(i -> i).toArray();
+	}
 
-        for(int i = 0; i < maps.length; i++) {
-            for(int j = 0; j < maps[i].length(); j++) {
-                map[i][j] = maps[i].charAt(j);
-            }
-        }
-    }
+	public void init(String[] maps) {
+		int n = maps.length;
+		int m = maps[0].length();
 
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
-    static int sum = 0;
+		arr = new char[n][m];
+		bool = new boolean[n][m];
 
-    public void DFS(int x, int y) {
-        bool[y][x] = true;
+		for (int i = 0; i < maps.length; i++) {
+			char[] ch = maps[i].toCharArray();
+			for (int j = 0; j < ch.length; j++)
+				arr[i][j] = ch[j];
+		}
+	}
 
-        for(int d = 0; d < 4; d++) {
-            int nx = x + dix[d];
-            int ny = y + diy[d];
+	static int[] dix = {0, 0, -1, 1};
+	static int[] diy = {-1, 1, 0, 0};
 
-            if(nx >= 0 && ny >= 0 && nx < map[0].length && ny < map.length && Character.isDigit(map[ny][nx])) {
-                if(!bool[ny][nx]) {
-                    bool[ny][nx] = true;
-                    sum += Character.getNumericValue(map[ny][nx]);
-                    DFS(nx, ny);
-                }
-            }
-        }
-    }
+	public void DFS(int x, int y, int n, int m) {
+		bool[y][x] = true;
+
+		for (int d = 0; d < 4; d++) {
+			int nx = x + dix[d];
+			int ny = y + diy[d];
+
+			if (nx >= 0 && ny >= 0 && nx < m && ny < n && Character.isDigit(arr[ny][nx])) {
+				if (!bool[ny][nx]) {
+					bool[ny][nx] = true;
+					sum += Character.getNumericValue(arr[ny][nx]);
+					DFS(nx, ny, n, m);
+				}
+			}
+		}
+	}
 }
