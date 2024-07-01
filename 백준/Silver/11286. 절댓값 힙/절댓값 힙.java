@@ -1,36 +1,28 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(br.readLine());
+		PriorityQueue<Integer> pq = new PriorityQueue<>(
+			(a, b) -> Math.abs(a) == Math.abs(b) ? a - b : Math.abs(a) - Math.abs(b)
+		);
 
-        PriorityQueue<Long> pq = new PriorityQueue<>(new Comparator<Long>(){
-            @Override
-            public int compare(Long o1, Long o2){
-                if(Math.abs(o1) == Math.abs(o2))
-                    return (int) (o1 - o2);
-                else
-                    return (int) (Math.abs(o1) - Math.abs(o2));
-            }
-        });
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			int x = Integer.parseInt(br.readLine());
 
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < n; i++) {
-            Long tmp = Long.parseLong(br.readLine());
+			if (x == 0) {
+				if (!pq.isEmpty())
+					sb.append(pq.poll()).append("\n");
+				else
+					sb.append("0\n");
+			} else
+				pq.add(x);
+		}
 
-            if(tmp == 0){
-                if(pq.size() == 0)
-                    sb.append("0\n");
-                else
-                    sb.append(pq.poll()).append("\n");
-            } else
-                pq.add(tmp);
-        }
-
-        System.out.println(sb);
-
-        br.close();
-    }
+		System.out.println(sb.toString());
+	}
 }
