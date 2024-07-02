@@ -9,20 +9,15 @@ class Main {
 		char[] ch = s.toCharArray();
 
 		for (int i = 0; i < ch.length; i++) {
-			int max = Integer.MIN_VALUE;
-			int index = -1;
+			int index = i;
 			for (int j = i + 1; j < ch.length; j++) {
-				if (Character.getNumericValue(ch[j]) > max) {
-					max = Character.getNumericValue(ch[j]);
+				if (Character.getNumericValue(ch[j]) > Character.getNumericValue(ch[index]))
 					index = j;
-				}
 			}
 
-			if (Character.getNumericValue(ch[i]) < max) {
-				char tmp = ch[index];
-				ch[index] = ch[i];
-				ch[i] = tmp;
-			}
+			char tmp = ch[index];
+			ch[index] = ch[i];
+			ch[i] = tmp;
 		}
 
 		for (char x : ch)
