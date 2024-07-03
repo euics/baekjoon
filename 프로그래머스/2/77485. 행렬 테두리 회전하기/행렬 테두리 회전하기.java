@@ -1,70 +1,64 @@
 class Solution {
-    static int[][] arr;
-    static int[] result;
+	static int[][] arr;
+	static int[] result;
 
-    public int[] solution(int rows, int columns, int[][] queries) {
-        init(rows, columns, queries);
-        for(int index = 0; index < queries.length; index++) rotate(queries[index], index);
+	public static void main(String[] args) {
+		Solution T = new Solution();
+		System.out.println(T.solution(6, 6, new int[][] {{2, 2, 5, 4}, {3, 3, 6, 6}, {5, 1, 6, 3}}));
+	}
 
-        return result;
-    }
+	public int[] solution(int rows, int columns, int[][] queries) {
+		init(rows, columns, queries);
 
-    public void init(int rows, int columns, int[][] queries) {
-        arr = new int[rows][columns];
-        result = new int[queries.length];
+		int index = 0;
+		for (int[] query : queries) {
+			rotate(--query[1], --query[0], --query[3], --query[2], index++);
+		}
 
-        int index = 1;
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                arr[i][j] = index++;
-            }
-        }
-    }
+		return result;
+	}
 
-    public void print(int rows, int columns) {
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                System.out.printf("%d ", arr[i][j]);
-            }
-            System.out.println();
-        }
-    }
+	public void init(int rows, int columns, int[][] queries) {
+		arr = new int[rows][columns];
+		result = new int[queries.length];
 
-    public void rotate(int[] query, int index) {
-        int row1 = query[0] - 1; // 1
-        int col1 = query[1] - 1; // 1
-        int row2 = query[2] - 1; // 4
-        int col2 = query[3] - 1; // 3
+		for (int i = 0, nums = 1; i < rows; i++) {
+			for (int j = 0; j < columns; j++)
+				arr[i][j] = nums++;
+		}
+	}
 
-        int firstNum = arr[row1][col2];
-        int min = Integer.MAX_VALUE;
+	public void rotate(int x1, int y1, int x2, int y2, int index) {
+		int tmp = arr[y1][x2];
+		int min = Integer.MAX_VALUE;
 
-        // 상단 rotate
-        for(int col = col2; col > col1; col--) {
-            min = Math.min(min, arr[row1][col]);
-            arr[row1][col] = arr[row1][col - 1];
-        }
+		// 상단 회전
+		for (int col = x2; col > x1; col--) {
+			min = Math.min(min, arr[y1][col]);
+			arr[y1][col] = arr[y1][col - 1];
+		}
 
-        // 좌측 rotate
-        for(int row = row1; row < row2; row++) {
-            min = Math.min(min, arr[row][col1]);
-            arr[row][col1] = arr[row + 1][col1];
-        }
+		// 좌측 회전
+		for (int row = y1; row < y2; row++) {
+			min = Math.min(min, arr[row][x1]);
+			arr[row][x1] = arr[row + 1][x1];
+		}
 
-        // 하단 rotate
-        for(int col = col1; col < col2; col++) {
-            min = Math.min(min, arr[row2][col]);
-            arr[row2][col] = arr[row2][col + 1];
-        }
+		// 하단 회전
+		for (int col = x1; col < x2; col++) {
+			min = Math.min(min, arr[y2][col]);
+			arr[y2][col] = arr[y2][col + 1];
+		}
 
-        // 오른쪽 rotate
-        for(int row = row2; row > row1; row--) {
-            min = Math.min(min, arr[row][col2]);
-            arr[row][col2] = arr[row - 1][col2];
-        }
+		// 우측 회전
+		for (int row = y2; row > y1; row--) {
+			min = Math.min(min, arr[row][x2]);
+			arr[row][x2] = arr[row - 1][x2];
+		}
 
-        // 마지막 회전 후 숫자 대입
-        arr[row1 + 1][col2] = firstNum;
-        result[index] = min;
-    }
+		min = Math.min(min, tmp);
+		arr[y1 + 1][x2] = tmp;
+
+		result[index] = min;
+	}
 }
