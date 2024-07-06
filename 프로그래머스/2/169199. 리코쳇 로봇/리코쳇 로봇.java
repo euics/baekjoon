@@ -2,32 +2,32 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class Solution {
-	static int[] start, end;
 	static char[][] arr;
+	static int[] start = new int[2];
+	static int[] end = new int[2];
+	static int[] dix = {0, 0, -1, 1};
+	static int[] diy = {-1, 1, 0, 0};
 
 	public int solution(String[] board) {
 		init(board);
-		return DFS(board.length, board[0].length());
+		return BFS();
 	}
 
 	public void init(String[] board) {
-		start = new int[2];
-		end = new int[2];
-
 		int n = board.length;
 		int m = board[0].length();
 		arr = new char[n][m];
 
 		for (int i = 0; i < n; i++) {
-			arr[i] = board[i].toCharArray();
-
 			for (int j = 0; j < m; j++) {
-				if (board[i].charAt(j) == 'R') {
+				arr[i][j] = board[i].charAt(j);
+
+				if (arr[i][j] == 'R') {
 					start[0] = j;
 					start[1] = i;
 				}
 
-				if (board[i].charAt(j) == 'G') {
+				if (arr[i][j] == 'G') {
 					end[0] = j;
 					end[1] = i;
 				}
@@ -35,15 +35,14 @@ class Solution {
 		}
 	}
 
-	static int[] dix = {0, 0, -1, 1};
-	static int[] diy = {-1, 1, 0, 0};
-
-	public int DFS(int n, int m) {
-		boolean[][] bool = new boolean[n][m];
-		bool[start[1]][start[0]] = true;
+	public int BFS() {
+		int n = arr.length;
+		int m = arr[0].length;
 
 		Queue<int[]> q = new LinkedList<>();
 		q.add(new int[] {start[0], start[1]});
+		boolean[][] bool = new boolean[n][m];
+		bool[start[1]][start[0]] = true;
 
 		int L = 0;
 		while (!q.isEmpty()) {
@@ -76,10 +75,10 @@ class Solution {
 					}
 				}
 			}
-
+			
 			L++;
 		}
-
+		
 		return -1;
 	}
 }
