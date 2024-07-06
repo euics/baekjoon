@@ -1,47 +1,58 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main {
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
+class Main {
+	static int[] unf;
+	static int[] groupSize;
 
-    static int[][] arr;
-    static boolean[] bool;
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
 
-    static int m, n, count = 0;
+		init(N);
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
 
-        arr = new int[n + 1][n + 1];
-        bool = new boolean[n + 1];
+			union(a, b);
+		}
 
-        for(int i = 0; i < m; i++){
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            arr[a][b] = arr[b][a] = 1;
-        }
+		int answer = 0;
+		for (int i = 1; i <= N; i++) {
+			if (unf[i] == i)
+				answer++;
+		}
 
-        for(int i = 1; i <= n; i++){
-            if(!bool[i]){
-                DFS(i);
-                count++;
-            }
-        }
+		System.out.println(answer);
+	}
 
-        System.out.println(count);
-    }
+	public static void init(int N) {
+		unf = new int[N + 1];
+		groupSize = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			unf[i] = i;
+			groupSize[i] = 1;
+		}
+	}
 
-    private static void DFS(int node){
-        bool[node] = true;
+	public static int find(int v) {
+		if (v == unf[v])
+			return unf[v];
+		else
+			return unf[v] = find(unf[v]);
+	}
 
-        for(int i = 1; i <= n; i++){
-            if(arr[node][i] == 1 && !bool[i])
-                DFS(i);
-        }
-    }
+	public static void union(int a, int b) {
+		int fa = find(a);
+		int fb = find(b);
+
+		if (fa != fb) {
+			unf[fa] = fb;
+			groupSize[fb] += groupSize[fa];
+		}
+	}
 }
