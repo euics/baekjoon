@@ -1,24 +1,34 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class Solution {
-    public int solution(int[][] data, int col, int row_begin, int row_end) {
-        // 주어진 조건에 따라 테이블 정렬
-        Arrays.sort(data, (a, b) -> a[col - 1] == b[col - 1] ? b[0] - a[0] : a[col - 1] - b[col - 1]);
+	public int solution(int[][] data, int col, int row_begin, int row_end) {
+		int answer = 0;
 
-        int answer = 0;
-        for (int i = row_begin - 1; i < row_end; i++) {
-            int Si = 0;
-            for (int j = 0; j < data[i].length; j++) {
-                Si += data[i][j] % (i + 1);
-            }
-            answer ^= Si;  // 각 S_i 값을 XOR 연산
-        }
+		List<int[]> list = new ArrayList<>();
+		for (int i = 0; i < data.length; i++) {
+			list.add(new int[data[i].length]);
 
-        return answer;
-    }
+			for (int j = 0; j < data[i].length; j++) {
+				list.get(i)[j] = data[i][j];
+			}
+		}
 
-    public static void main(String[] args) {
-        Solution T = new Solution();
-        System.out.println(T.solution(new int[][]{ {2, 2, 6}, {1, 5, 10}, {4, 2, 9}, {3, 8, 3} }, 2, 2, 3)); // 예시 인자값을 넣어 호출
-    }
+		Collections.sort(list, (a, b) -> a[col - 1] == b[col - 1] ? b[0] - a[0] : a[col - 1] - b[col - 1]);
+
+		int[] S = new int[row_end - row_begin + 1];
+		for (int i = row_begin - 1, idx = 0; i < row_end; i++) {
+			for (int j = 0; j < list.get(i).length; j++) {
+				S[idx] += (list.get(i)[j] % (i + 1));
+			}
+			idx++;
+		}
+
+		for (int i = 0; i < S.length; i++) {
+			answer ^= S[i];
+		}
+
+		return answer;
+	}
 }
