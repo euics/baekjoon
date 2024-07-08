@@ -1,29 +1,28 @@
-import java.util.*;
+import java.util.Collections;
+import java.util.PriorityQueue;
 
 class Solution {
-    public int solution(int n, int k, int[] enemy) {
-        int rounds = 0;
-        int remainingSoldiers = n;
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+	public int solution(int n, int k, int[] enemy) {
+		int answer = 0;
 
-        for (int i = 0; i < enemy.length; i++) {
-            pq.offer(enemy[i]);
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		for (int cur : enemy) {
+			pq.add(cur);
 
-            if (remainingSoldiers >= enemy[i]) {
-                remainingSoldiers -= enemy[i];
-            } else {
-                if (k > 0) {
-                    k--;
-                    remainingSoldiers += pq.poll();  // 가장 큰 값을 무적권으로 처리
-                    remainingSoldiers -= enemy[i];
-                } else {
-                    break;
-                }
-            }
+			if (n - cur >= 0) {
+				n -= cur;
+			} else {
+				if (k > 0) {
+					k--;
+					n += pq.poll();
+					n -= cur;
+				} else
+					break;
+			}
 
-            rounds++;
-        }
+			answer++;
+		}
 
-        return rounds;
-    }
+		return answer;
+	}
 }
