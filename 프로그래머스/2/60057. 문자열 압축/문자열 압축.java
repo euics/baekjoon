@@ -1,29 +1,42 @@
+import java.util.Stack;
+
 class Solution {
+	public static void main(String[] args) {
+		Solution T = new Solution();
+		System.out.println(T.solution("aabbaccc"));
+	}
+
 	public int solution(String s) {
 		int n = s.length();
 		int minLength = n;
 
-		for(int unit = 1; unit <= n / 2; unit++) {
-			String compressed = "";
-			String prev = s.substring(0, unit);
+		for (int length = 1; length <= n / 2; length++) {
+			StringBuilder compress = new StringBuilder();
+			String prev = s.substring(0, length);
 			int cnt = 1;
 
-			for(int i = unit; i < n; i += unit) {
-				String cur = s.substring(i, Math.min(i + unit, n));
-				if(prev.equals(cur)) cnt++;
+			for (int i = length; i < n; i += length) {
+				String cur = s.substring(i, Math.min(i + length, n));
+
+				if (prev.equals(cur))
+					cnt++;
 				else {
-					if(cnt > 1) compressed += cnt + prev;
-					else compressed += prev;
+					if (cnt > 1)
+						compress.append(cnt).append(prev);
+					else
+						compress.append(prev);
 
 					prev = cur;
 					cnt = 1;
 				}
 			}
 
-			if(cnt > 1) compressed += cnt + prev;
-			else compressed += prev;
+			if (cnt > 1)
+				compress.append(cnt).append(prev);
+			else
+				compress.append(prev);
 
-			minLength = Math.min(minLength, compressed.length());
+			minLength = Math.min(compress.toString().length(), minLength);
 		}
 
 		return minLength;
