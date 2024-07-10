@@ -1,19 +1,22 @@
 class Solution {
 	public int solution(String s) {
-		for(int length = s.length(); length >= 1; length--) {
+		int answer = 0;
 
-			for(int j = 0; j + length <= s.length(); j++) {
-
-				if(isPalindrome(s, j, j + length - 1)) return length;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			for (int j = 0; j <= i; j++) {
+				if (isPalindrome(s, j, i)) {
+					answer = Math.max(answer, i - j + 1);
+				}
 			}
 		}
 
-		return 0;
+		return answer;
 	}
 
 	public boolean isPalindrome(String value, int start, int end) {
 		while (start <= end) {
-			if(value.charAt(start++) != value.charAt(end--)) return false;
+			if (value.charAt(start++) != value.charAt(end--))
+				return false;
 		}
 
 		return true;
