@@ -1,53 +1,47 @@
 import java.io.*;
-import java.math.*;
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+class Main {
 
-        while(true){
-            String str = String.valueOf(n);
-            String tmp = new StringBuilder(str).reverse().toString();
-            int answer = 0, cnt = 0;
-            if(str.equals(tmp)){
-                for(int i = 1; i <= n; i++){
-                    if(n % i == 0){
-                        cnt++;
-                    }
-                }
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 
-                if(cnt == 2)
-                    answer = n;
-            }
+		while (true) {
+			if (isPalindrome(String.valueOf(N), 0, String.valueOf(N).length() - 1)) {
+				if (isPrime(N)) {
+					System.out.println(N);
+					break;
+				}
+			}
 
-            if(answer == n) {
-                System.out.println(answer);
-                break;
-            } else
-                n++;
-        }
-    }
+			N++;
+		}
+	}
 
-    private static List<Integer> prime(int n){
-        boolean[] bool = new boolean[n + 1];
-        for(int i = 0; i <= n; i++)
-            bool[i] = true;
-        bool[0] = false;
-        bool[1] = false;
+	public static boolean isPrime(int num) {
+		if (num <= 1)
+			return false;
+		if (num == 2)
+			return true;
+		if (num % 2 == 0)
+			return false;
 
-        for(int i = 2; i * i <= n; i++){
-            for(int j = i * i; j <= n; j += i)
-                bool[j] = false;
-        }
+		for (int i = 3; i * i <= num; i += 2) {
+			if (num % i == 0)
+				return false;
+		}
 
-        List<Integer> list = new ArrayList<>();
-        for(int i = 0; i <= n; i++){
-            if(bool[i])
-                list.add(i);
-        }
+		return true;
+	}
 
-        return list;
-    }
+	public static boolean isPalindrome(String s, int start, int end) {
+		while (start <= end) {
+			if (s.charAt(start++) != s.charAt(end--))
+				return false;
+		}
+
+		return true;
+	}
 }
