@@ -2,43 +2,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
+	List<Double> areas = new ArrayList<>();
+
 	public double[] solution(int k, int[][] ranges) {
-		double doubleK = (double)k;
-
-		List<Double> sequence = new ArrayList<>();
-		sequence.add(doubleK);
-
-		while (doubleK != 1) {
-			if (doubleK % 2 == 0) {
-				sequence.add(doubleK / 2);
-				doubleK /= 2;
-			} else {
-				sequence.add(doubleK * 3 + 1);
-				doubleK = doubleK * 3 + 1;
-			}
-		}
-
-		List<Double> areas = new ArrayList<>();
-		for (int i = 0; i < sequence.size() - 1; i++)
-			areas.add((sequence.get(i) + sequence.get(i + 1)) / 2);
-
-		List<Double> answer = new ArrayList<>();
+		int N = findN(k), idx = 0;
+		double[] result = new double[ranges.length];
 		for (int[] range : ranges) {
-			int a = range[0];
-			int b = sequence.size() - 1 + range[1];
-
-			if (a > b) {
-				answer.add((double)(Math.round(-1.0 * 10) / 10.0));
+			int start = range[0], end = N + range[1];
+			if (start > end) {
+				result[idx++] = -1;
 				continue;
 			}
 
-			Double sum = 0.0;
-			for (int x = a; x < b; x++)
-				sum += areas.get(x);
-
-			answer.add((double)(Math.round(sum * 10) / 10.0));
+			double sum = 0;
+			for (int i = start; i < end; i++)
+				sum += areas.get(i);
+			result[idx++] = sum;
 		}
 
-		return answer.stream().mapToDouble(i -> i).toArray();
+		return result;
+	}
+
+	public int findN(int k) {
+		int N = 0, prev = k;
+
+		while (k != 1) {
+			if (k % 2 == 0)
+				k /= 2;
+			else
+				k = k * 3 + 1;
+
+			areas.add((double)(k + prev) / 2);
+			prev = k;
+			N++;
+		}
+
+		return N;
 	}
 }
