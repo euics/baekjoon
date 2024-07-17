@@ -1,39 +1,57 @@
+import java.util.*;
+
 class Solution {
-	public int solution(int n, int k) {
-		int answer = 0;
+    public int solution(int n, int k) {
+                int answer = 0;
+        String num = Integer.toString(n, k);
 
-		String[] formations = convertFormation(n, k).split("0");
-		for(String formation : formations) {
-			if(formation.equals("")) continue;
+        int start = 0;
+        int index = 0;
 
-			if(checkPrime(Long.parseLong(formation))) {
-				answer++;
-			}
-		}
+        ArrayList<Integer> list = new ArrayList<>();
+        for (char x : num.toCharArray()) {
+            if (x == '0') {
+                list.add(index);
+            }
+            index++;
+        }
+        
+        ArrayList<Long> Number = new ArrayList<>();
+        list.add(num.length());
+        String a = "";
+        int j = 0;
 
-		return answer;
-	}
+        for(int end : list){
+            String q = num.substring(start, end).trim();
+            if(!q.isEmpty() && q.matches("\\d+")){
+                Number.add(Long.parseLong(q));
+            }
+            start = end + 1;
+        }
 
-	public String convertFormation(int n, int k) {
-		StringBuilder sb = new StringBuilder();
+        return answer = PrimeNumber(Number);
 
-		while (n > 0) {
-			sb.insert(0, n % k);
-			n /= k;
-		}
+    }
+    
+    public int PrimeNumber(ArrayList <Long> list){
+        int cnt = 0;
+        for(long x : list){
+            if(isPrime(x)){
+                cnt++;
+            }
+        }
+        return cnt;
+    }
 
-		return sb.toString();
-	}
-	
-	public boolean checkPrime(long num) {
-		if(num <= 1) return false;
-		if(num == 2) return true;
-		if(num % 2 == 0) return false;
-
-		for(long i = 3; i * i <= num; i += 2) {
-			if(num % i == 0) return false;
-		}
-
-		return true;
-	}
+    public boolean isPrime(long n){
+        if(n<=1){
+            return false;
+        }
+        for(long i = 2; i<=Math.sqrt(n); i++){
+            if(n % i == 0){
+                return false;
+            }
+        }
+        return true;
+    }
 }

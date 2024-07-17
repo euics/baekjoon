@@ -1,10 +1,10 @@
 # [level 2] k진수에서 소수 개수 구하기 - 92335 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92335) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92335#) 
 
 ### 성능 요약
 
-메모리: 75.9 MB, 시간: 0.13 ms
+메모리: 73.3 MB, 시간: 11.62 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 05월 30일 16:40:47
+2024년 07월 17일 11:19:21
 
 ### 문제 설명
 
