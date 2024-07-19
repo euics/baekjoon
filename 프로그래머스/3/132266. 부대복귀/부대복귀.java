@@ -10,17 +10,10 @@ class Solution {
 		int[] answer = new int[sources.length];
 
 		init(n, roads);
-		dis = new int[n + 1];
-		Arrays.fill(dis, Integer.MAX_VALUE);
-
 		dijkstra(destination);
 
-		for (int i = 0; i < sources.length; i++) {
-			if (dis[sources[i]] == Integer.MAX_VALUE)
-				answer[i] = -1;
-			else
-				answer[i] = dis[sources[i]];
-		}
+		for (int i = 0; i < sources.length; i++)
+			answer[i] = dis[sources[i]] == Integer.MAX_VALUE ? -1 : dis[sources[i]];
 
 		return answer;
 	}
@@ -29,19 +22,20 @@ class Solution {
 		graph = new ArrayList<>();
 		for (int i = 0; i <= n; i++)
 			graph.add(new ArrayList<Edge>());
-		for (int[] road : roads) {
-			int v1 = road[0];
-			int v2 = road[1];
 
-			graph.get(v1).add(new Edge(v2, 1));
-			graph.get(v2).add(new Edge(v1, 1));
+		for (int[] road : roads) {
+			graph.get(road[0]).add(new Edge(road[1], 1));
+			graph.get(road[1]).add(new Edge(road[0], 1));
 		}
+
+		dis = new int[n + 1];
+		Arrays.fill(dis, Integer.MAX_VALUE);
 	}
 
-	public void dijkstra(int source) {
-		PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.c - b.c);
-		pq.add(new Edge(source, 0));
-		dis[source] = 0;
+	public void dijkstra(int v) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(v, 0));
+		dis[v] = 0;
 
 		while (!pq.isEmpty()) {
 			Edge cur = pq.poll();
@@ -51,8 +45,8 @@ class Solution {
 
 			for (Edge o : graph.get(cur.v)) {
 				if (dis[o.v] > cur.c + o.c) {
-					pq.add(new Edge(o.v, cur.c + o.c));
 					dis[o.v] = cur.c + o.c;
+					pq.add(new Edge(o.v, cur.c + o.c));
 				}
 			}
 		}
