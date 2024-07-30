@@ -13,8 +13,11 @@ class Main {
 		C = Integer.parseInt(st.nextToken());
 
 		BFS();
+		
+		StringBuilder sb = new StringBuilder();
 		for (int x : set)
-			System.out.printf("%d ", x);
+			sb.append(x).append(" ");
+		System.out.println(sb.toString());
 	}
 
 	public static void BFS() {
