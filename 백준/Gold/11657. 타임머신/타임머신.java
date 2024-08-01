@@ -10,17 +10,15 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int V = Integer.parseInt(st.nextToken());
 		int E = Integer.parseInt(st.nextToken());
-		int start = 1;
-
 		init(V);
 
 		for (int i = 0; i < E; i++) {
 			st = new StringTokenizer(br.readLine());
 			int src = Integer.parseInt(st.nextToken());
 			int des = Integer.parseInt(st.nextToken());
-			int cost = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
 
-			graph.get(src).add(new Edge(des, cost));
+			graph.get(src).add(new Edge(des, c));
 		}
 
 		boolean cycle = bellmanFord(V, 1);
@@ -28,7 +26,7 @@ public class Main {
 			System.out.println(-1);
 		else {
 			for (int i = 1; i <= V; i++) {
-				if (i == start)
+				if (i == 1)
 					continue;
 
 				if (dis[i] == Long.MAX_VALUE)
@@ -40,18 +38,17 @@ public class Main {
 	}
 
 	public static void init(int V) {
-		dis = new long[V + 1];
-		Arrays.fill(dis, Long.MAX_VALUE);
-
 		graph = new ArrayList<>();
 		for (int i = 0; i <= V; i++)
 			graph.add(new ArrayList<Edge>());
+
+		dis = new long[V + 1];
+		Arrays.fill(dis, Long.MAX_VALUE);
 	}
 
 	public static boolean bellmanFord(int V, int src) {
 		dis[src] = 0;
 
-		// 벨만포드 알고리즘
 		for (int i = 1; i <= V - 1; i++) {
 			for (int j = 1; j <= V; j++) {
 				for (Edge o : graph.get(j)) {
@@ -61,7 +58,6 @@ public class Main {
 			}
 		}
 
-		// 음의 사이클 검사
 		for (int i = 1; i <= V; i++) {
 			for (Edge o : graph.get(i)) {
 				if (dis[i] != Long.MAX_VALUE && dis[o.v] > o.c + dis[i])
