@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int[][] dis;
+	public static int[][] dis;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,7 +25,6 @@ public class Main {
 			dis[A][B] = Math.min(dis[A][B], C);
 		}
 
-		// 플로이드-워셜 알고리즘
 		for (int K = 1; K <= N; K++) {
 			for (int S = 1; S <= N; S++) {
 				for (int E = 1; E <= N; E++) {
