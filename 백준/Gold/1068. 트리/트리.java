@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
 	static ArrayList<ArrayList<Integer>> tree;
-	static boolean[] bool;
+	static boolean[] deleted;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -12,7 +12,7 @@ public class Main {
 		tree = new ArrayList<>();
 		for (int i = 0; i < N; i++)
 			tree.add(new ArrayList<Integer>());
-		bool = new boolean[N];
+		deleted = new boolean[N];
 
 		int root = -1;
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -30,32 +30,32 @@ public class Main {
 		if (deleteNode == root)
 			System.out.println(0);
 		else
-			System.out.println(countLeafNodes(root));
+			System.out.println(countLeafNode(root));
 	}
 
 	public static void deleteTree(int node) {
-		bool[node] = true;
+		deleted[node] = true;
 		for (int child : tree.get(node)) {
-			if (!bool[child])
+			if (!deleted[child])
 				deleteTree(child);
 		}
 	}
 
-	public static int countLeafNodes(int node) {
-		if (bool[node])
+	public static int countLeafNode(int node) {
+		if (deleted[node])
 			return 0;
 		if (tree.get(node).isEmpty())
 			return 1;
 
-		int leafCount = 0;
+		int countLeafNode = 0;
 		boolean hasChild = false;
 		for (int child : tree.get(node)) {
-			if (!bool[child]) {
+			if (!deleted[child]) {
 				hasChild = true;
-				leafCount += countLeafNodes(child);
+				countLeafNode += countLeafNode(child);
 			}
 		}
 
-		return hasChild ? leafCount : 1;
+		return hasChild ? countLeafNode : 1;
 	}
 }
