@@ -1,26 +1,32 @@
 import java.io.*;
 import java.util.*;
 
-class Main {
-
-	public static void main(String[] args) throws Exception {
+public class Main {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
 
-		int[] S = new int[n + 1];
-		S[0] = 0;
-
+		int[] sum = new int[N];
 		st = new StringTokenizer(br.readLine());
-		for (int i = 1; i < n + 1; i++)
-			S[i] = S[i - 1] + Integer.parseInt(st.nextToken());
+		for (int i = 0; i < N; i++)
+			sum[i] = Integer.parseInt(st.nextToken());
+		for (int i = 1; i < N; i++)
+			sum[i] += sum[i - 1];
 
-		for (int i = 0; i < m; i++) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			System.out.println(S[b] - S[a - 1]);
+			int a = Integer.parseInt(st.nextToken()) - 1;
+			int b = Integer.parseInt(st.nextToken()) - 1;
+
+			if (a == 0)
+				sb.append(sum[b]).append("\n");
+			else
+				sb.append(sum[b] - sum[a - 1]).append("\n");
 		}
+
+		System.out.println(sb.toString());
 	}
 }
