@@ -17,13 +17,12 @@ class Main {
 
 			while (!dq.isEmpty() && i - dq.peekFirst()[0] + 1 > L)
 				dq.pollFirst();
-
 			while (!dq.isEmpty() && dq.peekLast()[1] > now)
 				dq.pollLast();
 
 			dq.addLast(new int[] {i, now});
 
-			sb.append(dq.peekFirst()[1]).append(' ');
+			sb.append(dq.peekFirst()[1]).append(" ");
 		}
 
 		System.out.println(sb.toString().trim());
