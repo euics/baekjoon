@@ -1,38 +1,58 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 
 class Main {
-	static int[] rules = new int[4];
-	static int[] cur = new int[4];
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int S = Integer.parseInt(st.nextToken());
 		int P = Integer.parseInt(st.nextToken());
+		char[] DNA = br.readLine().toCharArray();
 
-		String DNA = br.readLine();
-
-		rules = new int[4];
+		int[] sequence = new int[4];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < 4; i++)
-			rules[i] = Integer.parseInt(st.nextToken());
+			sequence[i] = Integer.parseInt(st.nextToken());
 
-		cur = new int[4];
-		for (int i = 0; i < P; i++)
-			addCur(DNA.charAt(i));
+		int end = 0;
+		int[] result = new int[4];
+		for (end = 0; end < P; end++) {
+			if (DNA[end] == 'A')
+				result[0]++;
+			if (DNA[end] == 'C')
+				result[1]++;
+			if (DNA[end] == 'G')
+				result[2]++;
+			if (DNA[end] == 'T')
+				result[3]++;
+		}
 
 		int answer = 0;
-		if (check(rules, cur))
+		if (isSubString(result, sequence))
 			answer++;
 
-		int start = 0, end = P;
-		while (end < DNA.length()) {
-			addCur(DNA.charAt(end));
-			removeCur(DNA.charAt(start));
+		int start = 0;
+		while (end < S) {
+			if (DNA[end] == 'A')
+				result[0]++;
+			if (DNA[end] == 'C')
+				result[1]++;
+			if (DNA[end] == 'G')
+				result[2]++;
+			if (DNA[end] == 'T')
+				result[3]++;
 
-			if (check(rules, cur))
+			if (DNA[start] == 'A')
+				result[0]--;
+			if (DNA[start] == 'C')
+				result[1]--;
+			if (DNA[start] == 'G')
+				result[2]--;
+			if (DNA[start] == 'T')
+				result[3]--;
+
+			if (isSubString(result, sequence))
 				answer++;
 
 			end++;
@@ -42,34 +62,14 @@ class Main {
 		System.out.println(answer);
 	}
 
-	public static boolean check(int[] rules, int[] cur) {
+	public static boolean isSubString(int[] result, int[] sequence) {
 		for (int i = 0; i < 4; i++) {
-			if (cur[i] < rules[i])
+			if (result[i] < sequence[i])
 				return false;
 		}
 
 		return true;
 	}
-
-	public static void addCur(char ch) {
-		if (ch == 'A')
-			cur[0]++;
-		if (ch == 'C')
-			cur[1]++;
-		if (ch == 'G')
-			cur[2]++;
-		if (ch == 'T')
-			cur[3]++;
-	}
-
-	public static void removeCur(char ch) {
-		if (ch == 'A')
-			cur[0]--;
-		if (ch == 'C')
-			cur[1]--;
-		if (ch == 'G')
-			cur[2]--;
-		if (ch == 'T')
-			cur[3]--;
-	}
 }
+
+// A C G T
