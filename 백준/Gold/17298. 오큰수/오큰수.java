@@ -5,28 +5,25 @@ class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(br.readLine());
+		int A = Integer.parseInt(br.readLine());
+		int[] answer = new int[A];
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int[] arr = new int[n];
-		for (int i = 0; i < n; i++)
-			arr[i] = Integer.parseInt(st.nextToken());
+		Stack<int[]> stack = new Stack<>();
+		for (int i = 0; i < A; i++) {
+			int cur = Integer.parseInt(st.nextToken());
 
-		Stack<Integer> stack = new Stack<>();
-		int[] answer = new int[n];
-		for (int i = 0; i < n; i++) {
-			while (!stack.isEmpty() && arr[i] > arr[stack.peek()]) {
-				answer[stack.pop()] = arr[i];
-			}
+			while (!stack.isEmpty() && stack.peek()[1] < cur)
+				answer[stack.pop()[0]] = cur;
 
-			stack.push(i);
+			stack.push(new int[] {i, cur});
 		}
 
 		while (!stack.isEmpty())
-			answer[stack.pop()] = -1;
+			answer[stack.pop()[0]] = -1;
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < A; i++)
 			sb.append(answer[i]).append(" ");
 		System.out.println(sb.toString());
 	}
