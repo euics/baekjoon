@@ -2,41 +2,39 @@ import java.io.*;
 import java.util.*;
 
 class Main {
-
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		List<Integer> result = new ArrayList<>();
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		List<Integer> answer = new ArrayList<>();
 
-		DFS(0, 0, N, result);
+		DFS(0, 0, N, answer);
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < result.size(); i++)
-			sb.append(result.get(i)).append("\n");
+		for (int i = 0; i < answer.size(); i++)
+			sb.append(answer.get(i)).append("\n");
 		System.out.println(sb.toString());
 	}
 
-	public static boolean isPrime(int num) {
-		if (num <= 1)
+	public static boolean isPrime(int n) {
+		if (n <= 1)
 			return false;
-		if (num == 2)
+		if (n == 2)
 			return true;
-		if (num % 2 == 0)
+		if (n % 2 == 0)
 			return false;
 
-		for (int i = 3; i * i <= num; i += 2) {
-			if (num % i == 0)
+		for (int i = 3; i * i <= n; i += 2) {
+			if (n % i == 0)
 				return false;
 		}
 
 		return true;
 	}
 
-	public static void DFS(int num, int L, int N, List<Integer> result) {
+	public static void DFS(int L, int num, int N, List<Integer> answer) {
 		if (L == N) {
-			if (isPrime(num))
-				result.add(num);
+			answer.add(num);
 
 			return;
 		}
@@ -44,7 +42,7 @@ class Main {
 		for (int i = 1; i <= 9; i++) {
 			int newNum = num * 10 + i;
 			if (isPrime(newNum))
-				DFS(newNum, L + 1, N, result);
+				DFS(L + 1, newNum, N, answer);
 		}
 	}
 }
