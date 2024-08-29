@@ -19,6 +19,7 @@ class Main {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
+
 			graph.get(a).add(b);
 			graph.get(b).add(a);
 		}
@@ -27,20 +28,21 @@ class Main {
 			if (!flag)
 				DFS(0, i, new boolean[N]);
 		}
+
 		System.out.println(flag ? 1 : 0);
 	}
 
 	public static void DFS(int L, int node, boolean[] bool) {
 		bool[node] = true;
-
+		
 		if (L == 4) {
 			flag = true;
 
 			return;
 		}
 
-		for (int edge : graph.get(node)) {
-			if (!bool[edge]) {
+		for(int edge : graph.get(node)) {
+			if(!bool[edge]) {
 				bool[edge] = true;
 				DFS(L + 1, edge, bool);
 				bool[edge] = false;
