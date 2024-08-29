@@ -33,14 +33,14 @@ class Main {
 	}
 
 	public static boolean canDivide(int[] lectures, int M, int mid) {
-		int curSum = 0, cnt = 1;
+		int sum = 0, cnt = 1;
 		for (int lecture : lectures) {
-			if (curSum + lecture > mid) {
+			if (sum + lecture > mid) {
 				cnt++;
-				curSum = 0;
+				sum = 0;
 			}
 
-			curSum += lecture;
+			sum += lecture;
 
 			if (cnt > M)
 				return false;
