@@ -1,62 +1,60 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class Main {
-    static int n, m;
-    static int[][] arr;
-    static int[][] dis;
-    static boolean[][] bool;
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
+class Main {
+	static int[][] arr;
+	static boolean[][] bool;
+	static int[] dix = {0, 0, -1, 1};
+	static int[] diy = {-1, 1, 0, 0};
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        arr = new int[n][m];
-        bool = new boolean[n][m];
-        dis = new int[n][m];
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		arr = new int[N][M];
+		bool = new boolean[N][M];
 
-        for(int i = 0; i < n; i++){
-            char[] ch = br.readLine().toCharArray();
-            for(int j = 0; j < m; j++)
-                arr[i][j] = Character.getNumericValue(ch[j]);
-        }
+		for (int i = 0; i < N; i++) {
+			char[] input = br.readLine().toCharArray();
+			for (int j = 0; j < M; j++)
+				arr[i][j] = Character.getNumericValue(input[j]);
+		}
 
-        BFS(0, 0);
-        System.out.println(dis[n - 1][m - 1]);
-    }
+		System.out.println(BFS(N, M));
+	}
 
-    private static void BFS(int x, int y){
-        bool[y][x] = true;
-        dis[y][x] = 1;  // 시작 위치의 거리를 1로 설정
+	public static int BFS(int N, int M) {
+		bool[0][0] = true;
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int[] {0, 0});
 
-        Queue<Coordinate> q = new LinkedList<>();
-        q.add(new Coordinate(x, y));
-        while(!q.isEmpty()){
-            Coordinate tmp = q.poll();
+		int L = 1;
+		while (!q.isEmpty()) {
+			int length = q.size();
 
-            for(int i = 0; i < 4; i++){
-                int nx = tmp.x + dix[i];
-                int ny = tmp.y + diy[i];
+			for (int i = 0; i < length; i++) {
+				int[] cur = q.poll();
 
-                if(nx >= 0 && ny >= 0 && nx < m && ny < n){
-                    if(!bool[ny][nx] && arr[ny][nx] == 1){
-                        bool[ny][nx] = true;
-                        q.add(new Coordinate(nx, ny));
-                        dis[ny][nx] = dis[tmp.y][tmp.x] + 1;
-                    }
-                }
-            }
-        }
-    }
-}
+				if (cur[0] == M - 1 && cur[1] == N - 1)
+					return L;
 
-class Coordinate {
-    int x, y;
-    public Coordinate(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
+				for (int d = 0; d < 4; d++) {
+					int nx = cur[0] + dix[d];
+					int ny = cur[1] + diy[d];
+
+					if (nx >= 0 && ny >= 0 && nx < M && ny < N && arr[ny][nx] == 1) {
+						if (!bool[ny][nx]) {
+							bool[ny][nx] = true;
+							q.add(new int[] {nx, ny});
+						}
+					}
+				}
+			}
+
+			L++;
+		}
+
+		return 1;
+	}
 }
