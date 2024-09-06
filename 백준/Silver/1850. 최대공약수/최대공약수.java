@@ -6,13 +6,13 @@ class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		long a = Long.parseLong(st.nextToken());
-		long b = Long.parseLong(st.nextToken());
-		long GCD = GCD(a, b);
+		long A = Long.parseLong(st.nextToken());
+		long B = Long.parseLong(st.nextToken());
+		long GCD = GCD(A, B);
 
 		StringBuilder sb = new StringBuilder();
 		while (GCD > 0) {
-			sb.append(1);
+			sb.append("1");
 			GCD--;
 		}
 
