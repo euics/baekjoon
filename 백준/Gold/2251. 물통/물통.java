@@ -2,25 +2,23 @@ import java.io.*;
 import java.util.*;
 
 class Main {
-	static int A, B, C;
 	static Set<Integer> set = new TreeSet<>();
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		A = Integer.parseInt(st.nextToken());
-		B = Integer.parseInt(st.nextToken());
-		C = Integer.parseInt(st.nextToken());
+		int A = Integer.parseInt(st.nextToken());
+		int B = Integer.parseInt(st.nextToken());
+		int C = Integer.parseInt(st.nextToken());
 
-		BFS();
-		
+		BFS(A, B, C);
+
 		StringBuilder sb = new StringBuilder();
-		for (int x : set)
-			sb.append(x).append(" ");
+		for(int cur : set) sb.append(cur).append(" ");
 		System.out.println(sb.toString());
 	}
 
-	public static void BFS() {
+	public static void BFS(int A, int B, int C) {
 		Queue<int[]> q = new LinkedList<>();
 		q.add(new int[] {0, 0, C});
 		boolean[][][] bool = new boolean[201][201][201];
@@ -35,42 +33,41 @@ class Main {
 			if (a == 0)
 				set.add(c);
 
-			// 물 옮기기
 			// A -> B
 			if (a + b > B)
-				q.add(new int[] {(a + b) - B, B, c});
+				q.add(new int[] {a + b - B, B, c});
 			else
 				q.add(new int[] {0, a + b, c});
 
 			// A -> C
 			if (a + c > C)
-				q.add(new int[] {(a + c) - C, b, C});
+				q.add(new int[] {a + c - C, b, C});
 			else
 				q.add(new int[] {0, b, a + c});
 
 			// B -> A
 			if (b + a > A)
-				q.add(new int[] {A, (a + b) - A, c});
+				q.add(new int[] {A, b + a - A, c});
 			else
-				q.add(new int[] {a + b, 0, c});
+				q.add(new int[] {b + a, 0, c});
 
 			// B -> C
 			if (b + c > C)
-				q.add(new int[] {a, (b + c) - C, C});
+				q.add(new int[] {a, b + c - C, C});
 			else
 				q.add(new int[] {a, 0, b + c});
 
 			// C -> A
 			if (c + a > A)
-				q.add(new int[] {A, b, (a + c) - A});
+				q.add(new int[] {A, b, c + a - A});
 			else
-				q.add(new int[] {a + c, b, 0});
+				q.add(new int[] {c + a, b, 0});
 
 			// C -> B
 			if (c + b > B)
-				q.add(new int[] {a, B, (b + c) - B});
+				q.add(new int[] {a, B, c + b - B});
 			else
-				q.add(new int[] {a, b + c, 0});
+				q.add(new int[] {a, c + b, 0});
 		}
 	}
 }
