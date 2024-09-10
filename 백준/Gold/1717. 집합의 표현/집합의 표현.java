@@ -14,17 +14,16 @@ class Main {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			int order = Integer.parseInt(st.nextToken());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-
-			if (order == 0)
-				union(a, b);
-			else {
-				if (find(a) == find(b))
-					sb.append("YES\n");
-				else
-					sb.append("NO\n");
+			int condition = Integer.parseInt(st.nextToken());
+			switch (condition) {
+				case 0:
+					union(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+					break;
+				case 1:
+					if (find(Integer.parseInt(st.nextToken())) == find(Integer.parseInt(st.nextToken())))
+						sb.append("YES").append("\n");
+					else
+						sb.append("NO").append("\n");
 			}
 		}
 
@@ -39,7 +38,7 @@ class Main {
 
 	public static int find(int v) {
 		if (v == unf[v])
-			return v;
+			return unf[v];
 		else
 			return unf[v] = find(unf[v]);
 	}
