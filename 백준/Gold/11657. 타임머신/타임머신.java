@@ -1,49 +1,42 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-	public static ArrayList<ArrayList<Edge>> graph;
-	public static long[] dis;
+class Main {
+	static ArrayList<ArrayList<Edge>> graph;
+	static long[] dis;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+
 		int V = Integer.parseInt(st.nextToken());
-		int E = Integer.parseInt(st.nextToken());
-		init(V);
+		graph = new ArrayList<>();
+		for (int i = 0; i <= V; i++)
+			graph.add(new ArrayList<Edge>());
+		dis = new long[V + 1];
+		Arrays.fill(dis, Long.MAX_VALUE);
 
-		for (int i = 0; i < E; i++) {
+		int M = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int src = Integer.parseInt(st.nextToken());
-			int des = Integer.parseInt(st.nextToken());
-			int c = Integer.parseInt(st.nextToken());
+			int A = Integer.parseInt(st.nextToken());
+			int B = Integer.parseInt(st.nextToken());
+			int C = Integer.parseInt(st.nextToken());
 
-			graph.get(src).add(new Edge(des, c));
+			graph.get(A).add(new Edge(B, C));
 		}
 
 		boolean cycle = bellmanFord(V, 1);
-		if (!cycle)
+		if(cycle)
 			System.out.println(-1);
 		else {
-			for (int i = 1; i <= V; i++) {
-				if (i == 1)
-					continue;
-
-				if (dis[i] == Long.MAX_VALUE)
+			for(int i = 2; i <= V; i++) {
+				if(dis[i] == Long.MAX_VALUE)
 					System.out.println(-1);
 				else
 					System.out.println(dis[i]);
 			}
 		}
-	}
-
-	public static void init(int V) {
-		graph = new ArrayList<>();
-		for (int i = 0; i <= V; i++)
-			graph.add(new ArrayList<Edge>());
-
-		dis = new long[V + 1];
-		Arrays.fill(dis, Long.MAX_VALUE);
 	}
 
 	public static boolean bellmanFord(int V, int src) {
@@ -61,11 +54,11 @@ public class Main {
 		for (int i = 1; i <= V; i++) {
 			for (Edge o : graph.get(i)) {
 				if (dis[i] != Long.MAX_VALUE && dis[o.v] > o.c + dis[i])
-					return false;
+					return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 }
 
