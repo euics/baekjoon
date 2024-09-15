@@ -8,12 +8,11 @@ class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
-		int V = Integer.parseInt(st.nextToken());
+		int N = Integer.parseInt(st.nextToken());
 		graph = new ArrayList<>();
-		for (int i = 0; i <= V; i++)
+		for (int i = 0; i <= N; i++)
 			graph.add(new ArrayList<Edge>());
-		dis = new long[V + 1];
+		dis = new long[N + 1];
 		Arrays.fill(dis, Long.MAX_VALUE);
 
 		int M = Integer.parseInt(st.nextToken());
@@ -26,12 +25,12 @@ class Main {
 			graph.get(A).add(new Edge(B, C));
 		}
 
-		boolean cycle = bellmanFord(V, 1);
-		if(cycle)
+		boolean cycle = bellmanFord(N, 1);
+		if (cycle)
 			System.out.println(-1);
 		else {
-			for(int i = 2; i <= V; i++) {
-				if(dis[i] == Long.MAX_VALUE)
+			for (int i = 2; i <= N; i++) {
+				if (dis[i] == Long.MAX_VALUE)
 					System.out.println(-1);
 				else
 					System.out.println(dis[i]);
@@ -39,21 +38,21 @@ class Main {
 		}
 	}
 
-	public static boolean bellmanFord(int V, int src) {
+	public static boolean bellmanFord(int v, int src) {
 		dis[src] = 0;
 
-		for (int i = 1; i <= V - 1; i++) {
-			for (int j = 1; j <= V; j++) {
+		for (int i = 1; i <= v - 1; i++) {
+			for (int j = 1; j <= v; j++) {
 				for (Edge o : graph.get(j)) {
-					if (dis[j] != Long.MAX_VALUE && dis[o.v] > o.c + dis[j])
-						dis[o.v] = o.c + dis[j];
+					if (dis[j] != Long.MAX_VALUE && dis[o.v] > dis[j] + o.c)
+						dis[o.v] = dis[j] + o.c;
 				}
 			}
 		}
 
-		for (int i = 1; i <= V; i++) {
+		for (int i = 1; i <= v; i++) {
 			for (Edge o : graph.get(i)) {
-				if (dis[i] != Long.MAX_VALUE && dis[o.v] > o.c + dis[i])
+				if (dis[i] != Long.MAX_VALUE && dis[o.v] > dis[i] + o.c)
 					return true;
 			}
 		}
