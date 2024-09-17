@@ -1,45 +1,39 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-	public static int[] unf;
+class Main {
+	static int[] unf;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int V = Integer.parseInt(st.nextToken());
-		int E = Integer.parseInt(st.nextToken());
-		init(V);
+		unf = new int[V + 1];
+		for (int i = 1; i <= V; i++)
+			unf[i] = i;
 
-		List<Edge> graph = new ArrayList<>();
+		int E = Integer.parseInt(st.nextToken());
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
 		for (int i = 0; i < E; i++) {
 			st = new StringTokenizer(br.readLine());
 			int A = Integer.parseInt(st.nextToken());
 			int B = Integer.parseInt(st.nextToken());
 			int C = Integer.parseInt(st.nextToken());
 
-			graph.add(new Edge(A, B, C));
+			pq.add(new int[] {A, B, C});
 		}
-		Collections.sort(graph);
 
 		int answer = 0;
-		for (Edge o : graph) {
-			int fv1 = find(o.src);
-			int fv2 = find(o.des);
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
 
-			if (fv1 != fv2) {
-				answer += o.c;
-				union(o.src, o.des);
+			if (find(cur[0]) != find(cur[1])) {
+				union(cur[0], cur[1]);
+				answer += cur[2];
 			}
 		}
 
 		System.out.println(answer);
-	}
-
-	public static void init(int V) {
-		unf = new int[V + 1];
-		for (int i = 1; i <= V; i++)
-			unf[i] = i;
 	}
 
 	public static int find(int v) {
@@ -55,20 +49,5 @@ public class Main {
 
 		if (fa != fb)
 			unf[fa] = fb;
-	}
-}
-
-class Edge implements Comparable<Edge> {
-	int src, des, c;
-
-	public Edge(int src, int des, int c) {
-		this.src = src;
-		this.des = des;
-		this.c = c;
-	}
-
-	@Override
-	public int compareTo(Edge o) {
-		return this.c - o.c;
 	}
 }
