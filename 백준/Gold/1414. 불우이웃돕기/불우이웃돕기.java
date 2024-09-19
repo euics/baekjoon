@@ -1,45 +1,45 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 	static int[] unf;
 
-	// 96
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(br.readLine());
-		init(N);
+		unf = new int[N];
+		for (int i = 0; i < N; i++)
+			unf[i] = i;
 
-		int sum = 0;
-		List<Edge> edges = new ArrayList<>();
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
+		int total = 0;
 		for (int i = 0; i < N; i++) {
 			String input = br.readLine();
+
 			for (int j = 0; j < N; j++) {
 				int num = 0;
-				if (input.charAt(j) >= 'a' && input.charAt(j) <= 'z')
-					num = input.charAt(j) - 'a' + 1;
-				if (input.charAt(j) >= 'A' && input.charAt(j) <= 'Z')
-					num = input.charAt(j) - 'A' + 27;
-				sum += num;
+
+				if (Character.isLowerCase(input.charAt(j)))
+					num = (int)input.charAt(j) - (int)'a' + 1;
+				if (Character.isUpperCase(input.charAt(j)))
+					num = (int)input.charAt(j) - (int)'A' + 27;
+				total += num;
 
 				if (i == j)
 					continue;
 
 				if (input.charAt(j) != '0')
-					edges.add(new Edge(i, j, num));
+					pq.add(new int[] {i, j, num});
 			}
 		}
-		Collections.sort(edges);
 
-		int donation = 0;
-		for (Edge o : edges) {
-			int fv1 = find(o.src);
-			int fv2 = find(o.des);
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
 
-			if (fv1 != fv2) {
-				union(o.src, o.des);
-				donation += o.c;
+			if (find(cur[0]) != find(cur[1])) {
+				union(cur[0], cur[1]);
+				total -= cur[2];
 			}
 		}
 
@@ -53,15 +53,9 @@ public class Main {
 		}
 
 		if (flag)
-			System.out.println(sum - donation);
+			System.out.println(total);
 		else
 			System.out.println(-1);
-	}
-
-	public static void init(int N) {
-		unf = new int[N];
-		for (int i = 0; i < N; i++)
-			unf[i] = i;
 	}
 
 	public static int find(int v) {
@@ -80,17 +74,7 @@ public class Main {
 	}
 }
 
-class Edge implements Comparable<Edge> {
-	int src, des, c;
-
-	public Edge(int src, int des, int c) {
-		this.src = src;
-		this.des = des;
-		this.c = c;
-	}
-
-	@Override
-	public int compareTo(Edge o) {
-		return this.c - o.c;
-	}
-}
+/*
+ (int)'z' - (int)'a' + 1
+ (int)'Z' - (int)'A' + 27
+*/
