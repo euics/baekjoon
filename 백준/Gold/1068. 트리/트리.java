@@ -1,21 +1,21 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
 	static ArrayList<ArrayList<Integer>> tree;
 	static boolean[] deleted;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		// StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		deleted = new boolean[N];
 		tree = new ArrayList<>();
 		for (int i = 0; i < N; i++)
-			tree.add(new ArrayList<Integer>());
-		deleted = new boolean[N];
+			tree.add(new ArrayList<>());
 
 		int root = -1;
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
 			int parent = Integer.parseInt(st.nextToken());
 			if (parent == -1)
@@ -35,6 +35,7 @@ public class Main {
 
 	public static void deleteTree(int node) {
 		deleted[node] = true;
+
 		for (int child : tree.get(node)) {
 			if (!deleted[child])
 				deleteTree(child);
