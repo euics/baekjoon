@@ -1,29 +1,28 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-	static int[] arr;
+class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		// StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(br.readLine());
-		arr = new int[N + 1];
-		for (int i = 1; i <= N; i++)
-			arr[i] = i;
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
 
-		int p1 = 1, p2 = 1, sum = 0, answer = 0;
-		while (p2 <= N && p1 <= p2) {
-			if (sum < N)
-				sum += arr[p2++];
+		int[] num = new int[n + 1];
+		for (int i = 0; i <= n; i++)
+			num[i] = i;
 
-			while (p1 <= p2 && sum > N)
-				sum -= arr[p1++];
+		int start = 1, end = 1, sum = 0, answer = 0;
+		while (start < n + 1) {
 
-			if(sum == N) {
+			if (sum + num[end] < n)
+				sum += num[end++];
+			else if (sum + num[end] == n) {
+				sum += num[end++];
+				sum -= num[start++];
 				answer++;
-				sum -= arr[p1++];
-			}
+			} else
+				sum -= num[start++];
 		}
 
 		System.out.println(answer);
