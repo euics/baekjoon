@@ -1,41 +1,35 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        st = new StringTokenizer(br.readLine());
-        int m = Integer.parseInt(st.nextToken());
+	static int[] arr;
 
-        int[] arr = new int[n];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(st.nextToken());
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
 
-        Arrays.sort(arr);
+		arr = new int[N];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++)
+			arr[i] = Integer.parseInt(st.nextToken());
+		Arrays.sort(arr);
 
-        int left = 0, right = n - 1;
-        int answer = 0;
-        while (left < right) {
-            int sum = arr[left] + arr[right];
+		int start = 0, end = N - 1, answer = 0;
+		while (start < end) {
+			int sum = arr[start] + arr[end];
 
-            if (sum > m) {
-                right--;
-            } else if(sum < m) {
-                left++;
-            } else {
-                answer++;
-                left++;
-                right--;
-            }
-        }
+			if (sum > M)
+				end--;
+			else if (sum < M)
+				start++;
+			else {
+				answer++;
+				start++;
+			}
+		}
 
-        System.out.println(answer);
-    }
+		System.out.println(answer);
+	}
 }
-
-// 1 2 2 4 5 7
