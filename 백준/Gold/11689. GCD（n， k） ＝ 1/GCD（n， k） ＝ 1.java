@@ -1,12 +1,13 @@
 import java.io.*;
 import java.util.*;
 
-class Main {
+public class Main {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		long n = Long.parseLong(st.nextToken());
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		long n = Long.parseLong(br.readLine());
+
 		System.out.println(phi(n));
 	}
 
@@ -14,15 +15,18 @@ class Main {
 		long result = n;
 
 		for (long p = 2; p <= Math.sqrt(n); p++) {
-			if (n % p == 0)
+			if (n % p == 0) {
 				result = result - result / p;
 
-			while (n % p == 0)
-				n /= p;
+				while (n % p == 0) {
+					n /= p;
+				}
+			}
 		}
 
-		if (n > 1)
+		if (n > 1) {
 			result = result - result / n;
+		}
 
 		return result;
 	}
