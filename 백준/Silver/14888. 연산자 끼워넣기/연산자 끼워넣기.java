@@ -1,63 +1,66 @@
-import java.util.Scanner;
- 
+import java.io.*;
+import java.util.*;
+
 public class Main {
- 
-	public static int MAX = Integer.MIN_VALUE;	// 최댓값 
-	public static int MIN = Integer.MAX_VALUE;	// 최솟값 
-	public static int[] operator = new int[4];	// 연산자 개수 
-	public static int[] number;					// 숫자 
-	public static int N;						// 숫자 개수 
- 
-	public static void main(String[] args) {
- 
-		Scanner in = new Scanner(System.in);
- 
-		N = in.nextInt();
-		number = new int[N];
- 
-		// 숫자 입력
+	static int[] arr;
+	static int[] operator = new int[4];
+	static int maxDepth = 0, max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		arr = new int[N];
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < N; i++) {
-			number[i] = in.nextInt();
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
- 
-		// 연산자 입력
+
+		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < 4; i++) {
-			operator[i] = in.nextInt();
+			operator[i] = Integer.parseInt(st.nextToken());
 		}
- 
-		dfs(number[0], 1);
- 
-		System.out.println(MAX);
-		System.out.println(MIN);
- 
+
+		DFS(0, arr[0]);
+
+		System.out.println(max);
+		System.out.println(min);
 	}
- 
-	public static void dfs(int num, int idx) {
-		if (idx == N) {
-			MAX = Math.max(MAX, num);
-			MIN = Math.min(MIN, num);
+
+	public static void DFS(int L, int result) {
+		if (L == arr.length - 1) {
+			max = Math.max(max, result);
+			min = Math.min(min, result);
+
 			return;
 		}
- 
-		for (int i = 0; i < 4; i++) {
-			// 연산자 개수가 1개 이상인 경우
-			if (operator[i] > 0) {
- 
-				// 해당 연산자를 1 감소시킨다.
-				operator[i]--;
- 
-				switch (i) {
- 
-				case 0:	dfs(num + number[idx], idx + 1);	break;
-				case 1:	dfs(num - number[idx], idx + 1);	break;
-				case 2:	dfs(num * number[idx], idx + 1);	break;
-				case 3:	dfs(num / number[idx], idx + 1);	break;
- 
+
+		for (int d = 0; d < 4; d++) {
+			if (operator[d] > 0) {
+				switch (d) {
+					case 0:
+						operator[d]--;
+						DFS(L + 1, result + arr[L + 1]);
+						operator[d]++;
+						break;
+					case 1:
+						operator[d]--;
+						DFS(L + 1, result - arr[L + 1]);
+						operator[d]++;
+						break;
+					case 2:
+						operator[d]--;
+						DFS(L + 1, result * arr[L + 1]);
+						operator[d]++;
+						break;
+					case 3:
+						operator[d]--;
+						DFS(L + 1, result / arr[L + 1]);
+						operator[d]++;
+						break;
 				}
-				// 재귀호출이 종료되면 다시 해당 연산자 개수를 복구한다.
-				operator[i]++;
 			}
 		}
 	}
- 
 }
