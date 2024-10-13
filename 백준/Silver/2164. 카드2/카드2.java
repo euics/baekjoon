@@ -1,18 +1,20 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
-	public static void main(String[] args) throws Exception {
+public class Main {
+	static Deque<Integer> dq = new LinkedList<>();
+
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(br.readLine());
+		int N = Integer.parseInt(br.readLine());
 
-		Deque<Integer> dq = new LinkedList<>();
-		for (int i = 1; i <= n; i++)
+		for (int i = 1; i <= N; i++) {
 			dq.addLast(i);
+		}
 
-		while (!dq.isEmpty() && dq.size() > 1) {
-			int remove = dq.pollFirst();
+		while (!dq.isEmpty() && dq.size() != 1) {
+			dq.pollFirst();
 			dq.addLast(dq.pollFirst());
 		}
 
