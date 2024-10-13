@@ -1,82 +1,67 @@
-import java.lang.management.OperatingSystemMXBean;
 import java.util.*;
 
 class Solution {
-	static long max = Integer.MIN_VALUE;
+
+	private static final String[][] precedences = {
+		"+-*".split(""),
+		"+*-".split(""),
+		"*+-".split(""),
+		"*-+".split(""),
+		"-*+".split(""),
+		"-+*".split("")
+	};
+
+	static long max = Long.MIN_VALUE;
 
 	public long solution(String expression) {
-		List<Long> numbers = new ArrayList<>();
-		List<Character> operations = new ArrayList<>();
-
-		StringBuilder sb = new StringBuilder();
-		for (char ch : expression.toCharArray()) {
-			if (Character.isDigit(ch))
-				sb.append(ch);
-			else {
-				numbers.add(Long.parseLong(sb.toString()));
-				operations.add(ch);
-				sb = new StringBuilder();
-			}
+		List<String> numbers = new ArrayList<>();
+		StringTokenizer st = new StringTokenizer(expression, "+-*", true);
+		while (st.hasMoreTokens()) {
+			numbers.add(st.nextToken());
 		}
-		numbers.add(Long.parseLong(sb.toString()));
 
-		char[] permutations = new char[3];
-		permutation(0, numbers, operations, new char[] {'+', '-', '*'}, permutations, new boolean[3]);
+		for (String[] precedence : precedences) {
+			long result = Math.abs(calculate(new ArrayList<>(numbers), precedence));
+			max = Math.max(max, result);
+		}
 
 		return max;
 	}
 
-	public void permutation(
-		int L,
-		List<Long> numbers,
-		List<Character> operations,
-		char[] sequences,
-		char[] permutations,
-		boolean[] bool
-	) {
-		if (L == 3) {
-			max = Math.max(max, Math.abs(calculate(numbers, operations, permutations)));
+	public long calculate(List<String> numbers, String[] precedence) {
+		for (String operation : precedence) {
+			for (int i = 0; i < numbers.size(); i++) {
+				if (operation.equals(numbers.get(i))) {
+					long a = Long.parseLong(numbers.get(i - 1));
+					long b = Long.parseLong(numbers.get(i + 1));
+					long result = calculate(a, b, operation);
 
-			return;
-		}
-
-		for (int i = 0; i < 3; i++) {
-			if (!bool[i]) {
-				bool[i] = true;
-				permutations[L] = sequences[i];
-				permutation(L + 1, numbers, operations, sequences, permutations, bool);
-				bool[i] = false;
-			}
-		}
-	}
-
-	public long calculate(List<Long> numbers, List<Character> operations, char[] permutations) {
-		LinkedList<Long> numList = new LinkedList<>(numbers);
-		LinkedList<Character> operList = new LinkedList<>(operations);
-			
-		for (char permutation : permutations) {
-			for (int i = 0; i < operList.size(); i++) {
-				if (permutation == operList.get(i)) {
-					long result = applyOperation(numList.remove(i), numList.remove(i), operList.remove(i));
-					numList.add(i, result);
-					i--;
+					numbers.remove(i - 1);
+					numbers.remove(i - 1);
+					numbers.remove(i - 1);
+					numbers.add(i - 1, String.valueOf(result));
+					i -= 2;
 				}
 			}
 		}
 
-		return numList.get(0);
+		return Long.parseLong(numbers.get(0));
 	}
 
-	public long applyOperation(long a, long b, char operation) {
+	public long calculate(long a, long b, String operation) {
 		switch (operation) {
-			case '+':
+			case "+" -> {
 				return a + b;
-			case '-':
+			}
+			case "-" -> {
 				return a - b;
-			case '*':
+			}
+			case "*" -> {
 				return a * b;
-			default:
-				throw new IllegalStateException("Apply Operation Exception Occur");
+			}
+			default -> {
+				return 0;
+			}
 		}
 	}
 }
