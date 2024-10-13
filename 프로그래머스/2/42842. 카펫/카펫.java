@@ -1,20 +1,22 @@
 class Solution {
-    public int[] solution(int brown, int yellow) {
-        int[] answer = new int[2];
-        
-        for(int x = 1; ; x++) {
-            boolean bool = false;
-            for(int y = 1; y <= x; y++) {
-                if(x * y == brown + yellow && (x - 2) * (y - 2) == yellow) {
-                    bool = true;
-                    answer[0] = x;
-                    answer[1] = y;
-                }
-            }
-            
-            if(bool) break;
-        }
-        
-        return answer;
-    }
+	public int[] solution(int brown, int yellow) {
+		for (int col = 1; ; col++) {
+			for (int row = 1; row <= col; row++) {
+				if (col * row == brown + yellow) {
+					if (2 * (row + col - 2) == brown) {
+						return new int[] {col, row};
+					}
+				}
+			}
+		}
+	}
 }
+
+/*
+ 가로 A 세로 B
+
+ A * B = BROWN + YELLOW
+ 2A + 2(B - 2) = BROWN
+ 2A + 2B - 4
+ 2(A + B - 2) = BROWN
+*/
