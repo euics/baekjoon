@@ -1,51 +1,51 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
+	static int[] arr;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
+		arr = new int[N];
 
-		int[] lectures = new int[N];
+		int max = 0, min = Integer.MIN_VALUE;
 		st = new StringTokenizer(br.readLine());
-		int min = Integer.MIN_VALUE, max = 0;
 		for (int i = 0; i < N; i++) {
-			lectures[i] = Integer.parseInt(st.nextToken());
-			min = Math.max(min, lectures[i]);
-			max += lectures[i];
+			arr[i] = Integer.parseInt(st.nextToken());
+			max += arr[i];
+			min = Math.max(min, arr[i]);
 		}
 
-		int answer = 0;
+		int answer = Integer.MAX_VALUE;
 		while (min <= max) {
 			int mid = (min + max) / 2;
 
-			if (canDivide(lectures, M, mid)) {
-				answer = mid;
+			if (blueRay(mid, M)) {
+				answer = Math.min(answer, mid);
 				max = mid - 1;
-			} else
+			} else {
 				min = mid + 1;
+			}
 		}
 
 		System.out.println(answer);
 	}
 
-	public static boolean canDivide(int[] lectures, int M, int mid) {
-		int sum = 0, cnt = 1;
-		for (int lecture : lectures) {
-			if (sum + lecture > mid) {
+	public static boolean blueRay(int mid, int M) {
+		int cnt = 1, sum = 0;
+
+		for (int i = 0; i < arr.length; i++) {
+			if (sum + arr[i] > mid) {
 				cnt++;
 				sum = 0;
 			}
 
-			sum += lecture;
-
-			if (cnt > M)
-				return false;
+			sum += arr[i];
 		}
 
-		return true;
+		return cnt <= M;
 	}
 }
