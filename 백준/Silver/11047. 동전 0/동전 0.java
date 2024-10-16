@@ -1,28 +1,26 @@
-import com.sun.source.tree.BinaryTree;
-
-import java.io.*;
-import java.math.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int k = Integer.parseInt(st.nextToken());
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
 
-        int[] dis = new int[n];
-        for(int i = 0; i < n; i++)
-            dis[i] = Integer.parseInt(br.readLine());
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+		for (int i = 0; i < N; i++) {
+			pq.add(Integer.parseInt(br.readLine()));
+		}
 
-        int cnt = 0;
-        for(int i = n - 1; i >= 0; i--){
-            if(dis[i] <= k){
-                cnt += k / dis[i];
-                k %= dis[i];
-            }
-        }
+		int answer = 0;
+		while (!pq.isEmpty() && K > 0) {
+			int max = pq.poll();
+			int quotient = K / max;
+			answer += quotient;
+			K %= max;
+		}
 
-        System.out.println(cnt);
-    }
+		System.out.println(answer);
+	}
 }
