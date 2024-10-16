@@ -1,22 +1,24 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
+	static PriorityQueue<Integer> pq = new PriorityQueue<>();
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-
-		PriorityQueue<Integer> pq = new PriorityQueue<>();
-		for (int i = 0; i < N; i++)
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(br.readLine());
+		for (int i = 0; i < N; i++) {
 			pq.add(Integer.parseInt(br.readLine()));
+		}
 
 		int answer = 0;
-		while (!pq.isEmpty() && pq.size() >= 2) {
-			int sum = pq.poll() + pq.poll();
-			answer += sum;
-			pq.add(sum);
+		while (pq.size() >= 2) {
+			int min = pq.poll();
+			int max = pq.poll();
+			answer += min + max;
+
+			pq.add(min + max);
 		}
 
 		System.out.println(answer);
