@@ -4,8 +4,9 @@ import java.util.Comparator;
 class Solution {
 	public String solution(int[] numbers) {
 		String[] tmp = new String[numbers.length];
-		for (int i = 0; i < numbers.length; i++)
+		for (int i = 0; i < numbers.length; i++) {
 			tmp[i] = String.valueOf(numbers[i]);
+		}
 
 		Arrays.sort(tmp, new Comparator<String>() {
 			@Override
@@ -15,12 +16,14 @@ class Solution {
 		});
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < tmp.length; i++)
+		for (int i = 0; i < tmp.length; i++) {
 			sb.append(tmp[i]);
+		}
 
-		if (sb.toString().startsWith("0"))
+		if (sb.toString().startsWith("0")) {
 			return "0";
-		else
+		} else {
 			return sb.toString();
+		}
 	}
 }
