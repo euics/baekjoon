@@ -1,26 +1,28 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
+	static int answer = 0;
+	static PriorityQueue<int[]> conferenceRoom
+		= new PriorityQueue<>((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(br.readLine());
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			pq.add(new int[] {Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())});
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+			conferenceRoom.add(new int[] {start, end});
 		}
 
-		int answer = 0, endTime = 0;
-		while (!pq.isEmpty()) {
-			while (!pq.isEmpty() && endTime > pq.peek()[0])
-				pq.poll();
+		int endTime = 0;
+		while (!conferenceRoom.isEmpty()) {
+			int[] curRoom = conferenceRoom.poll();
 
-			while (!pq.isEmpty() && endTime <= pq.peek()[0]) {
-				endTime = pq.peek()[1];
-				pq.poll();
+			if (curRoom[0] >= endTime) {
+				endTime = curRoom[1];
 				answer++;
 			}
 		}
