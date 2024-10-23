@@ -1,27 +1,22 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
+public class Main {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		long A = Long.parseLong(st.nextToken());
 		long B = Long.parseLong(st.nextToken());
-		long GCD = GCD(A, B);
+		long repeat = GCD(A, B);
 
-		StringBuilder sb = new StringBuilder();
-		while (GCD > 0) {
-			sb.append("1");
-			GCD--;
-		}
-
-		System.out.println(sb.toString());
+		System.out.println("1".repeat((int)repeat));
 	}
 
 	public static long GCD(long a, long b) {
-		if (b == 0)
+		if (b == 0) {
 			return a;
+		}
 
 		return GCD(b, a % b);
 	}
