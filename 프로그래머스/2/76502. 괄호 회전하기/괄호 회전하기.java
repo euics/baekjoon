@@ -1,51 +1,67 @@
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Stack;
 
 class Solution {
-    public int solution(String s) {
-        Deque<Character> dq = new LinkedList<>();
-        for(int i = 0; i < s.length(); i++){
-            dq.addLast(s.charAt(i));
-        }
-        
-        int answer = 0;
-        for(int i = 0; i < s.length(); i++){
-            
-            if(checkString(dq)){
-                answer++;
-            }
-            
-            changeDeque(dq);
-        }
-        
-        return answer;
-    }
-    
-    public void changeDeque(Deque<Character> dq){
-        dq.addLast(dq.pollFirst());
-    }
-    
-    public boolean checkString(Deque<Character> dq){
-        Iterator<Character> iter = dq.iterator();
-        Stack<Character> stack = new Stack<>();
-        
-        while(iter.hasNext()){
-            char cur = iter.next();
-            
-            if(cur == '(' || cur == '[' || cur == '{'){
-                stack.push(cur);
-            } else{
-                
-                if(stack.isEmpty()) return false;
-                
-                char top = stack.peek();
-                if((top == '(' && cur == ')') || (top == '[' && cur == ']') || (top == '{' && cur == '}')){
-                    stack.pop();
-                } else{
-                    return false;
-                }
-            }
-        }
-        
-        return stack.isEmpty();
-    }
+	static int answer = 0;
+	static Deque<Character> dq = new LinkedList<>();
+
+	public int solution(String s) {
+		for (char ch : s.toCharArray()) {
+			dq.addLast(ch);
+		}
+
+		int length = dq.size();
+		for (int i = 0; i < length; i++) {
+			if (isCorrect()) {
+				answer++;
+			}
+
+			dq.addLast(dq.pollFirst());
+		}
+
+		return answer;
+	}
+
+	public boolean isCorrect() {
+		Deque<Character> tmp = new LinkedList<>(dq);
+		Stack<Character> stack = new Stack<>();
+
+		int length = tmp.size();
+		for (int i = 0; i < length; i++) {
+			char cur = tmp.pollFirst();
+
+			if (cur == '(' || cur == '[' || cur == '{') {
+				stack.push(cur);
+			} else {
+				if (stack.isEmpty()) {
+					return false;
+				}
+
+				if (cur == ')') {
+					if (stack.peek() != '(') {
+						return false;
+					}
+				}
+
+				if (cur == ']') {
+					if (stack.peek() != '[') {
+						return false;
+					}
+				}
+
+				if (cur == '}') {
+					if (stack.peek() != '{') {
+						return false;
+					}
+				}
+
+				stack.pop();
+			}
+
+			tmp.addLast(cur);
+		}
+
+		return stack.isEmpty() ? true : false;
+	}
 }
