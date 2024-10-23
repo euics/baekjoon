@@ -1,20 +1,25 @@
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 class Solution {
-    public String solution(String[] participants, String[] completions) {
-        Map<String, Integer> map = new HashMap<>();
-        for(String participant : participants) map.put(participant, map.getOrDefault(participant, 0) + 1);
+	static HashMap<String, Integer> map = new HashMap<>();
 
-        for(String completion : completions) {
-            map.put(completion, map.get(completion) - 1);
+	public String solution(String[] participant, String[] completion) {
+		for (String s : participant) {
+			map.put(s, map.getOrDefault(s, 0) + 1);
+		}
 
-            if(map.get(completion) == 0) map.remove(completion);
-        }
+		for (String s : completion) {
+			map.put(s, map.get(s) - 1);
+			if (map.get(s) == 0) {
+				map.remove(s);
+			}
+		}
 
-        List<String> answer = new LinkedList<>(map.keySet());
-        return answer.get(0);
-    }
+		StringBuilder sb = new StringBuilder();
+		for (String key : map.keySet()) {
+			sb.append(key);
+		}
+
+		return sb.toString();
+	}
 }
