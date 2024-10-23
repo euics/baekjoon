@@ -1,30 +1,35 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
-    public int[] solution(int[] progresses, int[] speeds) {
-        int[] dueDates = new int[progresses.length];
-        for(int i = 0; i < progresses.length; i++) {
-            int dueDate = 0;
-            if((100 - progresses[i]) % speeds[i] == 0) {
-                dueDate = (100 - progresses[i]) / speeds[i];
-            } else {
-                dueDate = (100 - progresses[i]) / speeds[i] + 1;
-            }
-            dueDates[i] = dueDate;
-        }
-        
-        List<Integer> answer = new ArrayList<>();
-        for(int i = 0; i < dueDates.length; i++) {
-            int dueDate = dueDates[i];
-            int cnt = 0;
-            while(i < dueDates.length && dueDate >= dueDates[i]) {
-                cnt++;
-                i++;
-            }
-            answer.add(cnt);
-            i--;
-        }
-        
-        return answer.stream().mapToInt(i -> i).toArray();
-    }
+	static int[] answer;
+	static Deque<int[]> q = new LinkedList<>();
+
+	public int[] solution(int[] progresses, int[] speeds) {
+		for (int i = 0; i < progresses.length; i++) {
+			int remain = (100 - progresses[i]) / speeds[i];
+			if ((100 - progresses[i]) % speeds[i] != 0) {
+				remain += 1;
+			}
+
+			if (!q.isEmpty() && q.peekLast()[0] >= remain) {
+				int[] cur = q.pollLast();
+				cur[1]++;
+				q.addLast(cur);
+			} else {
+				q.addLast(new int[] {remain, 1});
+			}
+		}
+
+		answer = new int[q.size()];
+		int idx = 0;
+		while (!q.isEmpty()) {
+			int[] cur = q.poll();
+			answer[idx++] = cur[1];
+		}
+
+		return answer;
+	}
 }
