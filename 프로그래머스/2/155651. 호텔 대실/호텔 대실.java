@@ -1,36 +1,45 @@
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
+	static PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+	static PriorityQueue<Integer> roomInfo = new PriorityQueue<>();
+
 	public int solution(String[][] book_time) {
-		int[][] bookTimeIntegerFormat = new int[book_time.length][2];
-		for (int i = 0; i < book_time.length; i++)
-			bookTimeIntegerFormat[i] = changeTimeFormat(book_time[i]);
-		Arrays.sort(bookTimeIntegerFormat, (a, b) -> a[0] - b[0]);
+		for(int i = 0; i < book_time.length; i++) {
+			int startTime = convertTime(book_time[i][0]);
+			int endTime = convertTime(book_time[i][1]);
 
-		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] == b[1] ? a[0] - b[0] : a[1] - b[1]);
-		int max = Integer.MIN_VALUE;
-		for (int i = 0; i < bookTimeIntegerFormat.length; i++) {
-			if (!pq.isEmpty() && pq.peek()[1] + 10 <= bookTimeIntegerFormat[i][0])
-				pq.poll();
-
-			pq.add(bookTimeIntegerFormat[i]);
-			max = Math.max(max, pq.size());
+			pq.add(new int[]{startTime, endTime});
 		}
 
-		return max;
+		while (!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			int startTime = cur[0], endTime = cur[1];
+
+			if (!roomInfo.isEmpty() && roomInfo.peek() + 10 <= startTime) {
+				roomInfo.poll();
+			}
+
+			roomInfo.add(endTime);
+		}
+
+		return roomInfo.size();
 	}
 
-	public int[] changeTimeFormat(String[] bookTime) {
-		return new int[] {
-			Integer.parseInt(bookTime[0].split(":")[0]) * 60 + Integer.parseInt(bookTime[0].split(":")[1]),
-			Integer.parseInt(bookTime[1].split(":")[0]) * 60 + Integer.parseInt(bookTime[1].split(":")[1]),
-		};
+	public int convertTime(String time) {
+		return Integer.parseInt(time.split(":")[0]) * 60 + Integer.parseInt(time.split(":")[1]);
 	}
 
 	public static void main(String[] args) {
+		String[][] timeSlots = {
+			{"14:10", "19:20"},
+			{"14:20", "15:20"},
+			{"15:00", "17:00"},
+			{"16:40", "18:20"},
+			{"18:20", "21:20"}
+		};
+
 		Solution T = new Solution();
-		T.solution(new String[][] {{"15:00", "17:00"}, {"16:40", "18:20"}, {"14:20", "15:20"}, {"14:10", "19:20"},
-			{"18:20", "21:20"}});
+		System.out.println(T.solution(timeSlots));
 	}
 }
