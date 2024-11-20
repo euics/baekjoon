@@ -1,6 +1,7 @@
 import java.util.*;
 
 class Solution {
+    static int max = Integer.MIN_VALUE;
 	static PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
 	static PriorityQueue<Integer> roomInfo = new PriorityQueue<>();
 
@@ -21,9 +22,10 @@ class Solution {
 			}
 
 			roomInfo.add(endTime);
+            max = Math.max(max, roomInfo.size());
 		}
 
-		return roomInfo.size();
+		return max;
 	}
 
 	public int convertTime(String time) {
