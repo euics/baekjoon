@@ -1,25 +1,35 @@
 import java.util.*;
+import java.io.*;
 
 class Solution {
-	public int solution(String skill, String[] skill_trees) {
-		int answer = 0;
+	static int answer = 0;
 
+	public int solution(String skill, String[] skill_trees) {
 		for (String skillTree : skill_trees) {
-			Queue<Character> skillDictionary = new LinkedList<>();
-			for (char ch : skill.toCharArray())
-				skillDictionary.add(ch);
+			Queue<Character> q = new LinkedList<>();
+			
+			for (char ch : skill.toCharArray()) {
+				q.add(ch);
+			}
 
 			boolean bool = true;
 			for (char ch : skillTree.toCharArray()) {
-				if (!skillDictionary.isEmpty() && skillDictionary.contains(ch)) {
-					if(skillDictionary.peek() == ch) skillDictionary.poll();
-					else bool = false;
+				if (!q.isEmpty() && q.contains(ch)) {
+					if (q.peek() == ch) {
+						q.poll();
+					} else {
+						bool = false;
+					}
 				}
-				
-				if(!bool) break;
+
+				if (!bool) {
+					break;
+				}
 			}
-			
-			if(bool) answer++;
+
+			if (bool) {
+				answer++;
+			}
 		}
 
 		return answer;
