@@ -1,49 +1,48 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Solution {
-    public int solution(String begin, String target, String[] words) {
-        return BFS(begin, target, words);
-    }
-    
-    public int BFS(String begin, String target, String[] words) {
-        List<String> wordList = new ArrayList<>(Arrays.asList(words));
-        
-        boolean[] bool = new boolean[wordList.size()];
-        Queue<String> q = new LinkedList<>();
-        q.add(begin);
-        
-        int L = 0;
-        while(!q.isEmpty()) {
-            int length = q.size();
-            
-            for(int i = 0; i < length; i++) {
-                String cur = q.poll();
-                
-                if(cur.equals(target)) return L;
-                
-                for(int d = 0; d < wordList.size(); d++) {
-                    if(!bool[d] && compare(cur, wordList.get(d))) {
-                        bool[d] = true;
-                        q.add(wordList.get(d));
-                    }
-                }
-            }
-            
-            L++;
-        }
-        
-        return 0;
-    }
-    
-    public boolean compare(String x, String y) {
-        if(x.length() != y.length()) return false;
-        
-        int cnt = 0;
-        for(int i = 0; i < x.length(); i++) {
-            
-            if(x.charAt(i) != y.charAt(i)) cnt++;
-        }
-        
-        return cnt == 1 ? true : false;
-    }
+	static int answer = Integer.MAX_VALUE;
+	static List<String> list;
+
+	public int solution(String begin, String target, String[] words) {
+		list = Arrays.stream(words).collect(Collectors.toList());
+		DFS(0, begin, target, words, new boolean[words.length]);
+
+		return answer == Integer.MAX_VALUE ? 0 : answer;
+	}
+
+	public void DFS(int L, String begin, String target, String[] words, boolean[] bool) {
+		if (begin.equals(target)) {
+			answer = Math.min(answer, L);
+
+			return;
+		}
+
+		for (int i = 0; i < words.length; i++) {
+			if (countDiff(begin, words[i])) {
+				if (!bool[list.indexOf(words[i])]) {
+					bool[list.indexOf(words[i])] = true;
+					DFS(L + 1, words[i], target, words, bool);
+					bool[list.indexOf(words[i])] = false;
+				}
+			}
+		}
+	}
+
+	public boolean countDiff(String o1, String o2) {
+		int cnt = 0;
+
+		if (o1.length() != o2.length()) {
+			return false;
+		}
+
+		for (int i = 0; i < o1.length(); i++) {
+			if (o1.charAt(i) != o2.charAt(i)) {
+				cnt++;
+			}
+		}
+
+		return cnt == 1;
+	}
 }
