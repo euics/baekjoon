@@ -1,26 +1,27 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
+	static StringBuilder sb = new StringBuilder();
+	static Stack<Integer> stack = new Stack<>();
+
 	public String solution(String number, int k) {
-		Stack<Integer> stack = new Stack<>();
-		for (int i = 0; i < number.length(); i++) {
-			int cur = Integer.parseInt(String.valueOf(number.charAt(i)));
-			while (!stack.isEmpty() && k > 0 && stack.peek() < cur) {
+		for (char ch : number.toCharArray()) {
+			while (!stack.isEmpty() && k > 0 && stack.peek() < Integer.parseInt(String.valueOf(ch))) {
 				stack.pop();
 				k--;
 			}
 
-			stack.push(cur);
+			stack.push(Integer.parseInt(String.valueOf(ch)));
 		}
 
-		while (!stack.isEmpty() && k > 0) {
+		while (k > 0 && !stack.isEmpty()) {
 			stack.pop();
 			k--;
 		}
 
-		StringBuilder sb = new StringBuilder();
-		while (!stack.isEmpty())
+		while (!stack.isEmpty()) {
 			sb.insert(0, stack.pop());
+		}
 
 		return sb.toString();
 	}
