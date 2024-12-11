@@ -1,57 +1,50 @@
-import java.sql.Array;
 import java.util.*;
 
 class Solution {
-    public int[] solution(int[] fees, String[] records) {
-        Map<String, Integer> entranceInfo = new HashMap<>();
-        Map<String, Integer> totalInfo = new HashMap<>();
+	static ArrayList<Integer> answer = new ArrayList<>();
+	static HashMap<Integer, Integer> inMap = new HashMap<>();
+	static TreeMap<Integer, Integer> recordMap = new TreeMap<>();
 
-        for (String record : records) {
-            if(record.split(" ")[2].equals("IN"))
-                entranceInfo.put(record.split(" ")[1], convertTime(record.split(" ")[0]));
-            else {
-                int exitTime = convertTime(record.split(" ")[0]);
-                String carNumber = record.split(" ")[1];
-                int entranceTime = entranceInfo.get(carNumber);
+	public int[] solution(int[] fees, String[] records) {
+		for (String record : records) {
+			String[] tmp = record.split(" ");
+			int carNum = Integer.parseInt(tmp[1]);
+			int time = convert(tmp[0]);
 
-                totalInfo.put(carNumber, totalInfo.getOrDefault(carNumber, 0) + exitTime - entranceTime);
-                entranceInfo.remove(carNumber);
-            }
-        }
+			switch (tmp[2]) {
+				case "IN":
+					inMap.put(carNum, time);
+					break;
+				case "OUT":
+					recordMap.put(carNum, recordMap.getOrDefault(carNum, 0) + time - inMap.get(carNum));
+					inMap.remove(carNum);
+					break;
+			}
+		}
 
-        Set<String> remainKeySet = entranceInfo.keySet();
-        if(remainKeySet.size() != 0) {
-            for(String carNumber : remainKeySet) {
-                int exitTime = convertTime("23:59");
-                int entranceTime = entranceInfo.get(carNumber);
-                totalInfo.put(carNumber, totalInfo.getOrDefault(carNumber, 0) + exitTime - entranceTime);
-            }
-        }
+		for (int carNum : inMap.keySet()) {
+			int time = convert("23:59");
+			recordMap.put(carNum, recordMap.getOrDefault(carNum, 0) + time - inMap.get(carNum));
+		}
 
-        for(String carNumber : totalInfo.keySet()){
-            int totalTime = totalInfo.get(carNumber);
-            int fee = 0;
-            if(totalTime > fees[0]){
-                fee = fees[1] + (int) Math.ceil((double)(totalTime - fees[0]) / fees[2]) * fees[3];
-            } else
-                fee = fees[1];
+		for (int carNum : recordMap.keySet()) {
+			answer.add(calculate(fees, recordMap.get(carNum)));
+		}
 
-            totalInfo.put(carNumber, fee);
-        }
+		return answer.stream().mapToInt(i -> i).toArray();
+	}
 
-        for(String key : totalInfo.keySet()) System.out.printf("%s %d\n", key, totalInfo.get(key));
-        
-        List<String> totalInfoKey = new ArrayList<>(totalInfo.keySet());
-        Collections.sort(totalInfoKey);
-        
-        int[] answer = new int[totalInfoKey.size()];
-        int idx = 0;
-        for(String sortedCarNumber : totalInfoKey) answer[idx++] = totalInfo.get(sortedCarNumber); 
+	public int convert(String time) {
+		return Integer.parseInt(time.split(":")[0]) * 60 + Integer.parseInt(time.split(":")[1]);
+	}
 
-        return answer;
-    }
+	public int calculate(int[] fees, int time) {
+		if (time <= fees[0]) {
+			return fees[1];
+		} else {
+			double fee = (Math.ceil((double)(time - fees[0]) / fees[2])) * fees[3];
 
-    public int convertTime(String time){
-        return Integer.parseInt(time.split(":")[0]) * 60 + Integer.parseInt(time.split(":")[1]);
-    }
+			return (int)(fees[1] + fee);
+		}
+	}
 }
