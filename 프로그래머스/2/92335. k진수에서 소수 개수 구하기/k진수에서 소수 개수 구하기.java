@@ -1,57 +1,36 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int n, int k) {
-                int answer = 0;
-        String num = Integer.toString(n, k);
+	static int answer = 0;
+	public int solution(int n, int k) {
+		String radix = Integer.toString(n, k);
 
-        int start = 0;
-        int index = 0;
+		int start = 0, end = 0;
 
-        ArrayList<Integer> list = new ArrayList<>();
-        for (char x : num.toCharArray()) {
-            if (x == '0') {
-                list.add(index);
-            }
-            index++;
-        }
-        
-        ArrayList<Long> Number = new ArrayList<>();
-        list.add(num.length());
-        String a = "";
-        int j = 0;
+		String[] candidate = radix.split("0");
+		for (String x : candidate) {
+			if(!x.isEmpty() && isPrime(Long.parseLong(x))) {
+				answer++;
+			}
+		}
 
-        for(int end : list){
-            String q = num.substring(start, end).trim();
-            if(!q.isEmpty() && q.matches("\\d+")){
-                Number.add(Long.parseLong(q));
-            }
-            start = end + 1;
-        }
+		return answer;
+	}
 
-        return answer = PrimeNumber(Number);
+	public boolean isPrime(long n) {
+		if (n <= 1)
+			return false;
+		if (n == 2)
+			return true;
+		if (n % 2 == 0)
+			return false;
 
-    }
-    
-    public int PrimeNumber(ArrayList <Long> list){
-        int cnt = 0;
-        for(long x : list){
-            if(isPrime(x)){
-                cnt++;
-            }
-        }
-        return cnt;
-    }
+		for (long i = 3; i * i <= n; i += 2) {
+			if (n % i == 0) {
+				return false;
+			}
+		}
 
-    public boolean isPrime(long n){
-        if(n<=1){
-            return false;
-        }
-        for(long i = 2; i<=Math.sqrt(n); i++){
-            if(n % i == 0){
-                return false;
-            }
-        }
-        return true;
-    }
+		return true;
+	}
 }
