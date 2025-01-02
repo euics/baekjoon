@@ -2,10 +2,8 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-	static int visited = 0;
-	static int[] inDegree;
 	static StringBuilder sb = new StringBuilder();
-	static Queue<Integer> q = new LinkedList<>();
+	static int[] inDegree;
 	static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
 
 	public static void main(String[] args) throws IOException {
@@ -20,9 +18,9 @@ public class Main {
 		int M = Integer.parseInt(st.nextToken());
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-
 			int size = Integer.parseInt(st.nextToken());
 			int[] tmp = new int[size];
+
 			for (int j = 0; j < size; j++) {
 				tmp[j] = Integer.parseInt(st.nextToken());
 			}
@@ -33,30 +31,31 @@ public class Main {
 			}
 		}
 
+		Queue<Integer> q = new LinkedList<>();
 		for (int i = 1; i <= N; i++) {
 			if (inDegree[i] == 0) {
 				q.add(i);
 			}
 		}
 
+		int sortCnt = 0;
 		while (!q.isEmpty()) {
-			int cur = q.poll();
-			sb.append(cur).append("\n");
-			visited++;
+			int prev = q.poll();
+			sortCnt++;
+			sb.append(prev).append("\n");
 
-			for (int next : graph.get(cur)) {
+			for (int next : graph.get(prev)) {
 				inDegree[next]--;
-
 				if (inDegree[next] == 0) {
 					q.add(next);
 				}
 			}
 		}
 
-		if (visited != N) {
-			System.out.println(0);
-		} else {
+		if (sortCnt == N) {
 			System.out.println(sb.toString());
+		} else {
+			System.out.println(0);
 		}
 	}
 }
