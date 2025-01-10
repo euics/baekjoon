@@ -1,62 +1,54 @@
 import java.util.*;
 
 class Solution {
-	public int[] solution(int N, int[] stages) {
-		int[] reachStage = new int[N + 1];
-		int[] notClearStage = new int[N + 1];
-		for (int i = 1; i < N + 1; i++) {
-			for (int j = 0; j < stages.length; j++) {
-				if (stages[j] >= i) {
-					reachStage[i]++;
-				}
+	static int[] answer;
 
-				if (stages[j] == i) {
-					notClearStage[i]++;
-				}
-			}
+	public int[] solution(int N, int[] stages) {
+		int[] challenger = new int[N + 2];
+		for (int i = 0; i < stages.length; i++) {
+			challenger[stages[i]]++;
 		}
 
-		Fail[] failureRate = new Fail[N + 1];
+		FailRate[] failRates = new FailRate[N + 1];
 		for (int i = 1; i < N + 1; i++) {
-			failureRate[i] = new Fail(0f, i);
+			int cnt = stages.length;
 
-			if (reachStage[i] == 0) {
-				failureRate[i].rate = 0f;
+			if(challenger[i] == 0) {
+				failRates[i] = new FailRate(0, i);
 				continue;
 			}
 
-			failureRate[i].rate = (float)notClearStage[i] / (float)reachStage[i];
+			for (int j = 1; j < i; j++) {
+				cnt -= challenger[j];
+			}
+
+			failRates[i] = new FailRate((double)challenger[i] / cnt, i);
 		}
 
-		Arrays.sort(failureRate, 1, N + 1);
-
+		Arrays.sort(failRates, 1, N + 1);
+		answer = new int[N];
 		for (int i = 1; i < N + 1; i++) {
-			System.out.printf("%f %d\n", failureRate[i].rate, failureRate[i].idx);
-		}
-
-		int[] answer = new int[N];
-		for (int i = 1; i < N + 1; i++) {
-			answer[i - 1] = failureRate[i].idx;
+			answer[i - 1] = failRates[i].idx;
 		}
 
 		return answer;
 	}
 }
 
-class Fail implements Comparable<Fail> {
-	float rate;
+class FailRate implements Comparable<FailRate> {
+	double rate;
 	int idx;
 
-	public Fail(float rate, int idx) {
+	public FailRate(double rate, int idx) {
 		this.rate = rate;
 		this.idx = idx;
 	}
 
 	@Override
-	public int compareTo(Fail o) {
+	public int compareTo(FailRate o) {
 		if (this.rate == o.rate)
 			return this.idx - o.idx;
 		else
-			return Float.compare(o.rate, this.rate);
+			return Double.compare(o.rate, this.rate);
 	}
 }
