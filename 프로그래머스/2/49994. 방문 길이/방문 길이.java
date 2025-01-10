@@ -1,28 +1,49 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class Solution {
+	static int answer = 0;
+	static Set<String> set = new HashSet<>();
+
 	public int solution(String dirs) {
-		Set<String> route = new HashSet<>();
 		int x = 0, y = 0;
 
-		for(char dir : dirs.toCharArray()) {
-			int nx = x, ny = y;
+		for (char dir : dirs.toCharArray()) {
+			int tmpX = x, tmpY = y;
 
-			if(dir == 'U' && y + 1 <= 5) ny++;
-			if(dir == 'D' && y - 1 >= -5) ny--;
-			if(dir == 'L' && x - 1 >= -5) nx--;
-			if(dir == 'R' && x + 1 <= 5) nx++;
-			
-			if(nx == x && ny == y) continue;
-			
-			route.add("" + x + y + nx + ny);
-			route.add("" + nx + ny + x + y);
-			
-			x = nx;
-			y = ny;
+			switch (dir) {
+				case 'U':
+					y++;
+					break;
+				case 'D':
+					y--;
+					break;
+				case 'R':
+					x++;
+					break;
+				case 'L':
+					x--;
+			}
+
+			if (x < -5 || y < -5 || x > 5 || y > 5) {
+				x = tmpX;
+				y = tmpY;
+				continue;
+			}
+
+			StringBuilder sb1 = new StringBuilder();
+			sb1.append(tmpX).append(tmpY).append(x).append(y);
+			StringBuilder sb2 = new StringBuilder();
+			sb2.append(x).append(y).append(tmpX).append(tmpY);
+
+			if (set.contains(sb1.toString()) || set.contains(sb2.toString())) {
+				continue;
+			} else {
+				set.add(sb1.toString());
+				set.add(sb2.toString());
+				answer++;
+			}
 		}
-		
-		return route.size() / 2;
+
+		return answer;
 	}
 }
