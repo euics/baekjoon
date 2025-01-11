@@ -1,19 +1,23 @@
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
 	static int answer = 0;
-	static Deque<Character> dq = new LinkedList<>();
 
 	public int solution(String s) {
+		Deque<Character> dq = new LinkedList<>();
 		for (char ch : s.toCharArray()) {
 			dq.addLast(ch);
 		}
 
-		int length = dq.size();
-		for (int i = 0; i < length; i++) {
-			if (isCorrect()) {
+		int x = s.length();
+		for (int i = 0; i < x; i++) {
+			StringBuilder sb = new StringBuilder();
+
+			for (char ch : dq) {
+				sb.append(ch);
+			}
+
+			if (correctPattern(sb.toString())) {
 				answer++;
 			}
 
@@ -23,45 +27,31 @@ class Solution {
 		return answer;
 	}
 
-	public boolean isCorrect() {
-		Deque<Character> tmp = new LinkedList<>(dq);
+	public boolean correctPattern(String s) {
 		Stack<Character> stack = new Stack<>();
 
-		int length = tmp.size();
-		for (int i = 0; i < length; i++) {
-			char cur = tmp.pollFirst();
-
-			if (cur == '(' || cur == '[' || cur == '{') {
-				stack.push(cur);
+		for (char ch : s.toCharArray()) {
+			if (ch == '[' || ch == '(' || ch == '{') {
+				stack.push(ch);
 			} else {
 				if (stack.isEmpty()) {
 					return false;
-				}
-
-				if (cur == ')') {
-					if (stack.peek() != '(') {
+				} else {
+					if (matchPattern(stack.peek(), ch)) {
+						stack.pop();
+					} else {
 						return false;
 					}
 				}
-
-				if (cur == ']') {
-					if (stack.peek() != '[') {
-						return false;
-					}
-				}
-
-				if (cur == '}') {
-					if (stack.peek() != '{') {
-						return false;
-					}
-				}
-
-				stack.pop();
 			}
-
-			tmp.addLast(cur);
 		}
 
-		return stack.isEmpty() ? true : false;
+		return stack.isEmpty();
+	}
+
+	public boolean matchPattern(char open, char close) {
+		return (open == '(' && close == ')') ||
+			(open == '[' && close == ']') ||
+			(open == '{' && close == '}');
 	}
 }
