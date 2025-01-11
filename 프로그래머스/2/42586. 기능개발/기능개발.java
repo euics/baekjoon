@@ -1,35 +1,34 @@
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
-	static int[] answer;
-	static Deque<int[]> q = new LinkedList<>();
+	static ArrayList<Integer> answer = new ArrayList<>();
 
 	public int[] solution(int[] progresses, int[] speeds) {
+		Queue<Integer> q = new LinkedList<>();
 		for (int i = 0; i < progresses.length; i++) {
-			int remain = (100 - progresses[i]) / speeds[i];
-			if ((100 - progresses[i]) % speeds[i] != 0) {
-				remain += 1;
-			}
+			int time = -1;
 
-			if (!q.isEmpty() && q.peekLast()[0] >= remain) {
-				int[] cur = q.pollLast();
-				cur[1]++;
-				q.addLast(cur);
+			if ((100 - progresses[i]) % speeds[i] == 0) {
+				time = (100 - progresses[i]) / speeds[i];
 			} else {
-				q.addLast(new int[] {remain, 1});
+				time = (100 - progresses[i]) / speeds[i] + 1;
 			}
+
+			q.add(time);
 		}
 
-		answer = new int[q.size()];
-		int idx = 0;
 		while (!q.isEmpty()) {
-			int[] cur = q.poll();
-			answer[idx++] = cur[1];
+			int cur = q.poll();
+			int cnt = 1;
+
+			while (!q.isEmpty() && q.peek() <= cur) {
+				q.poll();
+				cnt++;
+			}
+
+			answer.add(cnt);
 		}
 
-		return answer;
+		return answer.stream().mapToInt(i -> i).toArray();
 	}
 }
