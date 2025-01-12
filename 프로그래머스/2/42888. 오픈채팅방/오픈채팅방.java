@@ -1,42 +1,30 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class Solution {
-	static Map<String, String> recordMap = new HashMap<>();
+	static ArrayList<String> answer = new ArrayList<>();
+	static Map<String, String> map = new HashMap<>();
 
 	public String[] solution(String[] record) {
-		for (int i = 0; i < record.length; i++) {
-			String enterAndExit = record[i].split(" ")[0];
+		for (String rec : record) {
+			String[] info = rec.split(" ");
 
-			if (enterAndExit.equals("Enter") || enterAndExit.equals("Change")) {
-				String uid = record[i].split(" ")[1];
-				String nickName = record[i].split(" ")[2];
-
-				recordMap.put(uid, nickName);
+			if (info[0].equals("Enter")) {
+				map.put(info[1], info[2]);
+			} else if (info[0].equals("Change")) {
+				map.put(info[1], info[2]);
 			}
 		}
 
-		List<String> answer = new ArrayList<>();
-		for (int i = 0; i < record.length; i++) {
-			String enterAndExit = record[i].split(" ")[0];
+		for (String rec : record) {
+			String[] info = rec.split(" ");
 
-			if (enterAndExit.equals("Enter")) {
-				StringBuilder sb = new StringBuilder();
-				String uid = record[i].split(" ")[1];
-				sb.append(recordMap.get(uid)).append("님이 들어왔습니다.");
-				answer.add(sb.toString());
-			}
-
-			if (enterAndExit.equals("Leave")) {
-				StringBuilder sb = new StringBuilder();
-				String uid = record[i].split(" ")[1];
-				sb.append(recordMap.get(uid)).append("님이 나갔습니다.");
-				answer.add(sb.toString());
+			if (info[0].equals("Enter")) {
+				answer.add(map.get(info[1]) + "님이 들어왔습니다.");
+			} else if (info[0].equals("Leave")) {
+				answer.add(map.get(info[1]) + "님이 나갔습니다.");
 			}
 		}
 
-		return answer.stream().toArray(String[]::new);
+		return answer.toArray(new String[0]);
 	}
 }
