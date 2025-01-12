@@ -1,48 +1,66 @@
 import java.util.*;
 
 class Solution {
-    public int[] solution(String[] genres, int[] plays) {
-        int n = genres.length;
-        
-        Map<String, Integer> genrePlaysInfo = new HashMap<>();
-        Map<String, PriorityQueue<Genre>> map = new HashMap<>();
-        for(int i = 0; i < n; i++) {
-            genrePlaysInfo.put(genres[i], genrePlaysInfo.getOrDefault(genres[i], 0) + plays[i]);
-            if(!map.containsKey(genres[i])) map.put(genres[i], new PriorityQueue<>());
-            
-            map.get(genres[i]).add(new Genre(i, plays[i]));
-        }
-        
-        List<String> keySet = new ArrayList<>(genrePlaysInfo.keySet());
-        Collections.sort(keySet, (a, b) -> genrePlaysInfo.get(b).compareTo(genrePlaysInfo.get(a)));
-        
-        List<Integer> answer = new ArrayList<>();
-        for(String key : keySet) {
-            int cnt = 0;
-            PriorityQueue<Genre> pq = map.get(key);
-            
-            while(!pq.isEmpty() && cnt < 2) {
-                Genre cur = pq.poll();
-                answer.add(cur.id);
-                cnt++;
-            }
-        }
-        
-        return answer.stream().mapToInt(i -> i).toArray();
-    }
-}
+	static ArrayList<Integer> answer = new ArrayList<>();
+	static Map<String, Integer> genreInfo = new HashMap<>();
+	static Map<Integer, Integer> idxInfo = new HashMap<>();
+	static Map<String, ArrayList<Integer>> genreIdx = new HashMap<>();
 
-class Genre implements Comparable<Genre>{
-    int id, play;
-    
-    public Genre(int id, int play) {
-        this.id = id;
-        this.play = play;
-    }
-    
-    @Override
-    public int compareTo(Genre o) {
-        if(this.play == o.play) return this.id - o.id;
-        else return o.play - this.play;
-    }
+	public int[] solution(String[] genres, int[] plays) {
+		for (int i = 0; i < genres.length; i++) {
+			idxInfo.put(i, plays[i]);
+			genreInfo.put(genres[i], genreInfo.getOrDefault(genres[i], 0) + plays[i]);
+			genreIdx.putIfAbsent(genres[i], new ArrayList<Integer>());
+			genreIdx.get(genres[i]).add(i);
+		}
+
+		System.out.println("idxInfo");
+		for (int a : idxInfo.keySet()) {
+			System.out.printf("%d %d\n", a, idxInfo.get(a));
+		}
+		System.out.println();
+
+		System.out.println("genreInfo");
+		for (String a : genreInfo.keySet()) {
+			System.out.printf("%s %d\n", a, genreInfo.get(a));
+		}
+		System.out.println();
+
+		System.out.println("genreIdx");
+		for (String a : genreIdx.keySet()) {
+			System.out.printf("%s ", a);
+			for (int b : genreIdx.get(a)) {
+				System.out.printf("%d ", b);
+			}
+			System.out.println();
+		}
+		System.out.println();
+
+		List<String> genreInfoKeySet = new ArrayList<>(genreInfo.keySet());
+		genreInfoKeySet.sort((o1, o2) -> genreInfo.get(o2).compareTo(genreInfo.get(o1)));
+
+		for (String keySet : genreInfoKeySet) {
+			genreIdx.get(keySet).sort((o1, o2) -> idxInfo.get(o2).compareTo(idxInfo.get(o1)));
+
+			System.out.printf("%s ", keySet);
+			if (genreIdx.get(keySet).size() <= 2) {
+				answer.addAll(genreIdx.get(keySet));
+			} else {
+				int cnt = 0;
+
+				for (int idx : genreIdx.get(keySet)) {
+					answer.add(idx);
+					cnt++;
+
+					if(cnt == 2) {
+						break;
+					}
+				}
+			}
+
+			System.out.println();
+		}
+
+		return answer.stream().mapToInt(i -> i).toArray();
+	}
 }
