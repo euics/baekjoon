@@ -1,13 +1,12 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
 	public int[][] solution(int[][] nodeinfo) {
 		Node[] nodes = new Node[nodeinfo.length];
-		for (int i = 0; i < nodes.length; i++) {
+		for (int i = 0; i < nodeinfo.length; i++) {
 			nodes[i] = new Node(i + 1, nodeinfo[i][0], nodeinfo[i][1]);
 		}
-		Arrays.sort(nodes, (a, b) -> b.y - a.y);
+		Arrays.sort(nodes);
 
 		Node root = constructTree(nodes);
 
@@ -21,6 +20,16 @@ class Solution {
 			preOrder.stream().mapToInt(i -> i).toArray(),
 			postOrder.stream().mapToInt(i -> i).toArray()
 		};
+	}
+
+	public Node constructTree(Node[] nodes) {
+		Node root = nodes[0];
+
+		for (int i = 1; i < nodes.length; i++) {
+			insert(root, nodes[i]);
+		}
+
+		return root;
 	}
 
 	public void insert(Node root, Node node) {
@@ -39,36 +48,28 @@ class Solution {
 		}
 	}
 
-	public Node constructTree(Node[] nodes) {
-		Node root = nodes[0];
-
-		for (int i = 1; i < nodes.length; i++) {
-			insert(root, nodes[i]);
+	public void preOrder(Node root, ArrayList<Integer> visits) {
+		if (root == null) {
+			return;
 		}
 
-		return root;
+		visits.add(root.value);
+		preOrder(root.left, visits);
+		preOrder(root.right, visits);
 	}
 
-	public void preOrder(Node node, ArrayList<Integer> visits) {
-		if (node == null)
+	public void postOrder(Node root, ArrayList<Integer> visits) {
+		if (root == null) {
 			return;
+		}
 
-		visits.add(node.value);
-		preOrder(node.left, visits);
-		preOrder(node.right, visits);
-	}
-
-	public void postOrder(Node node, ArrayList<Integer> visits) {
-		if (node == null)
-			return;
-
-		postOrder(node.left, visits);
-		postOrder(node.right, visits);
-		visits.add(node.value);
+		postOrder(root.left, visits);
+		postOrder(root.right, visits);
+		visits.add(root.value);
 	}
 }
 
-class Node {
+class Node implements Comparable<Node> {
 	int value, x, y;
 	Node left, right;
 
@@ -76,5 +77,10 @@ class Node {
 		this.value = value;
 		this.x = x;
 		this.y = y;
+	}
+
+	@Override
+	public int compareTo(Node o) {
+		return o.y - this.y;
 	}
 }
