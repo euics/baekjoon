@@ -1,33 +1,22 @@
 import java.util.*;
 
 class Solution {
+	static int answer = 0;
 	static int[] unf;
 
 	public int solution(int n, int[][] costs) {
+		Arrays.sort(costs, (a, b) -> a[2] - b[2]);
+
 		unf = new int[n];
 		for (int i = 0; i < n; i++) {
 			unf[i] = i;
 		}
 
-		int answer = 0;
-
-		Arrays.sort(costs, (a, b) -> a[2] - b[2]);
-
 		for (int[] cost : costs) {
 			if (find(cost[0]) != find(cost[1])) {
 				union(cost[0], cost[1]);
+
 				answer += cost[2];
-			}
-
-			int root = find(cost[0]), cnt = 0;
-			for (int i = 0; i < n; i++) {
-				if (find(i) == root) {
-					cnt++;
-				}
-			}
-
-			if (cnt == n) {
-				break;
 			}
 		}
 
