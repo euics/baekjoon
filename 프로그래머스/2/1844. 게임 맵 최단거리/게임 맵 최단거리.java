@@ -1,7 +1,8 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
+	static int answer = Integer.MAX_VALUE;
+	static boolean[][] bool;
 	static int[] dix = {0, 0, -1, 1};
 	static int[] diy = {-1, 1, 0, 0};
 
@@ -12,10 +13,10 @@ class Solution {
 	public int BFS(int[][] maps) {
 		int n = maps.length;
 		int m = maps[0].length;
+		bool = new boolean[n][m];
 
 		Queue<int[]> q = new LinkedList<>();
 		q.add(new int[] {0, 0});
-		boolean[][] bool = new boolean[n][m];
 		bool[0][0] = true;
 
 		int L = 1;
@@ -25,7 +26,7 @@ class Solution {
 			for (int i = 0; i < length; i++) {
 				int[] cur = q.poll();
 
-				if (cur[0] == m - 1 && cur[1] == n - 1) {
+				if(cur[0] == m - 1 && cur[1] == n - 1) {
 					return L;
 				}
 
