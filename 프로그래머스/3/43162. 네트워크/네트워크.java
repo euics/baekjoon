@@ -1,9 +1,7 @@
 import java.util.*;
-import java.io.*;
 
 class Solution {
 	static int[] unf;
-	static Set<Integer> root = new HashSet<>();
 
 	public int solution(int n, int[][] computers) {
 		unf = new int[n];
@@ -18,16 +16,19 @@ class Solution {
 				}
 
 				if (computers[i][j] == 1) {
-					union(i, j);
+					if (find(i) != find(j)) {
+						union(i, j);
+					}
 				}
 			}
 		}
 
+		Set<Integer> set = new HashSet<>();
 		for (int i = 0; i < n; i++) {
-			root.add(find(i));
+			set.add(find(i));
 		}
 
-		return root.size();
+		return set.size();
 	}
 
 	public int find(int v) {
