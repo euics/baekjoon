@@ -3,22 +3,22 @@ import java.util.*;
 class Solution {
 	public int[][] solution(int[][] nodeinfo) {
 		Node[] nodes = new Node[nodeinfo.length];
-		for (int i = 0; i < nodeinfo.length; i++) {
+		for (int i = 0; i < nodes.length; i++) {
 			nodes[i] = new Node(i + 1, nodeinfo[i][0], nodeinfo[i][1]);
 		}
 		Arrays.sort(nodes);
 
 		Node root = constructTree(nodes);
 
-		ArrayList<Integer> preOrder = new ArrayList<>();
-		preOrder(root, preOrder);
+		ArrayList<Integer> preOrders = new ArrayList<>();
+		preOrder(root, preOrders);
 
-		ArrayList<Integer> postOrder = new ArrayList<>();
-		postOrder(root, postOrder);
+		ArrayList<Integer> postOrders = new ArrayList<>();
+		postOrder(root, postOrders);
 
 		return new int[][] {
-			preOrder.stream().mapToInt(i -> i).toArray(),
-			postOrder.stream().mapToInt(i -> i).toArray()
+			preOrders.stream().mapToInt(i -> i).toArray(),
+			postOrders.stream().mapToInt(i -> i).toArray()
 		};
 	}
 
@@ -81,6 +81,10 @@ class Node implements Comparable<Node> {
 
 	@Override
 	public int compareTo(Node o) {
-		return o.y - this.y;
+		if (this.y == o.y) {
+			return this.x - o.x;
+		} else {
+			return o.y - this.y;
+		}
 	}
 }
