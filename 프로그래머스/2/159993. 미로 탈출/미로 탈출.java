@@ -1,52 +1,58 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
-	static int[] start = new int[2];
-	static int[] lever = new int[2];
-	static int[] end = new int[2];
+	static int n, m;
+	static char[][] arr;
 	static int[] dix = {0, 0, -1, 1};
 	static int[] diy = {-1, 1, 0, 0};
+	int[] S = new int[2];
+	int[] L = new int[2];
+	int[] E = new int[2];
 
 	public int solution(String[] maps) {
-		init(maps);
-		int leverLength = BFS(maps, start[0], start[1], lever[0], lever[1]);
-		if (leverLength == -1)
-			return -1;
+		n = maps.length;
+		m = maps[0].length();
+		arr = new char[n][m];
 
-		int endLength = BFS(maps, lever[0], lever[1], end[0], end[1]);
-		if (endLength == -1)
-			return -1;
-
-		return leverLength + endLength;
-	}
-
-	public void init(String[] maps) {
 		for (int i = 0; i < maps.length; i++) {
 			for (int j = 0; j < maps[i].length(); j++) {
-				if (maps[i].charAt(j) == 'S') {
-					start[0] = j;
-					start[1] = i;
+				arr[i][j] = maps[i].charAt(j);
+
+				if (arr[i][j] == 'S') {
+					S[0] = j;
+					S[1] = i;
+					arr[i][j] = 'O';
 				}
 
-				if (maps[i].charAt(j) == 'L') {
-					lever[0] = j;
-					lever[1] = i;
+				if (arr[i][j] == 'L') {
+					L[0] = j;
+					L[1] = i;
+					arr[i][j] = 'O';
 				}
 
-				if (maps[i].charAt(j) == 'E') {
-					end[0] = j;
-					end[1] = i;
+				if (arr[i][j] == 'E') {
+					E[0] = j;
+					E[1] = i;
+					arr[i][j] = 'O';
 				}
 			}
 		}
+
+		int toL = BFS(S[0], S[1], L[0], L[1]);
+		int toE = BFS(L[0], L[1], E[0], E[1]);
+
+		if (toL == -1 || toE == -1) {
+			return -1;
+		} else {
+			return toL + toE;
+		}
 	}
 
-	public int BFS(String[] maps, int startX, int startY, int endX, int endY) {
+	public int BFS(int srcX, int srcY, int desX, int desY) {
 		Queue<int[]> q = new LinkedList<>();
-		q.add(new int[] {startX, startY});
-		boolean[][] bool = new boolean[maps.length][maps[0].length()];
-		bool[startY][startX] = true;
+		q.add(new int[] {srcX, srcY});
+		boolean[][] bool = new boolean[n][m];
+		bool[srcY][srcX] = true;
 
 		int L = 0;
 		while (!q.isEmpty()) {
@@ -55,14 +61,15 @@ class Solution {
 			for (int i = 0; i < length; i++) {
 				int[] cur = q.poll();
 
-				if (cur[0] == endX && cur[1] == endY)
+				if (cur[0] == desX && cur[1] == desY) {
 					return L;
+				}
 
 				for (int d = 0; d < 4; d++) {
 					int nx = cur[0] + dix[d];
 					int ny = cur[1] + diy[d];
 
-					if (nx >= 0 && ny >= 0 && nx < maps[0].length() && ny < maps.length && maps[ny].charAt(nx) != 'X') {
+					if (nx >= 0 && ny >= 0 && nx < m && ny < n && arr[ny][nx] == 'O') {
 						if (!bool[ny][nx]) {
 							bool[ny][nx] = true;
 							q.add(new int[] {nx, ny});
@@ -70,7 +77,7 @@ class Solution {
 					}
 				}
 			}
-			
+
 			L++;
 		}
 
