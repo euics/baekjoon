@@ -1,12 +1,14 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class Solution {
-    public int solution(int[] nums) {
-        Set<Integer> set = new HashSet<>();
+	static Set<Integer> set = new HashSet<>();
 
-        for(int num : nums) set.add(num);
+	public int solution(int[] nums) {
+		int type = nums.length / 2;
+		for (int num : nums) {
+			set.add(num);
+		}
 
-        return Math.min(set.size(), nums.length / 2);
-    }
+		return Math.min(set.size(), type);
+	}
 }
