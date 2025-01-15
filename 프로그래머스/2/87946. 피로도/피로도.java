@@ -1,41 +1,46 @@
+import java.util.*;
+import java.io.*;
+
 class Solution {
+	static int answer = 0;
 	static int[] dis;
-	static int answer = Integer.MIN_VALUE;
 
 	public int solution(int k, int[][] dungeons) {
-		dis = new int[dungeons.length];
-		DFS(k, dungeons, 0, new boolean[dungeons.length]);
+		int n = dungeons.length;
+		dis = new int[n];
+
+		permutation(0, n, new boolean[n], k, dungeons);
 
 		return answer;
 	}
 
-	public void DFS(int k, int[][] dungeons, int L, boolean[] bool) {
-		if (L == dungeons.length) {
-			answer = Math.max(answer, countPassDungeons(k, dungeons));
+	public void permutation(int L, int n, boolean[] bool, int k, int[][] dungeons) {
+		if (L == n) {
+			int cnt = 0;
+
+			for (int i = 0; i < n; i++) {
+				if (dungeons[dis[i]][0] <= k) {
+					k -= dungeons[dis[i]][1];
+					cnt++;
+				}
+
+				if (k <= 0) {
+					break;
+				}
+			}
+
+			answer = Math.max(answer, cnt);
 
 			return;
 		}
 
-		for (int i = 0; i < dungeons.length; i++) {
+		for (int i = 0; i < n; i++) {
 			if (!bool[i]) {
 				bool[i] = true;
 				dis[L] = i;
-				DFS(k, dungeons, L + 1, bool);
+				permutation(L + 1, n, bool, k, dungeons);
 				bool[i] = false;
 			}
 		}
-	}
-
-	public int countPassDungeons(int k, int[][] dungeons) {
-		int cnt = 0;
-		for (int idx : dis) {
-			if (k <= 0 || k < dungeons[idx][0])
-				break;
-
-			k -= dungeons[idx][1];
-			cnt++;
-		}
-
-		return cnt;
 	}
 }
