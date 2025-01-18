@@ -1,14 +1,14 @@
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 class Solution {
+
 	public String solution(int[] numbers) {
-		String[] tmp = new String[numbers.length];
+		String[] str = new String[numbers.length];
 		for (int i = 0; i < numbers.length; i++) {
-			tmp[i] = String.valueOf(numbers[i]);
+			str[i] = String.valueOf(numbers[i]);
 		}
 
-		Arrays.sort(tmp, new Comparator<String>() {
+		Arrays.sort(str, new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
 				return (o2 + o1).compareTo(o1 + o2);
@@ -16,14 +16,10 @@ class Solution {
 		});
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < tmp.length; i++) {
-			sb.append(tmp[i]);
+		for (String s : str) {
+			sb.append(s);
 		}
 
-		if (sb.toString().startsWith("0")) {
-			return "0";
-		} else {
-			return sb.toString();
-		}
+		return sb.toString().startsWith("0") ? "0" : sb.toString();
 	}
 }
