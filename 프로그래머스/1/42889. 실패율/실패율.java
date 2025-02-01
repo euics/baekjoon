@@ -1,54 +1,56 @@
 import java.util.*;
 
 class Solution {
-	static int[] answer;
-
-	public int[] solution(int N, int[] stages) {
-		int[] challenger = new int[N + 2];
-		for (int i = 0; i < stages.length; i++) {
-			challenger[stages[i]]++;
-		}
-
-		FailRate[] failRates = new FailRate[N + 1];
-		for (int i = 1; i < N + 1; i++) {
-			int cnt = stages.length;
-
-			if(challenger[i] == 0) {
-				failRates[i] = new FailRate(0, i);
-				continue;
-			}
-
-			for (int j = 1; j < i; j++) {
-				cnt -= challenger[j];
-			}
-
-			failRates[i] = new FailRate((double)challenger[i] / cnt, i);
-		}
-
-		Arrays.sort(failRates, 1, N + 1);
-		answer = new int[N];
-		for (int i = 1; i < N + 1; i++) {
-			answer[i - 1] = failRates[i].idx;
-		}
-
-		return answer;
-	}
+    public int[] solution(int N, int[] stages) {
+        Rate[] rates = new Rate[N];
+        
+        for(int stage = 1; stage <= N; stage++) {
+            int onStage = 0, failStage = 0;
+            
+            for(int i = 0; i < stages.length; i++) {
+                if(stage <= stages[i]) {
+                    onStage++;
+                    
+                    if(stage == stages[i]) {
+                        failStage++;
+                    }
+                }
+            }
+            
+            double failureRate = 0;
+            if (onStage != 0) {
+                failureRate = (double) failStage / onStage;
+            }
+            
+            rates[stage - 1] = new Rate(stage, failureRate);
+        }
+        
+        Arrays.sort(rates);
+        
+        int[] answer = new int[N];
+        for(int i = 0; i < rates.length; i++) {
+            answer[i] = rates[i].idx;
+        }
+        
+        return answer;
+    }
 }
 
-class FailRate implements Comparable<FailRate> {
-	double rate;
-	int idx;
-
-	public FailRate(double rate, int idx) {
-		this.rate = rate;
-		this.idx = idx;
-	}
-
-	@Override
-	public int compareTo(FailRate o) {
-		if (this.rate == o.rate)
-			return this.idx - o.idx;
-		else
-			return Double.compare(o.rate, this.rate);
-	}
+class Rate implements Comparable<Rate> {
+    int idx;
+    double rate;
+    
+    public Rate(int idx, double rate) {
+        this.idx = idx;
+        this.rate = rate;
+    }
+    
+    @Override
+    public int compareTo(Rate o) {
+        if(this.rate == o.rate) {
+            return this.idx - o.idx;
+        } else {
+            return Double.compare(o.rate, this.rate);
+        }
+    }
 }
