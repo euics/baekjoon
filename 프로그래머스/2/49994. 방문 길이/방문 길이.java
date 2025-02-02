@@ -1,49 +1,53 @@
 import java.util.*;
 
 class Solution {
-	static int answer = 0;
-	static Set<String> set = new HashSet<>();
-
-	public int solution(String dirs) {
-		int x = 0, y = 0;
-
-		for (char dir : dirs.toCharArray()) {
-			int tmpX = x, tmpY = y;
-
-			switch (dir) {
-				case 'U':
-					y++;
-					break;
-				case 'D':
-					y--;
-					break;
-				case 'R':
-					x++;
-					break;
-				case 'L':
-					x--;
-			}
-
-			if (x < -5 || y < -5 || x > 5 || y > 5) {
-				x = tmpX;
-				y = tmpY;
-				continue;
-			}
-
-			StringBuilder sb1 = new StringBuilder();
-			sb1.append(tmpX).append(tmpY).append(x).append(y);
-			StringBuilder sb2 = new StringBuilder();
-			sb2.append(x).append(y).append(tmpX).append(tmpY);
-
-			if (set.contains(sb1.toString()) || set.contains(sb2.toString())) {
-				continue;
-			} else {
-				set.add(sb1.toString());
-				set.add(sb2.toString());
-				answer++;
-			}
-		}
-
-		return answer;
-	}
+    static int[] dix = {0, 0, -1, 1};
+    static int[] diy = {-1, 1, 0, 0};
+    
+    public int solution(String dirs) {
+        int x = 0, y = 0, d = 0;
+        Set<String> set = new HashSet<>();
+        
+        for(char dir : dirs.toCharArray()) {
+            int nx = x;
+            int ny = y;
+            
+            switch(dir) {
+                case 'U':
+                    d = 0;
+                    ny -= 1;
+                    
+                    break;
+                case 'D':
+                    d = 1;
+                    ny += 1;
+                    
+                    break;
+                case 'R':
+                    d = 3;
+                    nx += 1;
+                    
+                    break;
+                case 'L':
+                    d = 2;
+                    nx -= 1;
+                    
+                    break;
+            }
+            
+            if(nx < -5 || ny < -5 || nx > 5 || ny > 5) {
+                continue;
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            set.add(sb.append(x).append(y).append(nx).append(ny).toString());
+            sb = new StringBuilder();
+            set.add(sb.append(nx).append(ny).append(x).append(y).toString());
+            
+            x = nx;
+            y = ny;
+        }
+        
+        return set.size() / 2;
+    }
 }
