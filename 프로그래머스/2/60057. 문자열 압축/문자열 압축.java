@@ -1,44 +1,38 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
-	public static void main(String[] args) {
-		Solution T = new Solution();
-		System.out.println(T.solution("aabbaccc"));
-	}
-
-	public int solution(String s) {
-		int n = s.length();
-		int minLength = n;
-
-		for (int length = 1; length <= n / 2; length++) {
-			StringBuilder compress = new StringBuilder();
-			String prev = s.substring(0, length);
-			int cnt = 1;
-
-			for (int i = length; i < n; i += length) {
-				String cur = s.substring(i, Math.min(i + length, n));
-
-				if (prev.equals(cur))
-					cnt++;
-				else {
-					if (cnt > 1)
-						compress.append(cnt).append(prev);
-					else
-						compress.append(prev);
-
-					prev = cur;
-					cnt = 1;
-				}
-			}
-
-			if (cnt > 1)
-				compress.append(cnt).append(prev);
-			else
-				compress.append(prev);
-
-			minLength = Math.min(compress.toString().length(), minLength);
-		}
-
-		return minLength;
-	}
+    public int solution(String s) {
+        int min = s.length();
+        
+        for(int compress = 1; compress <= s.length(); compress++) {
+            Queue<String> q = new LinkedList<>();
+            
+            for(int i = 0; i < s.length(); i += compress) {
+                String str = s.substring(i, Math.min(i + compress, s.length()));
+                q.add(str);
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            
+            while(!q.isEmpty()) {
+                String cur = q.poll();
+                int cnt = 1;
+                
+                while(!q.isEmpty() && cur.equals(q.peek())) {
+                    q.poll();
+                    cnt++;
+                }
+                
+                if(cnt == 1) {
+                    sb.append(cur);
+                } else {
+                    sb.append(cnt).append(cur);
+                }
+            }
+            
+            min = Math.min(min, sb.toString().length());
+        }
+        
+        return min;
+    }
 }
