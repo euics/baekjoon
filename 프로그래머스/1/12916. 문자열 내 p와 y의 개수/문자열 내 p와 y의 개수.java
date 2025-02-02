@@ -1,30 +1,17 @@
 class Solution {
-	public boolean solution(String s) {
-		s = s.toUpperCase();
-		return checkAnswer(count(s));
-	}
+    public boolean solution(String s) {
+        int cnt1 = 0, cnt2 = 0;
+        
+        for(char ch : s.toLowerCase().toCharArray()) {
+            if(ch == 'p') {
+                cnt1++;
+            }
+            
+            if(ch == 'y') {
+                cnt2++;
+            }
+        }
 
-	public int[] count(String s) {
-		int[] cnt = new int[2];
-
-		for (char ch : s.toCharArray()) {
-			if (ch == 'P') {
-				cnt[0]++;
-			}
-
-			if (ch == 'Y') {
-				cnt[1]++;
-			}
-		}
-
-		return cnt;
-	}
-
-	public boolean checkAnswer(int[] cnt) {
-		if (cnt[0] == cnt[1]) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+        return cnt1 == cnt2;
+    }
 }
