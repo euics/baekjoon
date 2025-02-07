@@ -2,20 +2,20 @@ import java.util.*;
 
 class Solution {
 	public int solution(String numbers) {
-		Set<Integer> permutations = new HashSet<>();
-		permutation("", numbers, permutations);
+		Set<Integer> set = new HashSet<>();
+		permutation("", numbers, set);
 
-		return (int)permutations.stream().filter(this::isPrime).count();
+		return (int)set.stream().filter(this::isPrime).count();
 	}
 
-	public void permutation(String prefix, String str, Set<Integer> permutations) {
+	public void permutation(String prefix, String str, Set<Integer> set) {
 		if (!prefix.isEmpty()) {
-			permutations.add(Integer.parseInt(prefix));
+			set.add(Integer.parseInt(prefix));
 		}
 
 		int n = str.length();
 		for (int i = 0; i < n; i++) {
-			permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n), permutations);
+			permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n), set);
 		}
 	}
 
