@@ -1,15 +1,11 @@
-import java.util.Arrays;
+import java.util.*;
 
 class Solution {
 	public String solution(String s) {
-		char[] ch = s.toCharArray();
-		Arrays.sort(ch);
-
-		char[] answer = new char[ch.length];
-		for (int i = ch.length - 1, idx = 0; i >= 0; i--) {
-			answer[idx++] = ch[i];
-		}
-
-		return String.valueOf(answer);
+		return s.chars()
+			.boxed()
+			.sorted((a, b) -> b - a)
+			.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+			.toString();
 	}
 }
