@@ -1,40 +1,20 @@
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 class Solution {
-	static Set<Integer> set = new TreeSet<>();
-	static int[] permutation = new int[2];
-
 	public int[] solution(int[] numbers) {
-		permutation(0, numbers, new boolean[numbers.length]);
-
-		int[] answer = new int[set.size()];
-		int idx = 0;
-		for (int num : set) {
-			answer[idx++] = num;
-		}
-
-		return answer;
-	}
-
-	public void permutation(int L, int[] numbers, boolean[] bool) {
-		if (L == 2) {
-			int sum = 0;
-			for (int num : permutation) {
-				sum += num;
-			}
-			set.add(sum);
-
-			return;
-		}
+		Set<Integer> set = new TreeSet<>();
 
 		for (int i = 0; i < numbers.length; i++) {
-			if (!bool[i]) {
-				bool[i] = true;
-				permutation[L] = numbers[i];
-				permutation(L + 1, numbers, bool);
-				bool[i] = false;
+			for (int j = 0; j < numbers.length; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				int sum = numbers[i] + numbers[j];
+				set.add(sum);
 			}
 		}
+		
+		return set.stream().mapToInt(i -> i).toArray();
 	}
 }
