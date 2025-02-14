@@ -12,7 +12,7 @@ class Solution {
 				}
 			}
 		});
-		
+
 		return strings;
 	}
 }
