@@ -1,32 +1,26 @@
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 class Solution {
-	public static void main(String[] args) {
-		Solution T = new Solution();
-		System.out.println(T.solution(new int[] {1, 2, 3, 4, 5}));
-	}
-
 	public int solution(int[] citations) {
-		Integer[] arr = Arrays.stream(citations).boxed().toArray(Integer[]::new);
-		Arrays.sort(arr, Collections.reverseOrder());
+		Integer[] citationArray = Arrays.stream(citations).boxed().toArray(Integer[]::new);
+		Arrays.sort(citationArray, Collections.reverseOrder());
 
-		int H = arr[0], maxH = Integer.MIN_VALUE;
-		while (H >= 0) {
+		int h = citationArray[0], maxH = Integer.MIN_VALUE;
+		while (h >= 0) {
 			int cnt = 0;
 
 			for (int citation : citations) {
-				if (citation >= H) {
+				if (citation >= h) {
 					cnt++;
 				}
 			}
 
-			if (cnt >= H) {
-				maxH = H;
+			if(cnt >= h) {
+				maxH = h;
 				break;
 			}
-			
-			H--;
+
+			h--;
 		}
 
 		return maxH;
