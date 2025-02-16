@@ -1,12 +1,8 @@
 import java.util.*;
 
 class Solution {
-
 	public String solution(int[] numbers) {
-		String[] str = new String[numbers.length];
-		for (int i = 0; i < numbers.length; i++) {
-			str[i] = String.valueOf(numbers[i]);
-		}
+		String[] str = Arrays.stream(numbers).mapToObj(String::valueOf).toArray(String[]::new);
 
 		Arrays.sort(str, new Comparator<String>() {
 			@Override
@@ -16,8 +12,8 @@ class Solution {
 		});
 
 		StringBuilder sb = new StringBuilder();
-		for (String s : str) {
-			sb.append(s);
+		for (String value : str) {
+			sb.append(value);
 		}
 
 		return sb.toString().startsWith("0") ? "0" : sb.toString();
