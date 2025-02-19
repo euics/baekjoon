@@ -1,74 +1,65 @@
 import java.util.*;
 
 class Solution {
-	static ArrayList<Integer> answer = new ArrayList<>();
-	static HashMap<String, ArrayList<Integer>> map = new HashMap<>();
+	static int[] answer;
+	static Map<String, ArrayList<Integer>> map = new HashMap<>();
 
-	public int[] solution(String[] info, String[] queries) {
+	public int[] solution(String[] info, String[] query) {
 		for (int i = 0; i < info.length; i++) {
-			DFS(0, info[i].split(" "), "");
+			String[] split = info[i].split(" ");
+			String[] conditions = new String[] {split[0], split[1], split[2], split[3]};
+			int score = Integer.parseInt(split[4]);
+
+			combination(0, conditions, score, "");
 		}
 
-		for (String keySet : map.keySet()) {
-			ArrayList<Integer> value = map.get(keySet);
-			Collections.sort(value);
+		for (String key : map.keySet()) {
+			Collections.sort(map.get(key));
 		}
 
-		for (String str : queries) {
-			String[] query = str.split(" and ");
-			String programming = query[0];
-			String occupation = query[1];
-			String career = query[2];
-			String food = query[3].split(" ")[0];
-			int score = Integer.parseInt(query[3].split(" ")[1]);
+		answer = new int[query.length];
+		for (int i = 0; i < query.length; i++) {
+			String[] split = query[i].replace(" and ", " ").split(" ");
+			String key = split[0] + split[1] + split[2] + split[3];
+			int target = Integer.parseInt(split[4]);
 
-			StringBuilder sb = new StringBuilder();
-			sb.append(programming).append(occupation).append(career).append(food);
-
-			if (!map.containsKey(sb.toString())) {
-				answer.add(0);
-				continue;
-			}
-
-			int idx = binarySearch(map.get(sb.toString()), score);
-			if (idx == -1) {
-				answer.add(0);
+			if (map.containsKey(key)) {
+				int idx = binarySearch(map.get(key), target);
+				answer[i] = idx;
 			} else {
-				answer.add(map.get(sb.toString()).size() - idx);
+				answer[i] = 0;
 			}
 		}
 
-		return answer.stream().mapToInt(i -> i).toArray();
+		return answer;
 	}
 
-	public void DFS(int L, String[] info, String str) {
+	public void combination(int L, String[] conditions, int score, String key) {
 		if (L == 4) {
-			int score = Integer.parseInt(info[4]);
-
-			map.putIfAbsent(str, new ArrayList<Integer>());
-			map.get(str).add(score);
+			map.putIfAbsent(key, new ArrayList<>());
+			map.get(key).add(score);
 
 			return;
 		}
 
-		DFS(L + 1, info, str + "-");
-		DFS(L + 1, info, str + info[L]);
+		combination(L + 1, conditions, score, key + conditions[L]);
+		combination(L + 1, conditions, score, key + "-");
 	}
 
-	public int binarySearch(ArrayList<Integer> list, int score) {
-		int start = 0, end = list.size() - 1, idx = -1;
+	public int binarySearch(List<Integer> scores, int target) {
+		int left = 0, right = scores.size() - 1, idx = scores.size();
 
-		while (start <= end) {
-			int mid = (start + end) / 2;
+		while (left <= right) {
+			int mid = (left + right) / 2;
 
-			if (list.get(mid) < score) {
-				start = mid + 1;
-			} else {
+			if (scores.get(mid) >= target) {
 				idx = mid;
-				end = mid - 1;
+				right = mid - 1;
+			} else {
+				left = mid + 1;
 			}
 		}
 
-		return idx;
+		return scores.size() - idx;
 	}
 }
