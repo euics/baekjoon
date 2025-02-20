@@ -1,10 +1,10 @@
 import java.util.*;
 
 class Solution {
-	static HashMap<Character, Integer> beforeMap = new HashMap<>();
-	static HashMap<Character, Integer> afterMap = new HashMap<>();
-
 	public int solution(String before, String after) {
+		Map<Character, Integer> beforeMap = new HashMap<>();
+		Map<Character, Integer> afterMap = new HashMap<>();
+
 		if (before.length() != after.length()) {
 			return 0;
 		}
@@ -13,7 +13,7 @@ class Solution {
 			beforeMap.put(before.charAt(i), beforeMap.getOrDefault(before.charAt(i), 0) + 1);
 			afterMap.put(after.charAt(i), afterMap.getOrDefault(after.charAt(i), 0) + 1);
 		}
-		
-		return afterMap.equals(beforeMap) ? 1 : 0;
+
+		return beforeMap.equals(afterMap) ? 1 : 0;
 	}
 }
