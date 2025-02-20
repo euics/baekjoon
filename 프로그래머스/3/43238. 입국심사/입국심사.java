@@ -6,26 +6,28 @@ class Solution {
 	public long solution(int n, int[] times) {
 		Arrays.sort(times);
 
-		long start = 1, end = (long)n * times[times.length - 1];
-		while (start <= end) {
-			long mid = (start + end) / 2;
-			long cnt = countN(times, mid);
+		long min = 1, max = (long)n * times[times.length - 1];
 
-			if (cnt < n) {
-				start = mid + 1;
-			} else {
+		while (min <= max) {
+			long mid = (min + max) / 2;
+			long cnt = count(times, mid);
+
+			if (cnt >= n) {
 				answer = Math.min(answer, mid);
-				end = mid - 1;
+				max = mid - 1;
+			} else {
+				min = mid + 1;
 			}
 		}
 
 		return answer;
 	}
 
-	public long countN(int[] times, long mid) {
+	public long count(int[] times, long target) {
 		long cnt = 0;
+
 		for (int time : times) {
-			cnt += mid / time;
+			cnt += (target / time);
 		}
 
 		return cnt;
