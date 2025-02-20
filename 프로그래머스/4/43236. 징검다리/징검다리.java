@@ -1,45 +1,37 @@
 import java.util.*;
 
 class Solution {
-	static int answer = -1;
+	static int answer = Integer.MIN_VALUE;
 
 	public int solution(int distance, int[] rocks, int n) {
 		Arrays.sort(rocks);
 
-		int start = 1, end = distance;
-		while (start <= end) {
-			int mid = (start + end) / 2;
-			int remove = 0;
-
+		int min = 1, max = distance;
+		while (min <= max) {
+			int mid = (min + max) / 2;
+			int removed = 0;
 			int prev = 0;
-			for (int i = 0; i < rocks.length; i++) {
-				if (Math.abs(rocks[i] - prev) < mid) {
-					remove++;
+
+			for (int rock : rocks) {
+				if (rock - prev < mid) {
+					removed++;
 				} else {
-					prev = rocks[i];
+					prev = rock;
 				}
 			}
 
-			if (Math.abs(prev - distance) < mid) {
-				remove++;
+			if (distance - prev < mid) {
+				removed++;
 			}
 
-			if (remove <= n) {
-				answer = Math.max(answer, mid);
-				start = mid + 1;
+			if (removed > n) {
+				max = mid - 1;
 			} else {
-				end = mid - 1;
+				answer = Math.max(answer, mid);
+				min = mid + 1;
 			}
 		}
 
 		return answer;
 	}
 }
-
-/*
-
- 0 2 11 14 17 21 25
- 0 2 11 14 25
- 2 9 3 11
-
-*/
