@@ -1,15 +1,20 @@
-class Solution {
-	public int solution(int[] numbers) {
-		int sum = sum(numbers);
-		return 45 - sum;
-	}
+import java.util.*;
 
-	public int sum(int[] numbers) {
-		int sum = 0;
+class Solution {
+	static int answer = 0;
+
+	public int solution(int[] numbers) {
+		boolean[] bool = new boolean[10];
 		for (int number : numbers) {
-			sum += number;
+			bool[number] = true;
 		}
 
-		return sum;
+		for (int i = 0; i < 10; i++) {
+			if (!bool[i]) {
+				answer += i;
+			}
+		}
+
+		return answer;
 	}
 }
