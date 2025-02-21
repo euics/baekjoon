@@ -1,14 +1,11 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
-	static Set<Integer> set = new HashSet<>();
-
 	public int solution(int[] nums) {
-		int type = nums.length / 2;
-		for (int num : nums) {
-			set.add(num);
-		}
+		int n = nums.length;
+		Set<Integer> set = Arrays.stream(nums).boxed().collect(Collectors.toSet());
 
-		return Math.min(set.size(), type);
+		return Math.min(set.size(), n / 2);
 	}
 }
