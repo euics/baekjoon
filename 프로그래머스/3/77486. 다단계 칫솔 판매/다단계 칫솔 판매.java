@@ -2,38 +2,35 @@ import java.util.*;
 
 class Solution {
 	static int[] answer;
-	static Map<String, Integer> profitMap = new HashMap<>();
-	static Map<String, String> parentMap = new HashMap<>();
 
-	public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
-		answer = new int[enroll.length];
+	public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amounts) {
+		Map<String, String> graph = new HashMap<>();
+		Map<String, Integer> profit = new HashMap<>();
 
 		for (int i = 0; i < enroll.length; i++) {
-			parentMap.putIfAbsent(enroll[i], referral[i]);
-			profitMap.put(enroll[i], 0);
+			graph.putIfAbsent(enroll[i], referral[i]);
+			profit.put(enroll[i], 0);
 		}
 
 		for (int i = 0; i < seller.length; i++) {
-			String cur = seller[i];
-			int profit = amount[i] * 100;
+			int amount = amounts[i] * 100;
+			String prev = seller[i];
 
-			while (!cur.equals("-")) {
-				int parentProfit = profit / 10;
-				int curProfit = profit - parentProfit;
-
-				profitMap.put(cur, profitMap.getOrDefault(cur, 0) + curProfit);
-
-				cur = parentMap.get(cur);
-				profit = parentProfit;
-
-				if (curProfit < 1) {
+			while (!prev.equals("-")) {
+				int pro = amount / 10;
+				profit.put(prev, profit.getOrDefault(prev, 0) + amount - pro);
+				prev = graph.get(prev);
+				amount = pro;
+				
+				if(amount < 1) {
 					break;
 				}
 			}
 		}
 
+		answer = new int[enroll.length];
 		for (int i = 0; i < enroll.length; i++) {
-			answer[i] = profitMap.get(enroll[i]);
+			answer[i] = profit.get(enroll[i]);
 		}
 
 		return answer;
