@@ -4,33 +4,34 @@ class Solution {
 	static int answer = 0;
 
 	public int solution(int[][] board, int[] moves) {
-		int N = board.length;
-
-		for (int i = 0; i < moves.length; i++) {
-			moves[i]--;
-		}
-
 		Stack<Integer> stack = new Stack<>();
-		for (int col : moves) {
 
-			for (int row = 0; row < N; row++) {
+		for (int x : moves) {
+			x -= 1;
+			int y = isEmpty(board, x);
 
-				if (board[row][col] != 0) {
-					if (!stack.isEmpty() && stack.peek() == board[row][col]) {
-						stack.pop();
-						board[row][col] = 0;
-						answer += 2;
-					} else {
-						stack.push(board[row][col]);
-						board[row][col] = 0;
-					}
-
-					break;
+			if (y != -1) {
+				if (!stack.isEmpty() && stack.peek() == board[y][x]) {
+					stack.pop();
+					answer += 2;
+				} else {
+					stack.push(board[y][x]);
 				}
 
+				board[y][x] = 0;
 			}
 		}
 
 		return answer;
+	}
+
+	public int isEmpty(int[][] board, int x) {
+		for (int y = 0; y < board.length; y++) {
+			if (board[y][x] != 0) {
+				return y;
+			}
+		}
+
+		return -1;
 	}
 }
