@@ -4,31 +4,24 @@ class Solution {
 	static ArrayList<Integer> answer = new ArrayList<>();
 
 	public int[] solution(int[] progresses, int[] speeds) {
-		Queue<Integer> q = new LinkedList<>();
+		int[] remains = new int[progresses.length];
 		for (int i = 0; i < progresses.length; i++) {
-			int time = -1;
-
-			if ((100 - progresses[i]) % speeds[i] == 0) {
-				time = (100 - progresses[i]) / speeds[i];
-			} else {
-				time = (100 - progresses[i]) / speeds[i] + 1;
-			}
-
-			q.add(time);
+			remains[i] = (int)Math.ceil((100.0 - progresses[i]) / speeds[i]);
 		}
 
-		while (!q.isEmpty()) {
-			int cur = q.poll();
-			int cnt = 1;
-
-			while (!q.isEmpty() && q.peek() <= cur) {
-				q.poll();
+		int start = 0, end = 0, cnt = 0;
+		while (end < progresses.length) {
+			if (remains[start] >= remains[end]) {
 				cnt++;
+				end++;
+			} else {
+				answer.add(cnt);
+				start = end;
+				cnt = 0;
 			}
-
-			answer.add(cnt);
 		}
 
+		answer.add(cnt);
 		return answer.stream().mapToInt(i -> i).toArray();
 	}
 }
