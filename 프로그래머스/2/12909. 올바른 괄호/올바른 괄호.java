@@ -1,9 +1,8 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
-	static Stack<Character> stack = new Stack<>();
-
 	boolean solution(String s) {
+		Stack<Character> stack = new Stack<>();
 		for (char ch : s.toCharArray()) {
 			if (ch == '(') {
 				stack.push(ch);
@@ -12,10 +11,12 @@ class Solution {
 					return false;
 				}
 
-				stack.pop();
+				if (stack.peek() == '(') {
+					stack.pop();
+				}
 			}
 		}
-		
-		return stack.isEmpty() ? true : false;
+
+		return stack.isEmpty();
 	}
 }
