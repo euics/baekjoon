@@ -6,8 +6,8 @@ class Solution {
 	public int[] solution(String[] gems) {
 		answer = new int[2];
 		Set<String> set = new HashSet<>(Arrays.asList(gems));
-		Map<String, Integer> map = new HashMap<>();
 
+		Map<String, Integer> map = new HashMap<>();
 		int start = 0, end = 0, min = Integer.MAX_VALUE;
 		while (end < gems.length) {
 			map.put(gems[end], map.getOrDefault(gems[end], 0) + 1);
