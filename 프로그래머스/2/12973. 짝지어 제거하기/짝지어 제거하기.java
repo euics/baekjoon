@@ -3,14 +3,14 @@ import java.util.*;
 class Solution {
 	public int solution(String s) {
 		Stack<Character> stack = new Stack<>();
-		
-		for(char ch : s.toCharArray()) {
-			if(!stack.isEmpty() && stack.peek() == ch) {
+		stack.push(s.charAt(0));
+
+		for (int i = 1; i < s.length(); i++) {
+			if (!stack.isEmpty() && stack.peek() == s.charAt(i)) {
 				stack.pop();
-				continue;
+			} else {
+				stack.push(s.charAt(i));
 			}
-			
-			stack.push(ch);
 		}
 
 		return stack.isEmpty() ? 1 : 0;
