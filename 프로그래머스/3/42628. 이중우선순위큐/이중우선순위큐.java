@@ -10,26 +10,20 @@ class Solution {
 
 			if (split[0].equals("I")) {
 				list.add(num);
-			} else {
 
+				Collections.sort(list);
+			} else {
 				if (list.isEmpty()) {
 					continue;
 				}
 
-				if (num == 1) {
-					list.pollLast();
-				} else {
-					list.pollFirst();
+				switch (num) {
+					case 1 -> list.pollLast();
+					case -1 -> list.pollFirst();
 				}
 			}
-
-			Collections.sort(list);
 		}
 
-		if (list.isEmpty()) {
-			return new int[] {0, 0};
-		} else {
-			return new int[] {list.getLast(), list.getFirst()};
-		}
+		return list.isEmpty() ? new int[] {0, 0} : new int[] {list.getLast(), list.getFirst()};
 	}
 }
