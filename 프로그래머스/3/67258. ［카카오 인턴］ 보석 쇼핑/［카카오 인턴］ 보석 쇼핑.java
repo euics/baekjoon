@@ -1,13 +1,12 @@
 import java.util.*;
 
 class Solution {
-	static HashMap<String, Integer> map = new HashMap<>();
-	static Set<String> set = new HashSet<>();
+	static int[] answer;
 
 	public int[] solution(String[] gems) {
-		int[] answer = new int[2];
-
-		set.addAll(Arrays.asList(gems));
+		answer = new int[2];
+		Set<String> set = new HashSet<>(Arrays.asList(gems));
+		Map<String, Integer> map = new HashMap<>();
 
 		int start = 0, end = 0, min = Integer.MAX_VALUE;
 		while (end < gems.length) {
