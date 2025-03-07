@@ -2,9 +2,7 @@
 SELECT
     *
 FROM
-    FOOD_PRODUCT
+    FOOD_PRODUCT 
 WHERE
-    PRICE = (SELECT 
-                MAX(PRICE)
-            FROM
-                FOOD_PRODUCT)
+    PRICE = (SELECT MAX(PRICE) FROM FOOD_PRODUCT)
+;
