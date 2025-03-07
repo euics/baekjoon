@@ -9,9 +9,9 @@ FROM
 WHERE
     MONTH(DATE_OF_BIRTH) = 3
     AND
-    GENDER = 'W'
-    AND
     TLNO IS NOT NULL
+    AND
+    GENDER = 'W'
 ORDER BY
     MEMBER_ID ASC
 ;
