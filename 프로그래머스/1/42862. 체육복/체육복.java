@@ -1,28 +1,36 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int n, int[] lost, int[] reserve) {
-        int[] info = new int[n];
-        Arrays.fill(info, 1);
-        for(int i = 0; i < reserve.length; i++) info[reserve[i] - 1]++;
-        for(int i = 0; i < lost.length; i++) info[lost[i] - 1]--;
-        
-        for(int i = 0; i < n; i++) {
-            if(i - 1 >= 0 && info[i] > 1 && info[i - 1] == 0) {
-                info[i]--;
-                info[i - 1]++;
-            }
-            if(i + 1 < n && info[i] > 1 && info[i + 1] == 0) {
-                info[i]--;
-                info[i + 1]++;
-            }
-        }
-        
-        int cnt = 0;
-        for(int i = 0; i < n; i++) {
-            if(info[i] >= 1) cnt++;
-        }
-        
-        return cnt;
-    }
+	static int answer = 0;
+
+	public int solution(int n, int[] lost, int[] reserve) {
+		int[] arr = new int[n + 1];
+		Arrays.fill(arr, 1);
+		for (int j : lost) {
+			arr[j]--;
+		}
+		for (int j : reserve) {
+			arr[j]++;
+		}
+
+		for (int i = 1; i <= n; i++) {
+			if (arr[i] > 1 && i - 1 >= 1 && arr[i - 1] == 0) {
+				arr[i - 1]++;
+				arr[i]--;
+			}
+
+			if (arr[i] > 1 && i + 1 <= n && arr[i + 1] == 0) {
+				arr[i + 1]++;
+				arr[i]--;
+			}
+		}
+
+		for (int i = 1; i <= n; i++) {
+			if (arr[i] >= 1) {
+				answer++;
+			}
+		}
+
+		return answer;
+	}
 }
