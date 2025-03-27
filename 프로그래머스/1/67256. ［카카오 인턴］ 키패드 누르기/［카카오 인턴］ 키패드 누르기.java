@@ -1,74 +1,57 @@
 import java.util.*;
 
 class Solution {
-	static int leftLength = 0, rightLength = 0;
+	static StringBuilder answer = new StringBuilder();
+	static int[][] locations = new int[][] {
+		{1, 3},
+		{0, 0}, {1, 0}, {2, 0},
+		{0, 1}, {1, 1}, {2, 1},
+		{0, 2}, {1, 2}, {2, 2}
+	};
+
 	static int[] left = new int[] {0, 3};
 	static int[] right = new int[] {2, 3};
-	static char[][] phone = new char[4][3];
-	static HashMap<Character, int[]> map = new HashMap<>();
-	static StringBuilder sb = new StringBuilder();
 	static int[] dix = {0, 0, -1, 1};
 	static int[] diy = {-1, 1, 0, 0};
 
 	public String solution(int[] numbers, String hand) {
-		initPhone();
-
-		for (int number : numbers) {
-			if (number == 1 || number == 4 || number == 7) {
-				sb.append("L");
-				left = map.get(String.valueOf(number).charAt(0));
-			} else if (number == 3 || number == 6 || number == 9) {
-				sb.append("R");
-				right = map.get(String.valueOf(number).charAt(0));
+		for (int i = 0; i < numbers.length; i++) {
+			if (numbers[i] == 1 || numbers[i] == 4 || numbers[i] == 7) {
+				answer.append("L");
+				left = locations[numbers[i]];
+			} else if (numbers[i] == 3 || numbers[i] == 6 || numbers[i] == 9) {
+				answer.append("R");
+				right = locations[numbers[i]];
 			} else {
-				int leftLength = BFS(left, map.get(String.valueOf(number).charAt(0)));
-				int rightLength = BFS(right, map.get(String.valueOf(number).charAt(0)));
+				int r = distance(right, locations[numbers[i]]);
+				int l = distance(left, locations[numbers[i]]);
 
-				if (leftLength < rightLength) {
-					sb.append("L");
-					left = map.get(String.valueOf(number).charAt(0));
-				} else if (leftLength > rightLength) {
-					sb.append("R");
-					right = map.get(String.valueOf(number).charAt(0));
+				if (r > l) {
+					answer.append("L");
+					left = locations[numbers[i]];
+				} else if (r < l) {
+					answer.append("R");
+					right = locations[numbers[i]];
 				} else {
 					if (hand.equals("right")) {
-						sb.append("R");
-						right = map.get(String.valueOf(number).charAt(0));
+						answer.append("R");
+						right = locations[numbers[i]];
 					} else {
-						sb.append("L");
-						left = map.get(String.valueOf(number).charAt(0));
+						answer.append("L");
+						left = locations[numbers[i]];
 					}
 				}
 			}
 		}
 
-		return sb.toString();
+		return answer.toString();
 	}
 
-	public void initPhone() {
-		int num = 1;
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				phone[i][j] = String.valueOf(num).charAt(0);
-				map.put(String.valueOf(num).charAt(0), new int[] {j, i});
-				num++;
-			}
-		}
-
-		map.put('*', new int[] {0, 3});
-		phone[3][0] = '*';
-		map.put('0', new int[] {1, 3});
-		phone[3][1] = '0';
-		map.put('#', new int[] {2, 3});
-		phone[3][2] = '#';
-	}
-
-	public int BFS(int[] hand, int[] target) {
+	public int distance(int[] src, int[] des) {
 		Queue<int[]> q = new LinkedList<>();
-		q.add(hand);
+		q.add(src);
 		boolean[][] bool = new boolean[4][3];
-		bool[hand[1]][hand[0]] = true;
+		bool[src[1]][src[0]] = true;
 
 		int L = 0;
 		while (!q.isEmpty()) {
@@ -77,7 +60,7 @@ class Solution {
 			for (int i = 0; i < length; i++) {
 				int[] cur = q.poll();
 
-				if (cur[0] == target[0] && cur[1] == target[1]) {
+				if (cur[0] == des[0] && cur[1] == des[1]) {
 					return L;
 				}
 
@@ -87,8 +70,8 @@ class Solution {
 
 					if (nx >= 0 && ny >= 0 && nx < 3 && ny < 4) {
 						if (!bool[ny][nx]) {
-							q.add(new int[] {nx, ny});
 							bool[ny][nx] = true;
+							q.add(new int[] {nx, ny});
 						}
 					}
 				}
