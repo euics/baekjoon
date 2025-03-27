@@ -1,10 +1,10 @@
 import java.util.*;
 
 class Solution {
-	static StringBuilder sb = new StringBuilder();
-	static Stack<Integer> stack = new Stack<>();
+	static String answer = "";
 
 	public String solution(String number, int k) {
+		Stack<Integer> stack = new Stack<>();
 		for (char ch : number.toCharArray()) {
 			while (!stack.isEmpty() && k > 0 && stack.peek() < Integer.parseInt(String.valueOf(ch))) {
 				stack.pop();
@@ -20,9 +20,9 @@ class Solution {
 		}
 
 		while (!stack.isEmpty()) {
-			sb.insert(0, stack.pop());
+			answer = stack.pop() + answer;
 		}
 
-		return sb.toString();
+		return answer;
 	}
 }
