@@ -4,24 +4,25 @@ class Solution {
 	static int answer = 0;
 
 	public int solution(int[] topping) {
-		Map<Integer, Integer> map = new HashMap<>();
+		Map<Integer, Integer> A = new HashMap<>();
 		for (int i = 0; i < topping.length; i++) {
-			map.put(topping[i], map.getOrDefault(topping[i], 0) + 1);
+			A.put(topping[i], A.getOrDefault(topping[i], 0) + 1);
 		}
 
-		Map<Integer, Integer> a = new HashMap<>();
+		Map<Integer, Integer> B = new HashMap<>();
 		for (int i = 0; i < topping.length; i++) {
-			map.put(topping[i], map.get(topping[i]) - 1);
-			if (map.get(topping[i]) == 0) {
-				map.remove(topping[i]);
-			}
-			a.put(topping[i], a.getOrDefault(topping[i], 0) + 1);
+			B.put(topping[i], B.getOrDefault(topping[i], 0) + 1);
+			A.put(topping[i], A.get(topping[i]) - 1);
 			
-			if(a.size() == map.size()) {
+			if (A.get(topping[i]) == 0) {
+				A.remove(topping[i]);
+			}
+
+			if (A.keySet().size() == B.keySet().size()) {
 				answer++;
 			}
 		}
-		
+
 		return answer;
 	}
 }
