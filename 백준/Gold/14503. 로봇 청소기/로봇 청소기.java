@@ -2,52 +2,81 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int n, m, r, c ,dir, cnt = 1;
-    static int[][] arr;
+	static int N, M;
 
-    static int[] dix = {0, 1, 0, -1}; // 북 동 남 서
-    static int[] diy = {-1, 0, 1, 0};
+	static int[][] arr;
+	static boolean[][] bool;
 
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        arr = new int[n][m];
-        st = new StringTokenizer(br.readLine());
-        r = Integer.parseInt(st.nextToken());
-        c = Integer.parseInt(st.nextToken());
-        dir = Integer.parseInt(st.nextToken());
+	static int y, x, d;
 
-        for(int i = 0; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < m; j++)
-                arr[i][j] = Integer.parseInt(st.nextToken());
-        }
+	static int[] dix = {0, 1, 0, -1}; // 북 동 남 서
+	static int[] diy = {-1, 0, 1, 0};
 
-        DFS(c, r, dir);
-        System.out.println(cnt);
-    }
+	static int answer = 0;
 
-    private static void DFS(int x, int y, int direction){
-        arr[y][x] = -1;
+	public static void main(String[] args) throws IOException {
+		init();
 
-        for(int i = 0; i < 4; i++){
-            direction = (direction + 3) % 4;
+		boolean stop = false;
+		while (!stop) {
+			if (arr[y][x] == 0) {
+				arr[y][x] = 2;
+				answer++;
+			}
 
-            int nx = x + dix[direction];
-            int ny = y + diy[direction];
-            if(nx >= 0 && ny >= 0 && nx < m && ny < n && arr[ny][nx] == 0){
-                cnt++;
-                DFS(nx, ny, direction);
-                return;
-            }
-        }
+			boolean canMove = false;
+			for (int i = 0; i < 4; i++) {
+				d = (d + 3) % 4;
+				int nx = x + dix[d];
+				int ny = y + diy[d];
 
-        int back = (direction + 2) % 4;
-        int bx = x + dix[back];
-        int by = y + diy[back];
-        if(bx >= 0 && by >= 0 && bx < m && by < n && arr[by][bx] != 1)
-            DFS(bx, by, direction);
-    }
+				if (nx >= 0 && ny >= 0 && nx < M && ny < N && arr[ny][nx] == 0) {
+					x = nx;
+					y = ny;
+					canMove = true;
+					break;
+				}
+			}
+
+			if (!canMove) {
+				int back = (d + 2) % 4;
+				int nx = x + dix[back];
+				int ny = y + diy[back];
+
+				if (arr[ny][nx] == 1) {
+					stop = true;
+				} else {
+					x = nx;
+					y = ny;
+				}
+			}
+		}
+
+		System.out.println(answer);
+	}
+
+	public static void init() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		st = new StringTokenizer(br.readLine());
+		y = Integer.parseInt(st.nextToken());
+		x = Integer.parseInt(st.nextToken());
+		d = Integer.parseInt(st.nextToken());
+
+		arr = new int[N][M];
+		bool = new boolean[N][M];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+
+				if (arr[i][j] == 1) {
+
+				}
+			}
+		}
+	}
 }
