@@ -14,11 +14,7 @@ public class Main {
 			answer++;
 
 			rotate();
-			fall();
-
 			move();
-			fall();
-
 			put();
 		}
 
@@ -44,6 +40,7 @@ public class Main {
 		}
 
 		robot[0] = false;
+		robot[N - 1] = false;
 	}
 
 	public static void move() {
@@ -54,6 +51,8 @@ public class Main {
 				robot[i] = false;
 			}
 		}
+
+		robot[N - 1] = false;
 	}
 
 	public static void put() {
@@ -61,10 +60,6 @@ public class Main {
 			robot[0] = true;
 			arr[0][0]--;
 		}
-	}
-
-	public static void fall() {
-		robot[N - 1] = false;
 	}
 
 	public static boolean stop() {
@@ -102,12 +97,5 @@ public class Main {
 		}
 
 		robot = new boolean[N];
-
-		// for (int i = 0; i < 2; i++) {
-		// 	for (int j = 0; j < N; j++) {
-		// 		System.out.printf("%d ", belt[i][j]);
-		// 	}
-		// 	System.out.println();
-		// }
 	}
 }
