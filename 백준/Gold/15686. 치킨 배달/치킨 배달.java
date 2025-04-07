@@ -1,66 +1,61 @@
+import java.io.*;
 import java.util.*;
-        import java.io.*;
 
 public class Main {
-    static int n, m, total = Integer.MAX_VALUE;
+    static int n, m, answer = Integer.MAX_VALUE;
     static int[][] arr;
-    static ArrayList<Coordinate> chicken = new ArrayList<>();
-    static ArrayList<Coordinate> home = new ArrayList<>();
-    static Coordinate[] combi;
+    static ArrayList<int[]> house = new ArrayList<>();
+    static ArrayList<int[]> pizza = new ArrayList<>();
+    static Coordinate[] pm;
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         arr = new int[n][n];
-        combi = new Coordinate[m];
+        pm = new Coordinate[m];
 
         for(int i = 0; i < n; i++){
             st = new StringTokenizer(br.readLine());
             for(int j = 0; j < n; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
-                if(arr[i][j] == 2)
-                    chicken.add(new Coordinate(j, i));
                 if(arr[i][j] == 1)
-                    home.add(new Coordinate(j, i));
+                    house.add(new int[]{j, i});
+                else if(arr[i][j] == 2)
+                    pizza.add(new int[]{j, i});
             }
         }
 
-        combination(0, 0);
+        pizzaCombination(0, 0);
 
-        System.out.println(total);
+        System.out.println(answer);
     }
 
-    private static void combination(int L, int s){
+    private static void pizzaCombination(int L, int s){
         if(L == m){
-            int sum = 0;
-            for(int i = 0; i < home.size(); i++){
-                int distance = Integer.MAX_VALUE;
-                int homeX1 = home.get(i).x + 1;
-                int homeY1 = home.get(i).y + 1;
-                
-                for(int j = 0; j < combi.length; j++){
-                    int chickenX2 = combi[j].x + 1;
-                    int chickenY2 = combi[j].y + 1;
-
-                    distance = Math.min(distance, findDistance(homeX1, homeY1, chickenX2, chickenY2));
-                }
-                sum += distance;
-            }
-
-            total = Math.min(total, sum);
-
+            answer = Math.min(answer, findDistance());
         } else {
-            for(int i = s; i < chicken.size(); i++){
-                combi[L] = chicken.get(i);
-                combination(L + 1, i + 1);
+            for(int i = s; i < pizza.size(); i++){
+                pm[L] = new Coordinate(pizza.get(i)[0], pizza.get(i)[1]);
+                pizzaCombination(L + 1, i + 1);
             }
         }
     }
 
-    private static int findDistance(int x1, int y1, int x2, int y2){
-        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+    private static int findDistance(){
+        int min = 0;
+
+        for(int i = 0; i < house.size(); i++){
+            int[] cur = house.get(i);
+            int minDistance = Integer.MAX_VALUE;
+            for(int j = 0; j < pm.length; j++)
+                minDistance = Math.min(minDistance, Math.abs(cur[0] - pm[j].x) + Math.abs(cur[1] - pm[j].y));
+
+            min += minDistance;
+        }
+
+        return min;
     }
 }
 
