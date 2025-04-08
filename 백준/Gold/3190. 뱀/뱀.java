@@ -1,85 +1,98 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int n, k, l;
-    static int[][] arr;
-    static HashMap<Integer, Character> map = new HashMap<>();
-    static ArrayList<int[]> snake = new ArrayList<>();
-    static int[] dix = {1, 0, -1, 0};
-    static int[] diy = {0, 1, 0, -1};
+	static int N, K, L;
+	static int[][] arr;
+	static int[] dix = {1, 0, -1, 0};
+	static int[] diy = {0, 1, 0, -1};
+	static int[][] change;
 
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(br.readLine());
-        k = Integer.parseInt(br.readLine());
-        arr = new int[n][n];
+	public static void main(String[] args) throws IOException {
+		init();
 
-        for(int i = 0; i < k; i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int y = Integer.parseInt(st.nextToken());
-            int x = Integer.parseInt(st.nextToken());
-            arr[y - 1][x - 1] = 1;
-        }
+		System.out.println(BFS());
+	}
 
-        l = Integer.parseInt(br.readLine());
-        for(int i = 0; i < l; i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int time = Integer.parseInt(st.nextToken());
-            char ch = st.nextToken().charAt(0);
-            map.put(time, ch);
-        }
+	public static int BFS() {
+		Deque<int[]> dq = new LinkedList<>();
+		dq.add(new int[] {0, 0});
 
-        solution();
-    }
+		int time = 0, x = 0, y = 0, d = 0;
+		while (true) {
+			time++;
 
-    private static void solution(){
-        int x = 0, y = 0, time = 0, d = 0;
-        snake.add(new int[]{0, 0});
+			int nx = x + dix[d];
+			int ny = y + diy[d];
 
-        while(true){
-            time++;
+			if (!isValid(dq, nx, ny)) {
+				return time;
+			}
 
-            int nx = x + dix[d];
-            int ny = y + diy[d];
+			if (arr[ny][nx] == 0) {
+				dq.pollFirst();
+				dq.addLast(new int[] {nx, ny});
+			} else {
+				arr[ny][nx] = 0;
+				dq.addLast(new int[] {nx, ny});
+			}
 
-            if(finish(nx, ny))
-                break;
+			for (int i = 0; i < change.length; i++) {
+				if (change[i][0] == time) {
+					d = (d + change[i][1]) % 4;
+				}
+			}
 
-            if(arr[ny][nx] == 1){
-                snake.add(new int[]{nx, ny});
-                arr[ny][nx] = 0;
-            } else {
-                snake.add(new int[]{nx, ny});
-                snake.remove(0);
-            }
+			x = nx;
+			y = ny;
+		}
+	}
 
-            if(map.containsKey(time)){
-                if(map.get(time) == 'D')
-                    d = (d + 1) % 4;
-                else
-                    d = (d + 3) % 4;
-            }
+	public static boolean isValid(Deque<int[]> dq, int x, int y) {
+		if (x < 0 || y < 0 || x >= N || y >= N) {
+			return false;
+		}
 
-            x = nx;
-            y = ny;
-        }
+		int length = dq.size();
+		for (int i = 0; i < length; i++) {
+			int[] cur = dq.pollFirst();
+			if (cur[0] == x && cur[1] == y) {
+				return false;
+			}
 
-        System.out.println(time);
-    }
+			dq.addLast(cur);
+		}
 
-    private static boolean finish(int nx, int ny){
-        if(nx < 0 || ny < 0 || nx >= n || ny >= n)
-            return true;
+		return true;
+	}
 
-        for(int i = 0; i < snake.size(); i++){
-            int[] o = snake.get(i);
+	public static void init() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(br.readLine());
+		K = Integer.parseInt(br.readLine());
 
-            if(o[0] == nx && o[1] == ny)
-                return true;
-        }
+		arr = new int[N][N];
+		for (int i = 0; i < K; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			arr[Integer.parseInt(st.nextToken()) - 1][Integer.parseInt(st.nextToken()) - 1] = 1;
+		}
 
-        return false;
-    }
+		L = Integer.parseInt(br.readLine());
+		change = new int[L][2];
+		for (int i = 0; i < L; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int time = Integer.parseInt(st.nextToken());
+			change[i][0] = time;
+
+			char dir = st.nextToken().charAt(0);
+
+			if (dir == 'L') {
+				change[i][1] = 3;
+			} else if (dir == 'D') {
+				change[i][1] = 1;
+			}
+		}
+		Arrays.sort(change, (a, b) -> a[0] - b[0]);
+	}
 }
