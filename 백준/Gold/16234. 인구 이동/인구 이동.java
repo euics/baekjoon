@@ -1,85 +1,99 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int n, l, r, answer = 0;
-    static int[][] arr;
-    static boolean[][] bool;
+	static int answer = 0;
+	static int N, L, R;
+	static int[][] arr;
+	static int[] dix = {0, 0, -1, 1};
+	static int[] diy = {-1, 1, 0, 0};
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        l = Integer.parseInt(st.nextToken());
-        r = Integer.parseInt(st.nextToken());
-        arr = new int[n][n];
+	public static void main(String[] args) throws IOException {
+		init();
 
-        for(int i = 0; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < n; j++)
-                arr[i][j] = Integer.parseInt(st.nextToken());
-        }
+		while (true) {
+			boolean[][] bool = new boolean[N][N];
+			boolean find = false;
 
-        while(true){
-            bool = new boolean[n][n];
-            boolean moved = false;
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					if (!bool[i][j]) {
+						if (union(j, i, bool)) {
+							find = true;
+						}
+					}
+				}
+			}
 
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++){
-                    if(!bool[i][j])
-                        moved = moved | findUnion(j, i);
-                }
-            }
+			if (!find) {
+				break;
+			}
 
-            if(!moved)
-                break;
+			answer++;
+		}
 
-            answer++;
-        }
+		System.out.println(answer);
+	}
 
-        System.out.println(answer);
-    }
+	public static boolean union(int x, int y, boolean[][] bool) {
+		Queue<int[]> q = new LinkedList<>();
+		q.add(new int[] {x, y});
+		bool[y][x] = true;
 
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
+		int sum = 0;
+		Queue<int[]> union = new LinkedList<>();
+		while (!q.isEmpty()) {
+			int[] cur = q.poll();
+			union.add(new int[] {cur[0], cur[1]});
+			sum += arr[cur[1]][cur[0]];
 
-    private static boolean findUnion(int x, int y){
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{x, y});
-        ArrayList<int[]> union = new ArrayList<>();
-        union.add(new int[]{x, y});
-        bool[y][x] = true;
-        int sum = arr[y][x];
+			for (int d = 0; d < 4; d++) {
+				int nx = cur[0] + dix[d];
+				int ny = cur[1] + diy[d];
 
-        while(!q.isEmpty()){
-            int[] cur = q.poll();
+				if (isValid(nx, ny)) {
+					if (!bool[ny][nx]) {
+						int diff = Math.abs(arr[cur[1]][cur[0]] - arr[ny][nx]);
+						if (diff >= L && diff <= R) {
+							bool[ny][nx] = true;
+							q.add(new int[] {nx, ny});
+						}
+					}
+				}
+			}
+		}
 
-            for(int i = 0; i < 4; i++){
-                int nx = cur[0] + dix[i];
-                int ny = cur[1] + diy[i];
+		if (union.size() >= 2) {
+			int length = union.size();
 
-                if(nx >= 0 && ny >= 0 && nx < n && ny < n){
-                    int diff = Math.abs(arr[cur[1]][cur[0]] - arr[ny][nx]);
-                    if(diff >= l && diff <= r){
-                        if(!bool[ny][nx]){
-                            bool[ny][nx] = true;
-                            q.add(new int[]{nx, ny});
-                            union.add(new int[]{nx, ny});
-                            sum += arr[ny][nx];
-                        }
-                    }
-                }
-            }
-        }
+			while (!union.isEmpty()) {
+				int[] cur = union.poll();
+				arr[cur[1]][cur[0]] = sum / length;
+			}
 
-        if(union.size() > 1){
-            int avg = sum / union.size();
-            for(int[] pos : union)
-                arr[pos[1]][pos[0]] = avg;
+			return true;
+		}
 
-            return true;
-        }
+		return false;
+	}
 
-        return false;
-    }
+	public static boolean isValid(int x, int y) {
+		return x >= 0 && y >= 0 && x < N && y < N;
+	}
+
+	public static void init() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		L = Integer.parseInt(st.nextToken());
+		R = Integer.parseInt(st.nextToken());
+
+		arr = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+	}
 }
