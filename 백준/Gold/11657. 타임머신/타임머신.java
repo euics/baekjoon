@@ -1,19 +1,19 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-class Main {
-	static ArrayList<ArrayList<Edge>> graph;
+public class Main {
 	static long[] dis;
+	static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
-		graph = new ArrayList<>();
-		for (int i = 0; i <= N; i++)
-			graph.add(new ArrayList<Edge>());
 		dis = new long[N + 1];
 		Arrays.fill(dis, Long.MAX_VALUE);
+		for (int i = 0; i <= N; i++) {
+			graph.add(new ArrayList<Edge>());
+		}
 
 		int M = Integer.parseInt(st.nextToken());
 		for (int i = 0; i < M; i++) {
@@ -26,34 +26,37 @@ class Main {
 		}
 
 		boolean cycle = bellmanFord(N, 1);
-		if (cycle)
+		if (cycle) {
 			System.out.println(-1);
-		else {
+		} else {
 			for (int i = 2; i <= N; i++) {
-				if (dis[i] == Long.MAX_VALUE)
+				if (dis[i] == Long.MAX_VALUE) {
 					System.out.println(-1);
-				else
+				} else {
 					System.out.println(dis[i]);
+				}
 			}
 		}
 	}
 
-	public static boolean bellmanFord(int v, int src) {
+	public static boolean bellmanFord(int N, int src) {
 		dis[src] = 0;
 
-		for (int i = 1; i <= v - 1; i++) {
-			for (int j = 1; j <= v; j++) {
+		for (int i = 1; i <= N - 1; i++) {
+			for (int j = 1; j <= N; j++) {
 				for (Edge o : graph.get(j)) {
-					if (dis[j] != Long.MAX_VALUE && dis[o.v] > dis[j] + o.c)
-						dis[o.v] = dis[j] + o.c;
+					if (dis[j] != Long.MAX_VALUE && dis[o.v] > o.c + dis[j]) {
+						dis[o.v] = o.c + dis[j];
+					}
 				}
 			}
 		}
 
-		for (int i = 1; i <= v; i++) {
+		for (int i = 1; i <= N; i++) {
 			for (Edge o : graph.get(i)) {
-				if (dis[i] != Long.MAX_VALUE && dis[o.v] > dis[i] + o.c)
+				if (dis[i] != Long.MAX_VALUE && dis[o.v] > o.c + dis[i]) {
 					return true;
+				}
 			}
 		}
 
@@ -61,11 +64,16 @@ class Main {
 	}
 }
 
-class Edge {
+class Edge implements Comparable<Edge> {
 	int v, c;
 
 	public Edge(int v, int c) {
 		this.v = v;
 		this.c = c;
+	}
+
+	@Override
+	public int compareTo(Edge o) {
+		return this.c - o.c;
 	}
 }
