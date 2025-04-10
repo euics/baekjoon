@@ -1,87 +1,80 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int n, l;
-    static int[][] arr;
+	static int N, L, answer = 0;
+	static int[][] arr;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        l = Integer.parseInt(st.nextToken());
-        arr = new int[n][n];
-        for(int i = 0; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < n; j++)
-                arr[i][j] = Integer.parseInt(st.nextToken());
-        }
+	public static void main(String[] args) throws IOException {
+		init();
 
-        int count = 0;
-        for(int i = 0; i < n; i++) {
-            if(calRow(i)) count++; //i번째 열 확인
-            if(calCol(i)) count++; //i번째 행 확인
-        }
-        System.out.println(count);
-    }
+		for (int i = 0; i < N; i++) {
+			if (line(arr[i])) {
+				answer++;
+			}
+		}
 
-    public static boolean calRow(int row){
-        boolean[] isIncline = new boolean[n]; // 경사면 설치 여부를 확인하는 배열
+		for (int j = 0; j < N; j++) {
+			int[] line = new int[N];
 
-        for(int i = 0; i < n - 1; i++){
-            int diff = arr[row][i] - arr[row][i + 1];
+			for (int i = 0; i < N; i++) {
+				line[i] = arr[i][j];
+			}
 
-            if(diff > 1 || diff < -1)
-                return false; // 높이차 1 초과하므로 false
-            else if(diff == -1){ // 다음 계단이 한 계단 높다
-                for(int j = 0; j < l; j++){ // 올라가는 경사로를 설치할 수 있는지 확인한다.
-                    if(i - j < 0 || isIncline[i - j])
-                        return false;
-                    if(arr[row][i] != arr[row][i - j])
-                        return false;
-                    isIncline[i - j] = true;
-                }
-            } else if(diff == 1){ // 다음 계단이 한 계단 낮다
-                for(int j = 1; j <= l; j++){
-                    if(i + j >= n || isIncline[i + j])
-                        return false;
-                    if(arr[row][i] - 1 != arr[row][i + j])
-                        return false;
-                    isIncline[i + j] = true;
-                }
-            }
-        }
+			if (line(line)) {
+				answer++;
+			}
+		}
 
-        return true;
-    }
+		System.out.println(answer);
+	}
 
-    public static boolean calCol(int col){
-        boolean[] isIncline = new boolean[n];
+	public static boolean line(int[] line) {
+		boolean[] bool = new boolean[N];
 
-        for(int i = 0; i < n - 1; i++){
-            int diff = arr[i][col] - arr[i + 1][col];
+		for (int i = 0; i < N - 1; i++) {
+			int diff = line[i + 1] - line[i];
 
-            if(diff > 1 || diff < -1)
-                return false;
-            else if(diff == -1){
-                for(int j = 0; j < l; j++){
-                    if(i - j < 0 || isIncline[i - j])
-                        return false;
-                    if(arr[i - j][col] != arr[i][col])
-                        return false;
-                    isIncline[i - j] = true;
-                }
-            } else if(diff == 1){
-                for(int j = 1; j <= l; j++){
-                    if(i + j >= n || isIncline[i + j])
-                        return false;
-                    if(arr[i][col] - 1 != arr[i + j][col])
-                        return false;
-                    isIncline[i + j] = true;
-                }
-            }
-        }
+			if (diff == 0) {
+				continue;
+			}
 
-        return true;
-    }
+			if (diff == 1) {
+				for (int j = 0; j < L; j++) {
+					if (i - j < 0 || bool[i - j] || line[i - j] != line[i]) {
+						return false;
+					}
+
+					bool[i - j] = true;
+				}
+			} else if (diff == -1) {
+				for (int j = 0; j < L; j++) {
+					if (i + j + 1 >= N || bool[i + j + 1] || line[i + j + 1] != line[i + 1]) {
+						return false;
+					}
+
+					bool[i + j + 1] = true;
+				}
+			} else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static void init() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		L = Integer.parseInt(st.nextToken());
+
+		arr = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+	}
 }
