@@ -1,23 +1,18 @@
+import java.util.*;
+
 class Solution {
-    static int cnt = 0, loop = 0;
-    
     public int[] solution(String s) {
-        
-        while(!s.equals("1")) {
-            StringBuilder sb = new StringBuilder();
-            
-            for(int i = 0; i < s.length(); i++) {
-                if(s.charAt(i) == '0') {
-                    cnt++;
-                } else {
-                    sb.append("1");
-                }
-            }
-            
-            s = Integer.toString(sb.toString().length(), 2);
+        int loop = 0, deleted = 0;
+
+        while (!s.equals("1")) {
+            for (int i = 0; i < s.length(); i++) if (s.charAt(i) == '0') deleted++;
+
+            s = s.replace("0", "");
+            s = Integer.toString(s.length(), 2);
+
             loop++;
         }
-        
-        return new int[]{loop, cnt};
+
+        return new int[]{loop, deleted};
     }
 }
