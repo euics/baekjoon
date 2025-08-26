@@ -39,10 +39,8 @@ public class Main {
         }
 
         for (int i = 0; i < password.length() - 1; i++) {
-            if (password.charAt(i) == password.charAt(i + 1)) {
-                StringBuilder sb = new StringBuilder().append(password.charAt(i)).append(password.charAt(i + 1));
-                if (!sb.toString().equals("ee") && !sb.toString().equals("oo")) return false;
-            }
+            if (password.charAt(i) == 'e' || password.charAt(i) == 'o') continue;
+            if (password.charAt(i) == password.charAt(i + 1)) return false;
         }
 
         return true;
