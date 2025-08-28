@@ -2,17 +2,16 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] elements) {
-        int n = elements.length;
-        Set<Integer> answer = new HashSet<>();
-        
-        for(int start = 0; start < n; start++){
+        Set<Integer> set = new HashSet<>();
+
+        for (int i = 0; i < elements.length; i++) {
             int sum = 0;
-            for(int length = 1; length <= n; length++){
-                sum += elements[(start + length - 1) % n];
-                answer.add(sum);
+            for (int size = 1; size <= elements.length; size++) {
+                sum += elements[(i + size - 1) % elements.length];
+                set.add(sum);
             }
         }
-        
-        return answer.size();
+
+        return set.size();
     }
 }
