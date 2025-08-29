@@ -1,28 +1,21 @@
 import java.util.*;
 
 class Solution {
-	static int answer = 0;
+    static int ans = 0;
 
-	public int solution(int[] topping) {
-		Map<Integer, Integer> A = new HashMap<>();
-		for (int i = 0; i < topping.length; i++) {
-			A.put(topping[i], A.getOrDefault(topping[i], 0) + 1);
-		}
+    public int solution(int[] toppings) {
+        Map<Integer, Integer> front = new HashMap<>();
+        Map<Integer, Integer> rear = new HashMap<>();
+        for (int topping : toppings) rear.put(topping, rear.getOrDefault(topping, 0) + 1);
 
-		Map<Integer, Integer> B = new HashMap<>();
-		for (int i = 0; i < topping.length; i++) {
-			B.put(topping[i], B.getOrDefault(topping[i], 0) + 1);
-			A.put(topping[i], A.get(topping[i]) - 1);
-			
-			if (A.get(topping[i]) == 0) {
-				A.remove(topping[i]);
-			}
+        for (int i = 0; i < toppings.length; i++) {
+            if (front.size() == rear.size()) ans++;
 
-			if (A.keySet().size() == B.keySet().size()) {
-				answer++;
-			}
-		}
+            front.put(toppings[i], front.getOrDefault(toppings[i], 0) + 1);
+            rear.put(toppings[i], rear.get(toppings[i]) - 1);
+            if (rear.get(toppings[i]) == 0) rear.remove(toppings[i]);
+        }
 
-		return answer;
-	}
+        return ans;
+    }
 }
