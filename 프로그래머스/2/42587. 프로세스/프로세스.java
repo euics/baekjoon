@@ -2,35 +2,34 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        PriorityQueue<Progress> pq = new PriorityQueue<>();
-        Queue<int[]> q = new LinkedList<>();
-        for(int i = 0; i < priorities.length; i++) {
-            pq.add(new Progress(i, priorities[i]));
-            q.add(new int[]{i, priorities[i]});
-        }
-        int answer = 1;
-        while(!pq.isEmpty()) {
-            Progress cur = pq.poll();
-            
-            while(!q.isEmpty() && q.peek()[1] != cur.priority) q.add(q.poll());
-            
-            if(q.poll()[0] == location) return answer;
-            answer++;
-        }
-        
-        return -1;
-    }
-}
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int priority : priorities) pq.add(priority);
 
-class Progress implements Comparable<Progress> {
-    int id, priority;
-    public Progress(int id, int priority) {
-        this.id = id;
-        this.priority = priority;
-    }
-    
-    @Override
-    public int compareTo(Progress o) {
-        return o.priority - this.priority;
+        Queue<int[]> process = new LinkedList<>();
+        for (int i = 0; i < priorities.length; i++) process.add(new int[]{i, priorities[i]});
+
+        int seq = 1;
+        while (!pq.isEmpty()) {
+            int priority = pq.poll();
+
+            int size = process.size();
+            for (int i = 0; i < size; i++) {
+                int[] cur = process.poll();
+
+                if (cur[1] == priority) {
+                    if (cur[0] == location) {
+                        return seq;
+                    }
+                    
+                    break;
+                } else {
+                    process.add(cur);
+                }
+            }
+
+            seq++;
+        }
+
+        return -1;
     }
 }
