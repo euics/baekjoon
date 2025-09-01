@@ -1,44 +1,34 @@
 import java.util.*;
 
 class Solution {
-	static Map<String, Integer> dictionary;
+    static int idx = 27;
+    static Map<String, Integer> dic = new HashMap<>();
 
-	public int[] solution(String msg) {
-		makeDictionary();
+    public int[] solution(String msg) {
+        List<Integer> ans = new ArrayList<>();
 
-		int key = 27, pointer = 0;
-		char[] message = msg.toCharArray();
-		List<Integer> answer = new ArrayList<>();
-		while (pointer < message.length) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(message[pointer]);
+        for (int i = 1; i <= 26; i++) dic.put(String.valueOf((char) ((int) 'A' + i - 1)), i);
 
-			while (pointer + 1 < message.length && dictionary.containsKey(sb.toString() + message[pointer + 1])) {
-				sb.append(message[pointer + 1]);
-				pointer++;
-			}
+        int p = 0;
+        while (p < msg.length()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(msg.charAt(p));
 
-			answer.add(dictionary.get(sb.toString()));
+            while (p + 1 < msg.length() && dic.containsKey(sb.toString() + msg.charAt(p + 1))) {
+                sb.append(msg.charAt(p + 1));
+                p++;
+            }
 
-			if (pointer + 1 < message.length) {
-				sb.append(message[pointer + 1]);
-			}
-			pointer++;
+            ans.add(dic.get(sb.toString()));
 
-			dictionary.put(sb.toString(), key++);
-		}
+            if (p + 1 < msg.length()) {
+                sb.append(msg.charAt(p + 1));
+                dic.put(sb.toString(), idx++);
+            }
 
-		return answer.stream().mapToInt(i -> i).toArray();
-	}
+            p++;
+        }
 
-	public void makeDictionary() {
-		dictionary = new HashMap<>();
-
-		int key = 1;
-		char value = 'A';
-
-		for (int i = key; i <= 26; i++) {
-			dictionary.put(String.valueOf((char)(value + i - 1)), i);
-		}
-	}
+        return ans.stream().mapToInt(i -> i).toArray();
+    }
 }
