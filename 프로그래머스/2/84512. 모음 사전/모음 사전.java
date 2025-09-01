@@ -1,38 +1,28 @@
 import java.util.*;
 
 class Solution {
-    static List<String> dic = new ArrayList<>();
-    static char[] permutation;
+    static char[] ch = new char[]{'A', 'E', 'I', 'O', 'U'};
+    static List<String> dictionary = new ArrayList<>();
     
     public int solution(String word) {
-        
-        for(int length = 1; length <= 5; length++) {
-            permutation = new char[length];
-            
-            makeDic(0, length, new char[]{'A', 'E', 'I', 'O', 'U'});
-        }
-        
-        Collections.sort(dic);
-        
-        return dic.indexOf(word) + 1;
+        for (int length = 1; length <= 5; length++) dictionary(0, length, new char[length]);
+        Collections.sort(dictionary);
+
+        return dictionary.indexOf(word) + 1;
     }
-    
-    public void makeDic(int L, int length, char[] vowels) {
-        if(L == length) {
+
+    public void dictionary(int L, int length, char[] word) {
+        if (L == length) {
             StringBuilder sb = new StringBuilder();
-            
-            for(char per : permutation) {
-                sb.append(per);
-            }
-            
-            dic.add(sb.toString());
-            
+            for (char ch : word) sb.append(ch);
+            dictionary.add(sb.toString());
+
             return;
         }
-        
-        for(int i = 0; i < vowels.length; i++) {
-            permutation[L] = vowels[i];
-            makeDic(L + 1, length, vowels);
+
+        for (int i = 0; i < ch.length; i++) {
+            word[L] = ch[i];
+            dictionary(L + 1, length, word);
         }
     }
 }
