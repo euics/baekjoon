@@ -1,19 +1,17 @@
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
-	public int[] solution(int[] numbers) {
-		int[] answer = new int[numbers.length];
-		Arrays.fill(answer, -1);
+    public int[] solution(int[] numbers) {
+        int[] ans = new int[numbers.length];
+        Arrays.fill(ans, -1);
 
-		Stack<Integer> stack = new Stack<>();
-		for(int i = 0; i < numbers.length; i++) {
-			while (!stack.isEmpty() && numbers[stack.peek()] < numbers[i])
-				answer[stack.pop()] = numbers[i];
-			
-			stack.push(i);
-		}
-		
-		return answer;
-	}
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < numbers.length; i++) {
+            while (!stack.isEmpty() && numbers[stack.peek()] < numbers[i]) ans[stack.pop()] = numbers[i];
+            
+            stack.push(i);
+        }
+
+        return ans;
+    }
 }
