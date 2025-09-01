@@ -1,53 +1,34 @@
 import java.util.*;
 
 class Solution {
-    static int[] dix = {0, 0, -1, 1};
-    static int[] diy = {-1, 1, 0, 0};
-    
     public int solution(String dirs) {
-        int x = 0, y = 0, d = 0;
-        Set<String> set = new HashSet<>();
-        
-        for(char dir : dirs.toCharArray()) {
-            int nx = x;
-            int ny = y;
-            
-            switch(dir) {
-                case 'U':
-                    d = 0;
-                    ny -= 1;
-                    
-                    break;
-                case 'D':
-                    d = 1;
-                    ny += 1;
-                    
-                    break;
-                case 'R':
-                    d = 3;
-                    nx += 1;
-                    
-                    break;
-                case 'L':
-                    d = 2;
-                    nx -= 1;
-                    
-                    break;
+        int x = 0, y = 0, length = 0;
+        List<String> list = new ArrayList<>();
+
+        for (char dir : dirs.toCharArray()) {
+            int nx = x, ny = y;
+
+            if (dir == 'U') ny++;
+            else if (dir == 'D') ny--;
+            else if (dir == 'L') nx--;
+            else nx++;
+
+            if (nx >= -5 && ny >= -5 && nx <= 5 && ny <= 5) {
+                String coordinate1 = x + "" + y + nx + ny;
+                String coordinate2 = nx + "" + ny + x + y;
+
+                if (!list.contains(coordinate1) && !list.contains(coordinate2)) {
+                    list.add(coordinate1);
+                    list.add(coordinate1);
+
+                    length++;
+                }
+
+                x = nx;
+                y = ny;
             }
-            
-            if(nx < -5 || ny < -5 || nx > 5 || ny > 5) {
-                continue;
-            }
-            
-            StringBuilder sb = new StringBuilder();
-            set.add(sb.append(x).append(y).append(nx).append(ny).toString());
-            sb = new StringBuilder();
-            set.add(sb.append(nx).append(ny).append(x).append(y).toString());
-            
-            x = nx;
-            y = ny;
         }
-        
-        return set.size() / 2;
+
+        return length;
     }
 }
