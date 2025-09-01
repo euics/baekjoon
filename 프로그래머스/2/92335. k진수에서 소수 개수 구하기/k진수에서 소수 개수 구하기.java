@@ -1,36 +1,34 @@
 import java.util.*;
 
 class Solution {
-	static int answer = 0;
-	public int solution(int n, int k) {
-		String radix = Integer.toString(n, k);
+    public int solution(int n, int k) {
+        int ans = 0;
 
-		int start = 0, end = 0;
+        String[] convert = convert(n, k).split("0");
+        for (String prime : convert) if (!prime.isEmpty() && isPrime(Long.parseLong(prime))) ans++;
 
-		String[] candidate = radix.split("0");
-		for (String x : candidate) {
-			if(!x.isEmpty() && isPrime(Long.parseLong(x))) {
-				answer++;
-			}
-		}
+        return ans;
+    }
 
-		return answer;
-	}
+    public String convert(int n, int k) {
+        StringBuilder sb = new StringBuilder();
 
-	public boolean isPrime(long n) {
-		if (n <= 1)
-			return false;
-		if (n == 2)
-			return true;
-		if (n % 2 == 0)
-			return false;
+        while (n > 0) {
+            int remain = n % k;
+            sb.insert(0, remain);
+            n /= k;
+        }
 
-		for (long i = 3; i * i <= n; i += 2) {
-			if (n % i == 0) {
-				return false;
-			}
-		}
+        return sb.toString();
+    }
 
-		return true;
-	}
+    public boolean isPrime(long n) {
+        if (n <= 1) return false;
+        if (n == 2) return true;
+        if (n % 2 == 0) return false;
+
+        for (long i = 3; i * i <= n; i += 2) if (n % i == 0) return false;
+
+        return true;
+    }
 }
