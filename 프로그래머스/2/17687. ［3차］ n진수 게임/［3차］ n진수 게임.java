@@ -1,65 +1,40 @@
+import java.util.*;
+
 class Solution {
-	public String solution(int n, int t, int m, int p) {
-		StringBuilder sb = new StringBuilder();
-		String convert = convert(n, m, t);
+    static StringBuilder ans = new StringBuilder();
 
-		int cnt = 0, pointer = 0;
-		while (cnt < t) {
-			if(pointer % m + 1 == p) {
-				sb.append(convert.charAt(pointer));
-				cnt++;
-			}
+    public String solution(int n, int t, int m, int p) {
+        StringBuilder sb = new StringBuilder();
+        int end = (t + 1) * m;
+        int number = 1;
+        sb.append(0);
+        while (sb.length() < end) sb.append(convert(number++, n));
 
-			pointer++;
-		}
+        int start = p - 1;
+        while (ans.length() < t) {
+            ans.append(sb.toString().charAt(start));
+            start += m;
+        }
 
-		return sb.toString();
-	}
+        return ans.toString();
+    }
 
-	public String convert(int n, int m, int t) {
-		int num = 1;
-		StringBuilder convert = new StringBuilder();
-		convert.append(0);
+    public String convert(int number, int n) {
+        StringBuilder sb = new StringBuilder();
 
-		while (convert.toString().length() <= m * t) {
-			StringBuilder sb = new StringBuilder();
-			int tmp = num;
+        while (number > 0) {
+            int remain = number % n;
 
-			while (tmp > 0) {
-				int remain = tmp % n;
-				if (remain >= 10) {
-					switch (remain) {
-						case 10:
-							sb.insert(0, 'A');
-							break;
-						case 11:
-							sb.insert(0, 'B');
-							break;
-						case 12:
-							sb.insert(0, 'C');
-							break;
-						case 13:
-							sb.insert(0, 'D');
-							break;
-						case 14:
-							sb.insert(0, 'E');
-							break;
-						case 15:
-							sb.insert(0,
-								'F');
-							break;
-					}
-				} else {
-					sb.insert(0, remain);
-				}
+            if (remain >= 10) {
+                remain = (int) 'A' + remain % 10;
+                sb.insert(0, (char) remain);
+            } else {
+                sb.insert(0, remain);
+            }
 
-				tmp /= n;
-			}
+            number /= n;
+        }
 
-			convert.append(sb);
-			num++;
-		}
-
-		return convert.toString();
-	}
+        return sb.toString();
+    }
 }
