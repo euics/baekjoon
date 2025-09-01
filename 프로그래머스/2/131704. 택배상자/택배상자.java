@@ -1,21 +1,39 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
-	public int solution(int[] order) {
-		Stack<Integer> subContainer = new Stack<>();
-		int cnt = 0, nextBox = 1;
+    public int solution(int[] order) {
+        int ans = 0;
 
-		for (int cur : order) {
-			while (nextBox <= cur)
-				subContainer.push(nextBox++);
+        Queue<Integer> belt = new LinkedList<>();
+        for (int i = 1; i <= order.length; i++) belt.add(i);
+        Stack<Integer> sub = new Stack<>();
 
-			if (subContainer.peek() == cur) {
-				subContainer.pop();
-				cnt++;
-			} else
-				break;
-		}
-		
-		return cnt;
-	}
+        for (int i = 0; i < order.length; i++) {
+            boolean bool = false;
+
+            if (!sub.isEmpty() && sub.peek() == order[i]) {
+                sub.pop();
+                ans++;
+                bool = true;
+
+                continue;
+            }
+
+            while (!belt.isEmpty()) {
+                if (belt.peek() == order[i]) {
+                    belt.poll();
+                    ans++;
+                    bool = true;
+
+                    break;
+                } else {
+                    sub.push(belt.poll());
+                }
+            }
+
+            if (!bool) break;
+        }
+
+        return ans;
+    }
 }
