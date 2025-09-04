@@ -1,38 +1,34 @@
+import java.util.*;
+
 class Solution {
-	public int solution(int[] stones, int k) {
-		int low = 0, high = 0;
-		for (int stone : stones)
-			high = Math.max(high, stone);
+    public int solution(int[] stones, int k) {
+        int lo = 0, hi = 0;
+        for (int stone : stones) hi = Math.max(hi, stone);
 
-		int answer = 0;
-		while (low <= high) {
-			int mid = (low + high) / 2;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            int cnt = 0;
+            boolean bool = true;
 
-			if (canCross(stones, k, mid)) {
-				answer = mid;
-				low = mid + 1;
-			} else {
-				high = mid - 1;
-			}
-		}
+            for (int stone : stones) {
+                if (stone - mid <= 0) {
+                    cnt++;
+                    if (cnt >= k) {
+                        bool = false;
+                        break;
+                    }
+                } else {
+                    cnt = 0;
+                }
+            }
 
-		return answer;
-	}
+            if (!bool) {
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
 
-	public boolean canCross(int[] stones, int k, int mid) {
-		int cnt = 0;
-
-		for (int stone : stones) {
-			if (stone - mid < 0) {
-				cnt++;
-
-				if (cnt >= k)
-					return false;
-			} else {
-				cnt = 0;
-			}
-		}
-
-		return true;
-	}
+        return lo;
+    }
 }
