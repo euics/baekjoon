@@ -1,83 +1,91 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
-	static char[][] arr;
-	static boolean[][] bool;
+    static int ans = 0;
+    static Map<Character, Integer> map = new HashMap<>();
 
-	public int solution(int m, int n, String[] board) {
-		int answer = 0;
+    static {
+        for (int i = 0; i < 26; i++) map.put((char) ('A' + i), i + 1);
+    }
 
-		arr = new char[m][n];
-		for (int i = 0; i < m; i++)
-			arr[i] = board[i].toCharArray();
+    public int solution(int m, int n, String[] board) {
+        int[][] arr = new int[m][n];
+        for (int i = 0; i < m; i++) for (int j = 0; j < n; j++) arr[i][j] = map.get(board[i].charAt(j));
 
-		while (true) {
-			bool = new boolean[m][n];
+        int[] dix = {1, 1, 0};
+        int[] diy = {0, 1, 1};
 
-			for (int row = 0; row < m - 1; row++) {
-				for (int col = 0; col < n - 1; col++) {
-					if (arr[row][col] == ' ')
-						continue;
+        while (true) {
+            boolean[][] bool = new boolean[m][n];
 
-					findSameBlocks(row, col, arr[row][col]);
-				}
-			}
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (arr[i][j] == 0) continue;
 
-			int cnt = removeBlocks(m, n);
-			answer += cnt;
-			if (cnt == 0)
-				break;
+                    boolean same = true;
+                    for (int d = 0; d < 3; d++) {
+                        int nx = j + dix[d];
+                        int ny = i + diy[d];
 
-			dropBlocks(m, n);
-		}
+                        if ((nx >= n || ny >= m) || (arr[i][j] != arr[ny][nx])) {
+                            same = false;
+                            break;
+                        }
+                    }
 
-		return answer;
-	}
+                    if (same) {
+                        bool[i][j] = true;
 
-	public void findSameBlocks(int row, int col, char block) {
-		for (int i = row; i < row + 2; i++) {
-			for (int j = col; j < col + 2; j++) {
-				if (arr[i][j] != block)
-					return;
-			}
-		}
+                        for (int d = 0; d < 3; d++) {
+                            int nx = j + dix[d];
+                            int ny = i + diy[d];
 
-		for (int i = row; i < row + 2; i++) {
-			for (int j = col; j < col + 2; j++) {
-				bool[i][j] = true;
-			}
-		}
-	}
+                            bool[ny][nx] = true;
+                        }
+                    }
+                }
+            }
 
-	public int removeBlocks(int m, int n) {
-		int cnt = 0;
+            boolean finish = true;
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (bool[i][j]) {
+                        finish = false;
+                        break;
+                    }
+                }
+            }
 
-		for (int row = 0; row < m; row++) {
-			for (int col = 0; col < n; col++) {
-				if (bool[row][col]) {
-					arr[row][col] = ' ';
-					cnt++;
-				}
-			}
-		}
+            if (finish) break;
 
-		return cnt;
-	}
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (bool[i][j]) {
+                        arr[i][j] = 0;
+                        ans++;
+                    }
+                }
+            }
 
-	public void dropBlocks(int m, int n) {
-		for (int col = 0; col < n; col++) {
-			Stack<Character> stack = new Stack<>();
+            for (int col = 0; col < n; col++) {
+                Stack<Integer> stack = new Stack<>();
 
-			for (int row = 0; row < m; row++) {
-				if (arr[row][col] != ' ') {
-					stack.push(arr[row][col]);
-					arr[row][col] = ' ';
-				}
-			}
+                for (int row = 0; row < m; row++) {
+                    if (arr[row][col] != 0) {
+                        stack.push(arr[row][col]);
+                    }
 
-			int index = m - 1;
-			while (!stack.isEmpty())
-				arr[index--][col] = stack.pop();
-		}
-	}
+                    arr[row][col] = 0;
+                }
+
+                for (int row = m - 1; row >= 0; row--) {
+                    if (stack.isEmpty()) break;
+
+                    arr[row][col] = stack.pop();
+                }
+            }
+        }
+
+        return ans;
+    }
 }
