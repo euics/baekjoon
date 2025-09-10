@@ -1,33 +1,24 @@
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 class Solution {
-	public String[] solution(String[] files) {
-		Arrays.sort(files, new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				String[] file1 = splitFile(o1);
-				String[] file2 = splitFile(o2);
+    public String[] solution(String[] files) {
+        Arrays.sort(files, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                String head1 = o1.split("[0-9]")[0];
+                String head2 = o2.split("[0-9]")[0];
 
-				int headCompare = file1[0].compareToIgnoreCase(file2[0]);
-				if (headCompare == 0) {
-					int number1 = Integer.parseInt(file1[1]);
-					int number2 = Integer.parseInt(file2[1]);
+                if (!head1.equalsIgnoreCase(head2)) {
+                    return head1.toUpperCase().compareTo(head2.toUpperCase());
+                }
 
-					return Integer.compare(number1, number2);
-				}
+                int num1 = Integer.parseInt(o1.replaceAll("[^0-9]", " ").trim().split(" ")[0]);
+                int num2 = Integer.parseInt(o2.replaceAll("[^0-9]", " ").trim().split(" ")[0]);
 
-				return headCompare;
-			}
+                return num1 - num2;
+            }
+        });
 
-			private String[] splitFile(String file) {
-				String head = file.split("[0-9]")[0];
-				String number = file.replaceAll("[^0-9]", " ").trim().split(" ")[0];
-
-				return new String[] {head, number};
-			}
-		});
-		
-		return files;
-	}
+        return files;
+    }
 }
