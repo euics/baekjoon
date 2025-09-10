@@ -1,34 +1,22 @@
 import java.util.*;
 
 class Solution {
-	static ArrayList<String> answer = new ArrayList<>();
+    static List<String> ans = new ArrayList<>();
 
-	public String[] solution(String[] record) {
-		Map<String, String> map = new HashMap<>();
+    public String[] solution(String[] record) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < record.length; i++) {
+            String[] split = record[i].split(" ");
+            if (split[0].equals("Enter") || split[0].equals("Change")) map.put(split[1], split[2]);
+        }
 
-		for (String rec : record) {
-			String[] split = rec.split(" ");
+        for (int i = 0; i < record.length; i++) {
+            String[] split = record[i].split(" ");
 
-			if (split[0].equals("Enter") || split[0].equals("Change")) {
-				map.put(split[1], split[2]);
-			}
-		}
+            if (split[0].equals("Enter")) ans.add(map.get(split[1]) + "님이 들어왔습니다.");
+            if (split[0].equals("Leave")) ans.add(map.get(split[1]) + "님이 나갔습니다.");
+        }
 
-		for (String rec : record) {
-			String[] split = rec.split(" ");
-
-			StringBuilder sb = new StringBuilder();
-			if (split[0].equals("Enter")) {
-				sb.append(map.get(split[1])).append("님이 들어왔습니다.");
-			} else if (split[0].equals("Leave")) {
-				sb.append(map.get(split[1])).append("님이 나갔습니다.");
-			}
-
-			if (!sb.toString().isEmpty()) {
-				answer.add(sb.toString());
-			}
-		}
-
-		return answer.stream().toArray(String[]::new);
-	}
+        return ans.stream().toArray(String[]::new);
+    }
 }
