@@ -1,87 +1,73 @@
 import java.util.*;
 
 class Solution {
-	static long answer = Long.MIN_VALUE;
-	static char[] permutations = new char[3];
-	static char[] operations = {'+', '-', '*'};
+    static long ans = Long.MIN_VALUE;
+    static char[] ch = new char[]{'+', '-', '*'};
+    static char[] permutation = new char[3];
 
-	public long solution(String expression) {
-		permutation(expression, 0, new boolean[3]);
+    public long solution(String expression) {
+        permutation(0, new boolean[3], expression);
 
-		return answer;
-	}
+        return ans;
+    }
 
-	public void permutation(String expression, int L, boolean[] bool) {
-		if (L == 3) {
-			List<Long> numbers = parseNumbers(expression);
-			List<Character> operations = parseOperations(expression);
+    public void permutation(int L, boolean[] bool, String expression) {
+        if (L == 3) {
+            ans = Math.max(ans, Math.abs(sum(expression)));
 
-			for (char permutation : permutations) {
-				int p = 0;
+            return;
+        }
 
-				while (p < operations.size()) {
-					if (operations.get(p) == permutation) {
-						long result = calculate(numbers.get(p), numbers.get(p + 1), permutation);
-						numbers.set(p, result);
-						numbers.remove(p + 1);
-						operations.remove(p);
-					} else {
-						p++;
-					}
-				}
-			}
+        for (int i = 0; i < ch.length; i++) {
+            if (!bool[i]) {
+                bool[i] = true;
+                permutation[L] = ch[i];
+                permutation(L + 1, bool, expression);
+                bool[i] = false;
+            }
+        }
+    }
 
-			answer = Math.max(answer, Math.abs(numbers.get(0)));
+    public long sum(String expression) {
+        List<String> num = new ArrayList<>(Arrays.asList(expression.split("[^0-9]")));
+        List<String> operation = new ArrayList<>(Arrays.asList(expression.split("[0-9]")));
+        operation.removeIf(String::isEmpty);
+        System.out.println(permutation);
+        System.out.println(num);
+        System.out.println(operation);
 
-			return;
-		}
+        try {
+            for (char priority : permutation) {
+                int idx = 0;
+                while (idx < operation.size()) {
+                    if (operation.get(idx).equals(priority + "")) {
+                        long num1 = Long.parseLong(num.get(idx));
+                        long num2 = Long.parseLong(num.get(idx + 1));
+                        long sum = calculate(priority, num1, num2);
 
-		for (int i = 0; i < operations.length; i++) {
-			if (!bool[i]) {
-				bool[i] = true;
-				permutations[L] = operations[i];
-				permutation(expression, L + 1, bool);
-				bool[i] = false;
-			}
-		}
-	}
+                        num.set(idx, String.valueOf(sum));
+                        num.remove(idx + 1);
+                        operation.remove(idx);
 
-	public List<Long> parseNumbers(String expression) {
-		List<Long> numbers = new ArrayList<>();
+                        idx--;
+                    }
 
-		String[] formulationNumbers = expression.split("[-||+||*]");
-		for (String formulationNumber : formulationNumbers) {
-			formulationNumber = formulationNumber.trim();
+                    idx++;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-			if (!formulationNumber.isEmpty()) {
-				numbers.add(Long.parseLong(formulationNumber));
-			}
-		}
+        return Long.parseLong(num.get(0));
+    }
 
-		return numbers;
-	}
-
-	public List<Character> parseOperations(String expression) {
-		List<Character> operations = new ArrayList<>();
-
-		String[] formulationOperations = expression.split("[0-9]");
-		for (String formulationOperation : formulationOperations) {
-			formulationOperation = formulationOperation.trim();
-
-			if (!formulationOperation.isEmpty()) {
-				operations.add(formulationOperation.charAt(0));
-			}
-		}
-
-		return operations;
-	}
-
-	public long calculate(long a, long b, char permutation) {
-		return switch (permutation) {
-			case '+' -> a + b;
-			case '-' -> a - b;
-			case '*' -> a * b;
-			default -> throw new IllegalArgumentException("calculate Method Error");
-		};
-	}
+    public long calculate(char operation, long num1, long num2) {
+        return switch (operation) {
+            case '+' -> num1 + num2;
+            case '-' -> num1 - num2;
+            case '*' -> num1 * num2;
+            default -> Long.MIN_VALUE;
+        };
+    }
 }
