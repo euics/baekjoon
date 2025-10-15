@@ -1,21 +1,33 @@
 import java.util.*;
 
 class Solution {
-    static int M, N;
+    static int N, M;
 
     public boolean solution(int[][] key, int[][] lock) {
-        M = key.length;
-        N = lock.length;
-        int[][] board = new int[N + 2 * (M - 1)][N + 2 * (M - 1)];
-        for (int i = 0; i < N; i++) for (int j = 0; j < N; j++) board[M - 1 + i][M - 1 + j] = lock[i][j];
+        N = key.length;
+        M = lock.length;
+        int[][] arr = new int[M + 2 * (N - 1)][M + 2 * (N - 1)];
+        for (int i = 0; i < lock.length; i++) {
+            for (int j = 0; j < lock[i].length; j++) {
+                arr[N + i - 1][N + j - 1] = lock[i][j];
+            }
+        }
 
-        for (int i = 0; i < N + M - 1; i++) {
-            for (int j = 0; j < N + M - 1; j++) {
+        for (int row = 0; row <= arr.length - N; row++) {
+            for (int col = 0; col <= arr[row].length - N; col++) {
+
                 for (int d = 0; d < 4; d++) {
-                    key = rotateRight(key);
-                    if (unlock(board, key, j, i)) {
-                        return true;
+                    key = rotate(key);
+                    int[][] tmp = new int[M + 2 * (N - 1)][M + 2 * (N - 1)];
+                    for (int i = 0; i < tmp.length; i++) tmp[i] = arr[i].clone();
+
+                    for (int i = row; i < row + N; i++) {
+                        for (int j = col; j < col + N; j++) {
+                            tmp[i][j] += key[i - row][j - col];
+                        }
                     }
+
+                    if (solve(tmp)) return true;
                 }
             }
         }
@@ -23,31 +35,21 @@ class Solution {
         return false;
     }
 
-    public int[][] rotateRight(int[][] arr) {
-        int[][] rotate = new int[arr.length][arr.length];
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                rotate[arr.length - j - 1][i] = arr[i][j];
+    public int[][] rotate(int[][] key) {
+        int[][] tmp = new int[key.length][key[0].length];
+        for (int i = 0; i < key.length; i++) {
+            for (int j = 0; j < key[i].length; j++) {
+                tmp[j][tmp.length - 1 - i] = key[i][j];
             }
         }
 
-        return rotate;
+        return tmp;
     }
 
-    public boolean unlock(int[][] board, int[][] rotate, int x, int y) {
-        int[][] tmp = new int[board.length][board.length];
-        for (int i = 0; i < board.length; i++) tmp[i] = board[i].clone();
-
-        for (int i = y; i < y + rotate.length; i++) {
-            for (int j = x; j < x + rotate.length; j++) {
-                tmp[i][j] += rotate[i - y][j - x];
-            }
-        }
-
-        for (int i = M - 1; i < M + N - 1; i++) {
-            for (int j = M - 1; j < M + N - 1; j++) {
-                if (tmp[i][j] != 1) return false;
+    public boolean solve(int[][] arr) {
+        for (int i = N - 1; i < N + M - 1; i++) {
+            for (int j = N - 1; j < N + M - 1; j++) {
+                if (arr[i][j] != 1) return false;
             }
         }
 
