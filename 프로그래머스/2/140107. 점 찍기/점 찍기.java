@@ -1,12 +1,14 @@
+import java.util.*;
+
 class Solution {
-	public long solution(int k, int d) {
-		long answer = 0;
+    static long ans = 0;
 
-		for (int x = 0; x <= d; x += k) {
-			int maxY = (int)Math.sqrt(Math.pow(d, 2) - Math.pow(x, 2));
-			answer += (maxY / k) + 1;
-		}
+    public long solution(int k, int d) {
+        for (int x = 0; x <= d; x += k) {
+            int y = (int) Math.sqrt(Math.pow(d, 2) - Math.pow(x, 2));
+            ans += y / k + 1;
+        }
 
-		return answer;
-	}
+        return ans;
+    }
 }
