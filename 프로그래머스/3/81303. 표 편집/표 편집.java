@@ -1,6 +1,8 @@
 import java.util.*;
 
 class Solution {
+    static StringBuilder ans = new StringBuilder();
+
     public String solution(int n, int k, String[] cmd) {
         Node[] nodes = new Node[n];
         nodes[0] = new Node();
@@ -13,46 +15,44 @@ class Solution {
         Node cur = nodes[k];
         Stack<Node> stack = new Stack<>();
         for (String command : cmd) {
-            String[] split = command.split(" ");
-            char type = split[0].charAt(0);
-
-            if (type == 'U') {
-                int cnt = Integer.parseInt(split[1]);
-                for (int i = 0; i < cnt; i++) cur = cur.prev;
-            }
+            char type = command.split(" ")[0].charAt(0);
 
             if (type == 'D') {
-                int cnt = Integer.parseInt(split[1]);
+                int cnt = Integer.parseInt(command.split(" ")[1]);
                 for (int i = 0; i < cnt; i++) cur = cur.next;
             }
 
+            if (type == 'U') {
+                int cnt = Integer.parseInt(command.split(" ")[1]);
+                for (int i = 0; i < cnt; i++) cur = cur.prev;
+            }
+
             if (type == 'C') {
-                cur.removed = true;
+                cur.isDeleted = true;
                 stack.push(cur);
 
                 if (cur.prev != null) cur.prev.next = cur.next;
                 if (cur.next != null) cur.next.prev = cur.prev;
 
-                cur = (cur.next != null) ? cur.next : cur.prev;
+                cur = cur.next != null ? cur.next : cur.prev;
             }
 
             if (type == 'Z') {
-                Node removed = stack.pop();
-                removed.removed = false;
+                Node deleted = stack.pop();
+                deleted.isDeleted = false;
 
-                if (removed.prev != null) removed.prev.next = removed;
-                if (removed.next != null) removed.next.prev = removed;
+                if (deleted.prev != null) deleted.prev.next = deleted;
+                if (deleted.next != null) deleted.next.prev = deleted;
             }
         }
 
-        StringBuilder sb = new StringBuilder(n);
-        for (int i = 0; i < n; i++) sb.append(nodes[i].removed ? 'X' : 'O');
+        for (int i = 0; i < n; i++) ans.append(nodes[i].isDeleted ? 'X' : 'O');
 
-        return sb.toString();
+        return ans.toString();
     }
 }
 
 class Node {
-    Node next, prev;
-    boolean removed;
+    Node prev, next;
+    boolean isDeleted;
 }
