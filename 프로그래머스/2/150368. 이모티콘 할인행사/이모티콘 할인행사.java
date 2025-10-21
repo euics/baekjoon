@@ -2,28 +2,47 @@ import java.util.*;
 
 class Solution {
     static int[] ans = new int[2];
-    static int plusMax = 0, priceMax = 0;
-    static int[] discounts = new int[]{10, 20, 30, 40};
-    static int[] permutation;
+    static double[] discounts = new double[]{0.1, 0.2, 0.3, 0.4};
+    static double[] permutation;
 
     public int[] solution(int[][] users, int[] emoticons) {
-        permutation = new int[emoticons.length];
-        permutation(users, emoticons, 0, emoticons.length);
+        permutation = new double[emoticons.length];
+        permutation(0, emoticons.length, users, emoticons);
 
         return ans;
     }
 
-    public void permutation(int[][] users, int[] emoticons, int L, int depth) {
+    public void permutation(int L, int depth, int[][] users, int[] emoticons) {
         if (L == depth) {
-            int[] results = calculate(users, emoticons);
-            if (plusMax < results[0]) {
-                plusMax = results[0];
-                priceMax = results[1];
-                ans = Arrays.copyOfRange(results, 0, results.length);
-            } else if (plusMax == results[0]) {
-                if (priceMax < results[1]) {
-                    priceMax = results[1];
-                    ans = Arrays.copyOfRange(results, 0, results.length);
+            double[] tmp = new double[emoticons.length];
+            for (int i = 0; i < tmp.length; i++) tmp[i] = (1 - permutation[i]) * emoticons[i];
+
+            int plus = 0;
+            double sell = 0;
+            for (int i = 0; i < users.length; i++) {
+                double sum = 0;
+
+                for (int j = 0; j < tmp.length; j++) {
+                    if (permutation[j] >= (double) users[i][0] / 100) {
+                        sum += tmp[j];
+                    }
+                }
+
+                if (sum >= users[i][1]) {
+                    plus++;
+                    continue;
+                }
+
+                sell += sum;
+            }
+
+            if (ans[0] < plus) {
+                ans[0] = plus;
+                ans[1] = (int) sell;
+            } else if (ans[0] == plus) {
+                if (ans[1] <= sell) {
+                    ans[0] = plus;
+                    ans[1] = (int) sell;
                 }
             }
 
@@ -32,30 +51,7 @@ class Solution {
 
         for (int i = 0; i < discounts.length; i++) {
             permutation[L] = discounts[i];
-            permutation(users, emoticons, L + 1, depth);
+            permutation(L + 1, depth, users, emoticons);
         }
-    }
-
-    public int[] calculate(int[][] users, int[] emoticons) {
-        int plus = 0, price = 0;
-        int[] results = new int[users.length];
-        for (int i = 0; i < users.length; i++) {
-            int sum = 0;
-
-            for (int j = 0; j < emoticons.length; j++) {
-                if (permutation[j] >= users[i][0]) {
-                    sum += emoticons[j] * (100 - permutation[j]) / 100;
-                }
-            }
-
-            results[i] = sum;
-        }
-
-        for (int i = 0; i < users.length; i++) {
-            if (results[i] >= users[i][1]) plus++;
-            else price += results[i];
-        }
-
-        return new int[]{plus, price};
     }
 }
