@@ -1,45 +1,48 @@
 import java.util.*;
 
 class Solution {
-    static int result = 0;
-    static int[] combi;
+    static int answer = 0;
+    static ArrayList<ArrayList<Integer>> results = new ArrayList<>();
 
     public int solution(int n, int[][] q, int[] ans) {
-        combi = new int[5];
-        combination(0, 5, n, 1, q, ans);
+        combination(n, 0, q[0].length, 1, new ArrayList<Integer>());
 
-        return result;
+        for (int i = 0; i < results.size(); i++) {
+            Collections.sort(results.get(i));
+
+            boolean bool = true;
+            for (int j = 0; j < q.length; j++) {
+                int cnt = 0;
+
+                for (int k = 0; k < q[j].length; k++) {
+                    if (results.get(i).contains(q[j][k])) {
+                        cnt++;
+                    }
+                }
+
+                if (ans[j] != cnt) {
+                    bool = false;
+                    break;
+                }
+            }
+
+            if (bool) answer++;
+        }
+
+        return answer;
     }
 
-    public void combination(int L, int depth, int n, int s, int[][] q, int[] ans) {
+    public void combination(int n, int L, int depth, int s, ArrayList<Integer> result) {
         if (L == depth) {
-            if (correct(q, ans)) result++;
+            results.add(new ArrayList<>(result));
 
             return;
         }
 
-        for (int num = s; num <= n; num++) {
-            combi[L] = num;
-            combination(L + 1, depth, n, num + 1, q, ans);
+        for (int i = s; i <= n; i++) {
+            result.add(i);
+            combination(n, L + 1, depth, i + 1, result);
+            result.remove(result.size() - 1);
         }
-    }
-
-    public boolean correct(int[][] q, int[] ans) {
-        for (int l = 0; l < ans.length; l++) {
-            int cnt = 0;
-
-            for (int i = 0; i < combi.length; i++) {
-                for (int k = 0; k < q[l].length; k++) {
-                    if (combi[i] == q[l][k]) {
-                        cnt++;
-                        break;
-                    }
-                }
-            }
-
-            if (cnt != ans[l]) return false;
-        }
-
-        return true;
     }
 }
