@@ -1,37 +1,36 @@
 import java.util.*;
 
 class Solution {
-    static int min = Integer.MAX_VALUE;
+    static int ans = 0;
 
     public int solution(String s) {
-        for (int length = 1; length <= s.length(); length++) {
-            String compress = compress(s, length);
-            if (min > compress.length()) min = compress.length();
-        }
+        ans = s.length();
 
-        return min;
-    }
+        for (int compress = 1; compress <= s.length(); compress++) {
+            Queue<String> q = new LinkedList<>();
 
-    public String compress(String s, int length) {
-        StringBuilder sb = new StringBuilder();
-        int idx = 0;
-        while (idx < s.length() - length + 1) {
-            String prefix = s.substring(idx, idx + length);
-            int cnt = 1;
-
-            for (int j = idx + length; j < s.length() - length + 1; j += length) {
-                String suffix = s.substring(j, j + length);
-                if (prefix.equals(suffix)) cnt++;
-                else break;
+            for (int idx = 0; idx < s.length(); idx += compress) {
+                String substring = s.substring(idx, Math.min(s.length(), idx + compress));
+                q.add(substring);
             }
 
-            if (cnt == 1) sb.append(prefix);
-            else sb.append(cnt).append(prefix);
+            StringBuilder sb = new StringBuilder();
+            while (!q.isEmpty()) {
+                String cur = q.poll();
 
-            idx += cnt * length;
+                int cnt = 1;
+                while (!q.isEmpty() && q.peek().equals(cur)) {
+                    cnt++;
+                    q.poll();
+                }
+
+                if (cnt != 1) sb.append(cnt).append(cur);
+                else sb.append(cur);
+            }
+
+            ans = Math.min(ans, sb.toString().length());
         }
 
-        while (idx < s.length()) sb.append(s.charAt(idx++));
-        return sb.toString();
+        return ans;
     }
 }
