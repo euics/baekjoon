@@ -11,11 +11,12 @@ class Solution {
         }
 
         while (min <= max) {
-            int mid = min + (max - min) / 2;
-            long calculate = calculate(diffs, times, mid);
+            int mid = (max - min) / 2 + min;
+            long sum = calculate(diffs, times, mid);
 
-            if (calculate > limit) min = mid + 1;
-            else {
+            if (sum > limit) {
+                min = mid + 1;
+            } else {
                 max = mid - 1;
                 ans = Math.min(ans, mid);
             }
@@ -25,17 +26,13 @@ class Solution {
     }
 
     public long calculate(int[] diffs, int[] times, int level) {
-        long calculate = times[0];
+        long sum = 0;
 
-        for (int i = 1; i < diffs.length; i++) {
-            int diff = diffs[i];
-            int time_cur = times[i];
-            int time_prev = times[i - 1];
-
-            if (diff <= level) calculate += time_cur;
-            else calculate += (long) (diff - level) * (time_cur + time_prev) + time_cur;
+        for (int i = 0; i < diffs.length; i++) {
+            if (diffs[i] <= level) sum += times[i];
+            else sum += (long) (diffs[i] - level) * (long) (times[i - 1] + times[i]) + (long) times[i];
         }
 
-        return calculate;
+        return sum;
     }
 }
